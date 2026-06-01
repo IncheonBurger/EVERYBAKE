@@ -17,6 +17,9 @@ interface CartSidebarProps {
   notifications: string[]; // DoughIds registered for notification
   onRemoveNotification: (id: string) => void;
   allDoughs: DoughItem[];
+  isLoggedIn?: boolean;
+  onRedirectLogin?: () => void;
+  userStoreName?: string;
 }
 
 export default function CartSidebar({
@@ -29,6 +32,9 @@ export default function CartSidebar({
   notifications,
   onRemoveNotification,
   allDoughs,
+  isLoggedIn = false,
+  onRedirectLogin = () => {},
+  userStoreName = "",
 }: CartSidebarProps) {
   const [shopName, setShopName] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
@@ -36,6 +42,12 @@ export default function CartSidebar({
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderId, setOrderId] = useState("");
+
+  React.useEffect(() => {
+    if (isLoggedIn && userStoreName) {
+      setShopName(userStoreName);
+    }
+  }, [isLoggedIn, userStoreName]);
 
   if (!isOpen) return null;
 
@@ -216,60 +228,77 @@ export default function CartSidebar({
                     </div>
                   </div>
 
-                  <form onSubmit={handleCheckout} className="space-y-3 pt-2">
-                    <div className="grid grid-cols-2 gap-2">
+                  {!isLoggedIn ? (
+                    <div className="bg-amber-50/80 border border-amber-200/60 p-5 rounded-2xl text-center space-y-3 mt-4">
+                      <p className="text-xs font-semibold text-stone-750 leading-relaxed">
+                        🚨 <span className="text-amber-700 font-extrabold">로그인 상태가 아닙니다!</span> <br/>
+                        명인의 생지 발제 주문 및 발주 신청은 <br/>
+                        <span className="font-extrabold text-stone-900 font-sans">B2B 점주 로그인</span> 후에 진행하실 수 있습니다.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={onRedirectLogin}
+                        className="w-full py-2.5 bg-[#f97316] hover:bg-[#ea580c] text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs"
+                      >
+                        B2B 점주 로그인 하러가기 →
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleCheckout} className="space-y-3 pt-2">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">매장명</label>
+                          <input
+                            type="text"
+                            required
+                            value={shopName}
+                            onChange={(e) => setShopName(e.target.value)}
+                            placeholder="더블론드 카페"
+                            className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">연락처</label>
+                          <input
+                            type="tel"
+                            required
+                            value={contact}
+                            onChange={(e) => setContact(e.target.value)}
+                            placeholder="010-1234-5678"
+                            className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
+                          />
+                        </div>
+                      </div>
                       <div>
-                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">매장명</label>
+                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">희망 납품일</label>
                         <input
-                          type="text"
+                          type="date"
                           required
-                          value={shopName}
-                          onChange={(e) => setShopName(e.target.value)}
-                          placeholder="더블론드 카페"
+                          value={deliveryDate}
+                          onChange={(e) => setDeliveryDate(e.target.value)}
                           className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
                         />
                       </div>
-                      <div>
-                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">연락처</label>
-                        <input
-                          type="tel"
-                          required
-                          value={contact}
-                          onChange={(e) => setContact(e.target.value)}
-                          placeholder="010-1234-5678"
-                          className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">희망 납품일</label>
-                      <input
-                        type="date"
-                        required
-                        value={deliveryDate}
-                        onChange={(e) => setDeliveryDate(e.target.value)}
-                        className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
-                      />
-                    </div>
 
-                    <button
-                      type="submit"
-                      disabled={isOrdering}
-                      className="w-full mt-2 py-3 bg-stone-950 hover:bg-stone-900 disabled:bg-stone-400 text-white rounded-xl text-sm font-bold cursor-pointer transition-all flex items-center justify-center gap-2 shadow"
-                    >
-                      {isOrdering ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          바코드 원장 검증 중...
-                        </>
-                      ) : (
-                        <>
-                          <CreditCard className="w-4 h-4" />
-                          발주 승인 신청하기
-                        </>
-                      )}
-                    </button>
-                  </form>
+                      <button
+                        type="submit"
+                        disabled={isOrdering}
+                        className="w-full mt-2 py-3 bg-stone-950 hover:bg-stone-900 disabled:bg-stone-400 text-white rounded-xl text-sm font-bold cursor-pointer transition-all flex items-center justify-center gap-2 shadow"
+                      >
+                        {isOrdering ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            바코드 원장 검증 중...
+                          </>
+                        ) : (
+                          <>
+                            <CreditCard className="w-4 h-4" />
+                            발주 승인 신청하기
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  )}
                 </div>
               )}
             </div>

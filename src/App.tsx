@@ -40,9 +40,13 @@ import OvenSim from "./components/OvenSim";
 import KoreaMap from "./components/KoreaMap";
 import GlobalMap from "./components/GlobalMap";
 import DoughCard from "./components/DoughCard";
+import PartnerPortal from "./components/PartnerPortal";
 import { CURATED_DOUGHS } from "./data";
 import { DoughItem } from "./types";
 import ovenImage from "./assets/images/smart_pro_oven_1780278141890.png";
+import warmBakingFamilyImage from "./assets/images/warm_baking_family_1780289855930.png";
+import artisanBakerDetailImage from "./assets/images/artisan_baker_detail_1780289872811.png";
+import modernSmartOvenImage from "./assets/images/modern_smart_oven_close_1780289886400.png";
 
 interface CartItem {
   item: DoughItem;
@@ -90,8 +94,16 @@ interface CommunityPost {
 
 export default function App() {
   // Navigation View Tracking
-  // Current view can be: "home" | "equip-list" | "equip-detail" | "dough-main" | "dough-detail" | "coffee" | "community" | "inquiry"
+  // Current view can be: "home" | "equip-list" | "equip-detail" | "dough-main" | "dough-detail" | "coffee" | "community" | "inquiry" | "login" | "partner-portal"
   const [currentView, setCurrentView] = useState<string>("home");
+  
+  // B2B Partner Portal login states
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userStoreName, setUserStoreName] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+  
+  // Pending item trying to add to cart before login
+  const [pendingCartItem, setPendingCartItem] = useState<DoughItem | null>(null);
   
   // Selected dough for the detail view
   const [selectedDoughId, setSelectedDoughId] = useState<string>("m-001");
@@ -290,8 +302,83 @@ export default function App() {
     }
   };
 
+  // B2B login state handlers
+  const handleLoginSuccess = (uid: string, sname: string) => {
+    setIsLoggedIn(true);
+    setUserId(uid);
+    setUserStoreName(sname);
+    setCurrentView("partner-portal");
+    
+    if (pendingCartItem) {
+      setCartItems((prev) => {
+        const existing = prev.find((c) => c.item.id === pendingCartItem.id);
+        if (existing) {
+          return prev.map((c) =>
+            c.item.id === pendingCartItem.id ? { ...c, quantity: c.quantity + 1 } : c
+          );
+        }
+        return [...prev, { item: pendingCartItem, quantity: 1 }];
+      });
+      const addedName = pendingCartItem.name;
+      setPendingCartItem(null);
+      setCartOpen(true);
+      setTimeout(() => {
+        alert(`🔓 B2B 파트너 인증이 완료되었습니다!\n가선택하셨던 [${addedName}] 상품이 장바구니에 자동 추가되었으며 바로 발주 신청이 가능합니다.`);
+      }, 400);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserId("");
+    setUserStoreName("");
+    setPendingCartItem(null);
+    setCurrentView("home");
+  };
+
+  const handleAddToCartFromPortal = (item: any) => {
+    const existingDough = CURATED_DOUGHS.find(d => d.id === item.id);
+    if (existingDough) {
+      handleAddToCart(existingDough);
+    } else {
+      const virtualItem: DoughItem = {
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        masterName: item.category === "coffee" ? "에브리베이크 원두 가공소" : "B2B 명인 생지",
+        region: "B2B 제휴",
+        description: "B2B 점주 전용 원클릭 빠른 수급 보장 상품",
+        stockStatus: "in",
+        statusText: "동기화 즉시 배송",
+        barcode: `880${Math.floor(1000000000 + Math.random() * 9000000000)}`,
+        category: "global",
+        imageLabel: "📦 비주얼 B2B 수급 원재료",
+        iconBg: "bg-amber-100/60",
+        settings: {
+          defrostTemp: 22,
+          defrostTime: 30,
+          fermentTemp: 28,
+          fermentHumidity: 85,
+          fermentTime: 45,
+          bakeTemp: 180,
+          bakeTime: 15,
+          steam: true
+        }
+      };
+      handleAddToCart(virtualItem);
+    }
+  };
+
   // Cart operations
   const handleAddToCart = (item: DoughItem) => {
+    if (!isLoggedIn) {
+      alert(`⚠️ [${item.name}] 상품을 장바구니에 담고 발주(주문)하기 위해선 B2B 점포 파트너 로그인이 필요합니다.\n로그인 화면으로 안내해 드립니다. 로그인 시 이 상품이 자동으로 장바구니에 추가됩니다.`);
+      setPendingCartItem(item);
+      setCurrentView("login");
+      setCartOpen(false);
+      return;
+    }
+
     setCartItems((prev) => {
       const existing = prev.find((c) => c.item.id === item.id);
       if (existing) {
@@ -535,6 +622,8 @@ export default function App() {
         onCartToggle={() => setCartOpen(!cartOpen)}
         currentView={currentView}
         onNav={handleNav}
+        isLoggedIn={isLoggedIn}
+        onLogout={handleLogout}
       />
 
       {/* Cart Sidebar panel */}
@@ -548,6 +637,12 @@ export default function App() {
         notifications={notifications}
         onRemoveNotification={handleRemoveNotification}
         allDoughs={CURATED_DOUGHS}
+        isLoggedIn={isLoggedIn}
+        onRedirectLogin={() => {
+          setCurrentView("login");
+          setCartOpen(false);
+        }}
+        userStoreName={userStoreName}
       />
 
       {/* Main Container padding matching header offset */}
@@ -843,143 +938,359 @@ export default function App() {
         {/* 3. EQUIPMENT DETAIL VIEW                             */}
         {/* ==================================================== */}
         {currentView === "equip-detail" && (
-          <div className="max-w-5xl mx-auto px-6 py-8 animate-fade-in">
-            <button 
-              onClick={() => handleNav("equip-list")}
-              className="mb-6 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
-            >
-              <ChevronLeft className="w-4 h-4" /> 목록으로
-            </button>
+          <div className="max-w-6xl mx-auto px-6 py-12 animate-fade-in font-sans">
+            {/* Minimalist Apple Breadcrumb navigation */}
+            <div className="flex justify-between items-center mb-10 pb-4 border-b border-stone-100">
+              <button 
+                onClick={() => handleNav("equip-list")}
+                className="flex items-center gap-1 text-xs font-semibold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4" /> 스마트 기기 목록
+              </button>
+              <div className="flex items-center gap-4 text-[11px] font-semibold text-stone-500">
+                <span className="text-stone-950 font-bold">KCT Smart Pro 170cm</span>
+                <span className="text-stone-300">|</span>
+                <span>스위치형 AI 하드웨어</span>
+              </div>
+            </div>
 
             {/* Apple style central stacked layout */}
             <div className="flex flex-col items-center w-full">
               
-              {/* SECTION 1: Main Visual & Buying */}
-              <div className="w-full flex flex-col items-center text-center py-12 border-b border-stone-200">
-                <div className="w-full max-w-3xl h-[500px] md:h-[680px] bg-[#f8fafc] rounded-3xl flex items-center justify-center relative overflow-hidden mb-10 border border-stone-150 p-4">
-                  <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+              {/* SECTION 1: Pure Hero Visual Showcase */}
+              <div className="w-full text-center py-8">
+                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-widest text-[#f97316] mb-4 bg-orange-50/60 px-3.5 py-1.5 rounded-full border border-orange-100/50">
+                  <Sparkles className="w-3.5 h-3.5 text-[#f97316] animate-pulse" />
+                  THE NEW BENCHMARK OF ARTISAN BAKING
+                </span>
+
+                <h1 className="text-4xl sm:text-6xl font-black text-stone-900 tracking-tight leading-tight mb-4 font-sans">
+                  KCT Smart Pro
+                </h1>
+                
+                <p className="text-stone-550 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-medium mb-10">
+                  성인 키 높이의 170cm 수직 올인원 스테이션. 단 1평의 남는 매장 공간에서 명장의 비법 발효 데이터와 고화력 열 소성 제어로 완벽한 황금빛 크러스트를 스스로 창정해냅니다.
+                </p>
+
+                {/* Spectacular premium rendering presentation with light glow */}
+                <div className="w-full max-w-4xl bg-stone-50 rounded-[40px] px-6 py-16 flex items-center justify-center relative overflow-hidden mb-12 border border-stone-150/80 shadow-xs">
+                  <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
                   
+                  {/* Subtle luxurious background accent */}
+                  <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-200/10 rounded-full blur-[100px] pointer-events-none" />
+                  <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-300/10 rounded-full blur-[100px] pointer-events-none" />
+
                   <img
                     src={ovenImage}
-                    alt="KCT Smart Pro Premium Stainless"
-                    className="h-full w-auto object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.12)] group-hover:scale-[1.01] transition-transform duration-500 rounded-2xl"
+                    alt="KCT Smart Pro Premium Showpiece"
+                    className="h-[420px] sm:h-[600px] w-auto object-contain filter drop-shadow-[0_32px_50px_rgba(0,0,0,0.14)] hover:scale-[1.01] transition-transform duration-700 ease-out rounded-2xl"
                     referrerPolicy="no-referrer"
                   />
-                </div>
-
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="inline-block px-3.5 py-1.5 bg-[#fff7ed] text-[#f97316] text-xs font-bold tracking-wider rounded-full uppercase border border-orange-100">
-                    AI 프리미엄 탑재 기기
-                  </span>
-                  <span className="inline-block px-3.5 py-1.5 bg-blue-50 text-blue-600 text-xs font-bold tracking-wider rounded-full uppercase border border-blue-105">
-                    높이: 170cm 대형 규격
-                  </span>
-                </div>
-
-                <h1 className="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                  KCT Smart Pro (170cm)
-                </h1>
-
-                <p className="text-sm sm:text-base text-stone-500 max-w-2xl mx-auto leading-relaxed font-semibold mb-8">
-                  실제 성인 키만 한 170cm 대형 수직 구조로, 카운터 뒤 단 1평의 공간만으로 해동, 정밀 온습도 발효, 고화력 굽기까지 통합 처리합니다.<br />
-                  전용 B2B 데이터 스캔과 연동되어 업계 대표 명장들의 발효 공식을 그대로 구현합니다.
-                </p>
-
-                <div className="text-2xl sm:text-4xl font-black text-stone-950 tracking-tight mb-6 font-mono">
-                  일시불 ₩ 6,500,000
-                </div>
-
-                <button
-                  onClick={() => handleAddCustomToCart("eq-pro-01", "KCT Smart Pro (All-in-one)", 6500000, "bg-blue-50 text-[#2563eb]", "KCT Systems")}
-                  className="px-10 py-4 bg-stone-900 hover:bg-black text-white text-sm font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-xl shadow-stone-900/15"
-                >
-                  기기 구매하기
-                </button>
-              </div>
-
-              {/* SECTION 2: IoT Live Simulation Control Panel */}
-              <div className="w-full flex flex-col items-center text-center py-16 border-b border-stone-200">
-                <span className="text-xs font-black uppercase tracking-widest text-[#f97316] mb-3 flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-orange-500 animate-spin-slow" />
-                  IoT Real-Time Simulation Panel
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight mb-4">
-                  지능형 굽기 하드웨어 관제판
-                </h2>
-                <p className="text-stone-500 text-sm max-w-xl mx-auto leading-relaxed font-semibold mb-8">
-                  선택한 생지 바코드를 적용하여 가상의 발효/굽기 스피커 및 온습도 그래프 변화값을 실시간 주입 테스트해보십시오.
-                </p>
-
-                <div className="w-full max-w-3xl border border-stone-150 rounded-2xl overflow-hidden shadow-xs bg-stone-50 text-left">
-                  <OvenSim
-                    doughs={CURATED_DOUGHS}
-                    onSetSimulationDough={(dough) => setOvenActiveDoughId(dough.id)}
-                  />
-                </div>
-              </div>
-
-              {/* SECTION 3: Smart App Integration */}
-              <div className="w-full flex flex-col items-center text-center py-16 border-b border-stone-200">
-                <h2 className="text-2xl sm:text-3.5xl font-black text-stone-900 tracking-tight mb-4">
-                  지능형 굽기 관제 시스템
-                </h2>
-                <p className="text-sm sm:text-base text-stone-500 max-w-2xl mx-auto leading-relaxed font-semibold mb-10">
-                  스마트폰 하나로 발효부터 굽기까지의 모든 과정을 확인하세요.<br />
-                  기기가 스스로 판단하고 당신에게 다음 단계를 알려줍니다.
-                </p>
-
-                <div className="w-full max-w-3xl bg-[#f1f5f9] rounded-[32px] p-10 md:p-16 flex flex-col items-center">
-                  {/* Smartphone Frame */}
-                  <div className="w-full max-w-[320px] bg-stone-900 border-[10px] border-stone-950 rounded-[40px] p-3.5 shadow-2xl relative overflow-hidden text-left">
-                    {/* Notch indicator */}
-                    <div className="absolute top-1 left-1/2 -translate-x-1/2 w-20 h-4 bg-stone-950 rounded-b-xl z-20" />
-                    
-                    <div className="bg-[#f8fafc] rounded-[24px] px-4.5 py-5 min-h-[440px] flex flex-col justify-between font-sans select-none relative z-10 text-stone-850">
-                      
-                      {/* App header */}
-                      <div className="flex justify-between items-center border-b border-stone-200/80 pb-2.5 pt-1">
-                        <span className="text-xs font-black uppercase text-[#f97316]">EveryBake Manager</span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[9px] font-bold text-stone-500">통신 연동됨</span>
-                        </div>
-                      </div>
-
-                      {/* Oven preheat status card */}
-                      <div className="bg-white p-3.5 rounded-2xl shadow-xs border border-stone-200/60 my-2">
-                        <span className="text-stone-400 block text-[9px] font-bold mb-0.5">현재 기기 상태</span>
-                        <div className="font-extrabold text-stone-900 text-[11px] flex items-center gap-1">
-                          🟢 <span className="text-[#f97316]">오븐 예열 180℃ </span> 완료
-                        </div>
-                      </div>
-
-                      {/* Phone notification panel */}
-                      <div className="bg-[#f97316] text-white p-4 rounded-2xl shadow-sm space-y-2 border border-orange-600 my-2">
-                        <div className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-white bg-orange-850/30 w-fit px-2 py-0.5 rounded-md">
-                          <Bell className="w-3 h-3" /> 발효 완료 알림
-                        </div>
-                        <p className="text-[10px] font-bold leading-relaxed">
-                          🔔 <strong>발효 완료 알림</strong><br /><br />
-                          [명장 무화과 깜빠뉴]<br />발효가 완벽하게 끝났습니다. 도우컨디셔너에서 꺼내 상단 오븐에 넣어주세요.
-                        </p>
-                      </div>
-
-                      {/* Quick start action button */}
-                      <button className="w-full py-3 mt-auto border-none rounded-2xl bg-stone-200 text-stone-800 hover:bg-stone-300 font-extrabold text-xs cursor-pointer text-center transition-colors">
-                        오븐 작동 시작
-                      </button>
+                  
+                  {/* Floating Specs Spec Sheets on the sides for desktop view (absolute) */}
+                  <div className="hidden lg:flex flex-col gap-6 absolute left-10 bottom-16 text-left max-w-xs">
+                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
+                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Chamber Height</div>
+                      <div className="text-sm font-extrabold text-stone-800">170cm 초대형 수직 규격</div>
+                      <div className="text-xs text-stone-500 mt-1">서서 일하는 작업자의 최적 관절 각도 정밀 배분</div>
                     </div>
+                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
+                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Connectivity</div>
+                      <div className="text-sm font-extrabold text-stone-800">바코드 자동 전송 WiFi 칩</div>
+                      <div className="text-xs text-stone-500 mt-1">대량 전국 명인 생지 온습도 곡선 즉각 무선 세팅</div>
+                    </div>
+                  </div>
+
+                  <div className="hidden lg:flex flex-col gap-6 absolute right-10 bottom-16 text-left max-w-xs">
+                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
+                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Fermentation System</div>
+                      <div className="text-sm font-extrabold text-stone-800">AI 능동형 상태 감측 센서</div>
+                      <div className="text-xs text-stone-500 mt-1">대기 습도와 주위 환경 온도를 스스로 파악하는 효모 관리</div>
+                    </div>
+                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
+                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Baking Power</div>
+                      <div className="text-sm font-extrabold text-stone-800">스팀 분무 파워 컨트롤 세라믹</div>
+                      <div className="text-xs text-stone-500 mt-1">유럽식 아티장 하드 브레드 전용 즉각 고압 스팀 분배</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile visual specs list */}
+                <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto lg:hidden text-left mb-10">
+                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
+                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Chamber Height</span>
+                    <p className="text-xs font-bold text-stone-800">170cm 수직 규격</p>
+                  </div>
+                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
+                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Connectivity</span>
+                    <p className="text-xs font-bold text-stone-800">바코드 무선 WiFi 연동</p>
+                  </div>
+                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
+                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Fermentation System</span>
+                    <p className="text-xs font-bold text-stone-800">AI 능동 온습도 감측</p>
+                  </div>
+                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
+                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Baking Power</span>
+                    <p className="text-xs font-bold text-stone-800">고압 스팀 분무 탑재</p>
+                  </div>
+                </div>
+
+                {/* Apple pricing details */}
+                <div className="max-w-2xl mx-auto space-y-4 mb-16">
+                  <div className="text-xs font-black uppercase tracking-wider text-stone-400">EVERYBAKE PARTNER PRICE</div>
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="text-center">
+                      <div className="text-sm text-stone-500 leading-none">B2B 결제 파트너 일시불가</div>
+                      <div className="text-4xl sm:text-5xl font-black text-stone-900 font-mono mt-1.5">₩ 6,500,000</div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 flex justify-center items-center">
+                    <button
+                      onClick={() => handleAddCustomToCart("eq-pro-01", "KCT Smart Pro (All-in-one)", 6500000, "bg-blue-50 text-[#2563eb]", "KCT Systems")}
+                      className="w-full sm:w-auto px-12 py-4 bg-stone-900 hover:bg-black text-white text-xs font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-md shadow-stone-800/20"
+                    >
+                      장바구니 담고 즉시 주문서 작성
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 2: APPLE-STYLE LINEAR STORYTELLING FLOW WITH MULTIPLE PREMIUM IMAGES */}
+              <div className="w-full py-16 border-t border-stone-200/70 space-y-24">
+                
+                {/* Introduction Header for Stories */}
+                <div className="text-center max-w-2xl mx-auto space-y-2 mb-16">
+                  <span className="text-[10px] font-black uppercase text-stone-400 tracking-widest font-mono">BEAUTIFUL BAKING LIFE</span>
+                  <p className="text-3xl sm:text-4.5xl font-black text-stone-900 tracking-tight leading-tight">
+                    모두를 위해 설계된<br />
+                    미식 기술의 심플한 따뜻함
+                  </p>
+                </div>
+
+                {/* Story Stack - All Vertical (No side-by-side text/cols layout!) */}
+                <div className="space-y-28 max-w-4xl mx-auto">
+                  
+                  {/* Item 1: Artisan Baker with image */}
+                  <div className="space-y-6">
+                    {/* Immersive centered image */}
+                    <div className="w-full rounded-[32px] overflow-hidden bg-stone-50 border border-stone-150 shadow-xs">
+                      <img 
+                        src={artisanBakerDetailImage} 
+                        alt="Artisan Master Baker"
+                        className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    {/* Centered clean description stack */}
+                    <div className="text-center max-w-2xl mx-auto space-y-3 pt-2">
+                      <span className="text-[10px] font-extrabold text-[#f97316] uppercase tracking-widest block font-mono">01 / PROFESSIONAL ARTISAN FIDELITY</span>
+                      <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
+                        30년 제빵 명인의 손가락 끝 감각, 그대로 내재화됩니다
+                      </h3>
+                      <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
+                        좋은 빵은 반죽의 은온과 구울 때 스며드는 미세 수분의 양에서 완벽함이 갈립니다. 전국구 명장이 가동을 통해 측정하던 발효 온습 곡선과 미세 수분 조절 설계 데이터를 디지털화하여, 초미풍 대류 팬과 세라믹 하우징 오븐이 최상의 한 판을 완성해 냅니다.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Item 2: Family Warmth with image */}
+                  <div className="space-y-6">
+                    {/* Immersive centered image */}
+                    <div className="w-full rounded-[32px] overflow-hidden bg-stone-50 border border-stone-150 shadow-xs">
+                      <img 
+                        src={warmBakingFamilyImage} 
+                        alt="Cozy familial baking environment"
+                        className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    {/* Centered clean description stack */}
+                    <div className="text-center max-w-2xl mx-auto space-y-3 pt-2">
+                      <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest block font-mono">02 / HOME CONGENIAL WELLBEING</span>
+                      <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
+                        아침을 여는 소박한 행복, 엄마의 주방에서 피어난 따스한 웃음
+                      </h3>
+                      <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
+                        버터의 풍요로운 향기가 집안을 사르르 채우는 행복을 느껴보십시오. 조리 안전 차단 시스템이 어린 자녀들과의 소중한 베이킹 체험을 안전하게 수화하며, 전문가의 수고로운 매뉴얼 작업을 원터치 컨트롤 하나로 모두 줄여 주었습니다.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Item 3: Smart Oven with image */}
+                  <div className="space-y-6">
+                    {/* Immersive centered image */}
+                    <div className="w-full rounded-[32px] overflow-hidden bg-stone-50 border border-stone-150 shadow-xs">
+                      <img 
+                        src={modernSmartOvenImage} 
+                        alt="Minimalistic Apple-themed Design Close"
+                        className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    {/* Centered clean description stack */}
+                    <div className="text-center max-w-2xl mx-auto space-y-3 pt-2">
+                      <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest block font-mono">03 / INTELLIGENT SENSING ENVIRONMENT</span>
+                      <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
+                        대기 환경까지 스스로 측정 조절하는 극도로 정교한 발효
+                      </h3>
+                      <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
+                        주변 미세 습도와 주위의 사소한 계절성 온도 격차를 스스로 파악하여 효모가 안전하고 충만하게 부풀어 오르는 환경을 성립시킵니다. 수직 일체형 스테이션 디자인으로 공간 배치는 극도로 심플해지고 주방 동선은 탁월하게 개조됩니다.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* SECTION 3: RE-CONFIGURED SIMULATOR ZONE (스마트 베이커리 AI 관제판 + Mobile Notification Widget) */}
+              <div className="w-full py-16 border-t border-stone-200/70" id="smart-bakery-ai-panel">
+                <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-blue-600 tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100/50">
+                    <Wifi className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+                    INTELLIGENT IoT REALTIME DUAL-PLAY
+                  </span>
+                  
+                  <h2 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight">
+                    스마트 베이커리 AI 관제판
+                  </h2>
+                  
+                  <p className="text-stone-550 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-semibold">
+                    선택하신 명장 생지의 통신 바코드를 활용해, 기기와 모바일 간 실시간 소통 및 정밀 온습도 변화 그래프를 직접 원격 주입 시뮬레이션해 보십시오.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                  
+                  {/* Left: The original (greatly integrated) Oven Simulator - Occupying 8 cols */}
+                  <div className="lg:col-span-8 bg-white border border-stone-200/80 rounded-3xl overflow-hidden shadow-xs">
+                    <OvenSim
+                      doughs={CURATED_DOUGHS}
+                      onSetSimulationDough={(dough) => {
+                        setOvenActiveDoughId(dough.id);
+                        // Trigger simulation alerts on mobile phone for smart feel
+                        const alertBox = document.getElementById("mock-phone-alert-hub");
+                        if (alertBox) {
+                          alertBox.classList.add("animate-bounce");
+                          setTimeout(() => alertBox.classList.remove("animate-bounce"), 1000);
+                        }
+                      }}
+                    />
+                  </div>
+
+                  {/* Right: Simulated Mobile Phone Hub with Dynamic Push Notification alerts - Occupying 4 cols */}
+                  <div className="lg:col-span-4 space-y-6">
+                    
+                    {/* Phone Frame Simulator Container */}
+                    <div className="bg-stone-900 border-[10px] border-stone-950 rounded-[44px] p-4 shadow-2xl relative overflow-hidden text-left mx-auto max-w-[310px]">
+                      {/* Speaker and Notch */}
+                      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-24 h-5 bg-stone-950 rounded-b-xl z-20 flex justify-center items-center pb-1">
+                        <div className="w-8 h-1 bg-stone-750 rounded-full" />
+                      </div>
+                      
+                      {/* Inside Screen Content in iOS aesthetic */}
+                      <div className="bg-[#f8fafc] rounded-[32px] px-3.5 py-4 min-h-[460px] flex flex-col justify-between font-sans relative z-10 text-stone-850">
+                        
+                        {/* Status bar */}
+                        <div className="flex justify-between items-center text-[9px] font-black text-stone-500 px-1 border-b border-stone-200/50 pb-2 pt-1.5">
+                          <span>EveryBake LTE</span>
+                          <div className="flex items-center gap-1">
+                            <Wifi className="w-3 h-3 text-emerald-505" />
+                            <span>100%</span>
+                          </div>
+                        </div>
+
+                        {/* App header logo */}
+                        <div className="my-2 text-center">
+                          <span className="text-[10px] text-stone-400 font-bold uppercase tracking-widest block">MOBILE CONTROLLER</span>
+                          <span className="text-xs font-black text-stone-900 font-sans block mt-0.5">에브리베이크 원격 앱</span>
+                        </div>
+
+                        {/* Dynamic IoT Push Alerts Hub - Users feel the notification real-time */}
+                        <div className="space-y-3 my-4 flex-1 overflow-y-auto max-h-[280px] p-1 pr-1.5 scrollbar-thin" id="mock-phone-alert-hub">
+                          
+                          <div className="text-[9px] font-bold text-stone-400 tracking-wider mb-2 text-center uppercase border-b border-dashed border-stone-200 pb-1">
+                            🚨 IoT 실시간 푸시 피드
+                          </div>
+
+                          {/* Push Alert 1 */}
+                          <div className="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-xs space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[8px] font-black text-[#f97316] uppercase bg-orange-50 px-1.5 py-0.5 rounded border border-orange-100/50">
+                                AI 실시간 케어
+                              </span>
+                              <span className="text-[8px] text-stone-400">오전 06:12</span>
+                            </div>
+                            <p className="text-[10px] font-bold text-stone-800 leading-snug">
+                              🔔 발효 조율 완수! <br />
+                              <span className="text-stone-550 font-medium">안감 이스트 발효 85% 지점 통과. 도우를 상단 가열실에 예치하십시오.</span>
+                            </p>
+                          </div>
+
+                          {/* Push Alert 2 */}
+                          <div className="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-xs space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[8px] font-black text-blue-600 uppercase bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100/50">
+                                오븐 자동 예열
+                              </span>
+                              <span className="text-[8px] text-stone-400">오전 06:14</span>
+                            </div>
+                            <p className="text-[10px] font-bold text-stone-800 leading-snug">
+                              🔥 섭씨 180℃ 사전 가열 개시! <br />
+                              <span className="text-stone-550 font-medium">상단 구움 화실의 자동 가열 대류 열기가 준비되었습니다.</span>
+                            </p>
+                          </div>
+
+                          {/* Push Alert 3 */}
+                          <div className="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-xs space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[8px] font-black text-emerald-600 uppercase bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100/50">
+                                스팀 소킹 검증
+                              </span>
+                              <span className="text-[8px] text-stone-400">오전 06:25</span>
+                            </div>
+                            <p className="text-[10px] font-bold text-stone-800 leading-snug">
+                              💨 크러스트 칩 세팅! <br />
+                              <span className="text-stone-550 font-medium font-sans">고밀도 스팀 분사로 겉면 팽창 계수를 극한의 황금빛 바삭함으로 유지합니다.</span>
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Interactive trigger feedback inside the app */}
+                        <div className="bg-stone-50 p-2.5 rounded-xl border border-stone-200 text-center mb-1">
+                          <span className="text-[8px] text-stone-400 font-bold block">연결 모드: WiFi Smart Node v2</span>
+                          <button 
+                            onClick={() => alert("스마트폰으로부터 오븐 정지 신호를 유선 송신했습니다. 기기가 즉각 가열을 차단하고 쿨링 대기에 진입합니다.")}
+                            className="w-full mt-1.5 py-2 bg-stone-900 hover:bg-stone-950 text-[10px] font-extrabold text-white rounded-lg cursor-pointer transition-colors"
+                          >
+                            앱으로 소성 가중 원격 긴급 중단
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Descriptive side column widgets */}
+                    <div className="bg-stone-50 p-5 rounded-2xl border border-stone-200/60 shadow-xs text-left space-y-3">
+                      <div className="flex items-center gap-1.5">
+                        <Smartphone className="w-4 h-4 text-[#f97316]" />
+                        <span className="text-xs font-extrabold text-stone-850">모바일 알림의 역할</span>
+                      </div>
+                      <p className="text-stone-500 text-xs leading-relaxed">
+                        매장 밖 시장을 가거나 휴식을 취할 때에도 오븐 앞에 머무실 필요가 전혀 없습니다. 해동 완료, 발효 포화 상태, 스팀 투하점, 굽기 완수 시간 등을 맞춤 스마트 알림으로 전송하여 바쁜 올인원 가사 조율과 매장 운영을 동시에 성립시킵니다.
+                      </p>
+                    </div>
+
                   </div>
                 </div>
               </div>
 
               {/* SECTION 4: Real-time Device Reviews (Comment Feed) */}
-              <div className="w-full flex flex-col items-center py-16">
+              <div className="w-full flex flex-col items-center py-16 border-t border-stone-200/70">
                 <h2 className="text-2xl sm:text-3.5xl font-black text-stone-900 tracking-tight text-center mb-2">
-                  고객 후기
+                  이 기기를 사용 중인 오너들의 생생한 목소리
                 </h2>
                 <p className="text-sm sm:text-base text-stone-500 max-w-xl mx-auto text-center leading-relaxed font-semibold mb-12">
-                  에브리베이크와 함께 일상을 바꾼 고객님들의 이야기입니다.
+                  에브리베이크 170cm AI 스마트 오토 기기와 함께 일상을 바꾼 실제 사장님과 주부들의 후기입니다.
                 </p>
 
                 <div className="w-full max-w-3xl text-left space-y-8">
@@ -1942,6 +2253,18 @@ export default function App() {
               </div>
 
             </div>
+          </div>
+        )}
+
+        {(currentView === "login" || currentView === "partner-portal") && (
+          <div className="animate-fade-in">
+            <PartnerPortal
+              isLoggedIn={isLoggedIn}
+              onLoginSuccess={handleLoginSuccess}
+              onLogout={handleLogout}
+              onAddToCart={handleAddToCartFromPortal}
+              currentDoughs={CURATED_DOUGHS}
+            />
           </div>
         )}
 

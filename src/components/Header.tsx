@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { ShoppingBag, ChevronRight, Award, HelpCircle, Menu, X, ArrowRight } from "lucide-react";
+import { ShoppingBag, ChevronRight, Award, HelpCircle, Menu, X, ArrowRight, LogIn, LogOut, User } from "lucide-react";
 
 interface HeaderProps {
   cartCount: number;
   onCartToggle: () => void;
   currentView: string;
   onNav: (view: string) => void;
+  isLoggedIn: boolean;
+  onLogout: () => void;
 }
 
 export default function Header({
@@ -13,15 +15,21 @@ export default function Header({
   onCartToggle,
   currentView,
   onNav,
+  isLoggedIn,
+  onLogout,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const links = [
+  const baseLinks = [
     { id: "equip-list", name: "도우컨디셔너 / 오븐" },
     { id: "dough-main", name: "프리미엄 생지 라이브러리" },
     { id: "coffee", name: "커피 원두 / 머신" },
     { id: "community", name: "에브리베이크 커뮤니티" },
   ];
+
+  const links = isLoggedIn 
+    ? [...baseLinks, { id: "partner-portal", name: "🔒 B2B 점주 포털" }]
+    : baseLinks;
 
   const handleMobileNav = (view: string) => {
     onNav(view);
@@ -95,6 +103,28 @@ export default function Header({
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
 
+          {isLoggedIn ? (
+            <button
+              type="button"
+              onClick={onLogout}
+              className="px-3 sm:px-4 py-2 rounded-xl text-xs font-bold tracking-tight bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all cursor-pointer border border-stone-200 flex items-center gap-1 shrink-0"
+              id="partners-logout-btn"
+            >
+              <LogOut className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <span>로그아웃</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => handleMobileNav("login")}
+              className="px-3 sm:px-4 py-2 rounded-xl text-xs font-bold tracking-tight bg-stone-900 hover:bg-black text-white transition-all cursor-pointer flex items-center gap-1 shrink-0"
+              id="partners-login-btn"
+            >
+              <LogIn className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <span>로그인</span>
+            </button>
+          )}
+
           {/* Hamburger Menu Toggle (Mobile only) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -133,7 +163,7 @@ export default function Header({
               );
             })}
           </div>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col gap-2">
             <button
               onClick={() => handleMobileNav("inquiry")}
               className="w-full bg-stone-900 hover:bg-black text-white text-xs font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow"
@@ -141,6 +171,28 @@ export default function Header({
               <span>입점 및 제휴 신청하기</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+            {isLoggedIn ? (
+              <button
+                onClick={() => {
+                  onLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-1.5 border border-stone-200"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>로그아웃</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  handleMobileNav("login");
+                }}
+                className="w-full bg-[#f97316] hover:bg-orange-600 text-white text-xs font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>B2B 로그인</span>
+              </button>
+            )}
           </div>
         </div>
       )}
