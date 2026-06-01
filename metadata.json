@@ -1,0 +1,6 @@
+{
+  "name": "KCT Partners",
+  "description": "KCT Partners B2B 플랫폼. 1인 카페 사장님들을 위한 스마트 하드웨어 도우컨디셔너와 프리미엄 생지, 고품질 원두 및 파트너 제안 통합 연동 시스템.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

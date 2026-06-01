@@ -1,0 +1,153 @@
+import React from "react";
+import { Barcode, Bell, BellOff, ShoppingBag, Radio } from "lucide-react";
+import { DoughItem } from "../types";
+
+interface DoughCardProps {
+  item: DoughItem;
+  onAddToCart: (item: DoughItem) => void;
+  onToggleNotification: (id: string) => void;
+  isNotificationApplied: boolean;
+  onScanShortcut: (id: string) => void;
+  activeInOven: boolean;
+  onHoverCard: (region: string | null) => void;
+}
+
+export const DoughCard: React.FC<DoughCardProps> = ({
+  item,
+  onAddToCart,
+  onToggleNotification,
+  isNotificationApplied,
+  onScanShortcut,
+  activeInOven,
+  onHoverCard,
+}) => {
+  
+  // Format price into elegant KRW
+  const formattedPrice = `₩ ${item.price.toLocaleString()}`;
+
+  // Helper for stock dot color and borders
+  const getStockClasses = (status: "in" | "low" | "out") => {
+    switch (status) {
+      case "in":
+        return { dot: "bg-emerald-500", text: "text-emerald-700 bg-emerald-50 border-emerald-100" };
+      case "low":
+        return { dot: "bg-amber-400", text: "text-amber-700 bg-amber-50 border-amber-100" };
+      case "out":
+        return { dot: "bg-rose-500", text: "text-rose-700 bg-rose-50 border-rose-100 animate-pulse" };
+      default:
+        return { dot: "bg-stone-400", text: "text-stone-700 bg-stone-50 border-stone-100" };
+    }
+  };
+
+  const stockStyle = getStockClasses(item.stockStatus);
+
+  return (
+    <div 
+      className={`group bg-white rounded-3xl p-5 border transition-all duration-300 flex flex-col justify-between ${
+        activeInOven 
+          ? "border-amber-400 shadow-md ring-1 ring-amber-400" 
+          : "border-stone-200/60 hover:border-stone-400 hover:shadow-md"
+      }`}
+      onMouseEnter={() => onHoverCard(item.region)}
+      onMouseLeave={() => onHoverCard(null)}
+    >
+      <div>
+        {/* Card Visual / Display Area */}
+        <div className="w-full h-44 bg-stone-100 rounded-2xl mb-4 relative overflow-hidden flex flex-col items-center justify-center p-4 border border-stone-200/50">
+          <div className="absolute inset-0 opacity-[0.03] select-none pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:10px_10px]" />
+          
+          <span className="text-3xl filter drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
+            {item.id === "m-001" ? "🥐" : item.id === "m-002" ? "🍎" : item.id === "m-003" ? "🍫" : item.id === "g-001" ? "🍈" : "🥖"}
+          </span>
+          <span className="text-xs font-bold text-stone-500 mt-2 tracking-wide font-mono uppercase bg-white/70 px-2 py-0.5 rounded-full shadow-xs">
+            {item.imageLabel}
+          </span>
+
+          {/* Glowing active state signal */}
+          {activeInOven && (
+            <div className="absolute top-2.5 right-2.5 flex items-center gap-1 text-[9px] uppercase font-mono font-extrabold bg-amber-500 text-stone-900 px-2 py-0.5 rounded-full animate-bounce shadow">
+              <Radio className="w-3 h-3 animate-pulse" />
+              <span>OVEN SYNCED</span>
+            </div>
+          )}
+        </div>
+
+        {/* Stock Status Badge */}
+        <div className={`w-fit flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border mb-3 ${stockStyle.text}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${stockStyle.dot}`} />
+          <span>{item.statusText}</span>
+        </div>
+
+        {/* Content Details */}
+        <h3 className="text-md font-extrabold text-stone-900 group-hover:text-stone-950 truncate transition-colors">
+          {item.name}
+        </h3>
+        
+        <p className="text-xs text-stone-400 mb-1 font-semibold">{item.masterName}</p>
+        
+        <p className="text-[11px] text-stone-500 leading-relaxed mb-4 line-clamp-2">
+          {item.description}
+        </p>
+      </div>
+
+      <div>
+        {/* Barcode representation */}
+        <div className="flex items-center gap-1.5 bg-stone-50 rounded-xl px-3 py-1.5 border border-stone-200/50 text-[10px] text-stone-500 mb-4 font-mono">
+          <Barcode className="w-3.5 h-3.5" />
+          <span>{item.barcode}</span>
+        </div>
+
+        {/* Bottom actions */}
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-lg font-black text-stone-950 tracking-tight">
+            {formattedPrice}
+          </span>
+          
+          <button
+            type="button"
+            onClick={() => onScanShortcut(item.id)}
+            className="text-[10px] font-bold text-stone-650 hover:text-amber-500 hover:bg-amber-50 px-2 py-1 rounded border border-stone-200 hover:border-amber-300 transition-all cursor-pointer font-mono"
+            title="기기에 바코드 해동 세팅 즉각 주입"
+          >
+            기기 바코드 주입 ⇡
+          </button>
+        </div>
+
+        {item.stockStatus === "out" ? (
+          <button
+            type="button"
+            onClick={() => onToggleNotification(item.id)}
+            className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              isNotificationApplied
+                ? "bg-stone-200 hover:bg-stone-300 text-stone-700"
+                : "bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-200"
+            }`}
+          >
+            {isNotificationApplied ? (
+              <>
+                <BellOff className="w-4 h-4" />
+                알림 신청 해제됨
+              </>
+            ) : (
+              <>
+                <Bell className="w-4 h-4 animate-swing" />
+                원료 입고 알림 받기
+              </>
+            )}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onAddToCart(item)}
+            className="w-full py-2.5 bg-stone-950 hover:bg-stone-850 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm hover:shadow"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            장바구니 담기
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default DoughCard;
