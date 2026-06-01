@@ -42,6 +42,7 @@ import GlobalMap from "./components/GlobalMap";
 import DoughCard from "./components/DoughCard";
 import { CURATED_DOUGHS } from "./data";
 import { DoughItem } from "./types";
+import ovenImage from "./assets/images/smart_pro_oven_1780278141890.png";
 
 interface CartItem {
   item: DoughItem;
@@ -781,9 +782,9 @@ export default function App() {
                   <div className="absolute w-40 h-40 bg-blue-400/5 rounded-full blur-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                   
                   <img
-                    src="/src/assets/images/stainless_steel_baking_oven_1779955578372.png"
+                    src={ovenImage}
                     alt="KCT Smart Pro (All-in-one)"
-                    className="h-60 w-auto object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-500"
+                    className="h-[400px] w-auto object-contain rounded-xl filter drop-shadow-lg group-hover:scale-[1.02] transition-transform duration-500"
                     referrerPolicy="no-referrer"
                   />
                 </div>
@@ -793,21 +794,24 @@ export default function App() {
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#2563eb] text-[10px] font-bold">
                       <Cpu className="w-3.5 h-3.5 animate-pulse" /> AI 모듈 내장형 기기
                     </span>
-                    <span className="text-stone-400 text-xs font-medium font-mono">CODE: KCT-SM-PRO</span>
+                    <span className="text-stone-400 text-xs font-medium font-mono">CODE: KCT-SM-PRO (Height: 170cm)</span>
                   </div>
 
                   <h3 className="text-xl font-black text-stone-900 group-hover:text-[#2563eb] transition-colors">
-                    KCT 수직형 AI 도우컨디셔너+오븐 일체형 [Smart Pro]
+                    KCT 수직형 AI 도우컨디셔너+오븐 일체형 [Smart Pro] (170cm)
                   </h3>
                   
                   <p className="text-stone-500 text-xs leading-relaxed">
-                    좁은 1인 매장의 한계 공간을 돌파하는 수직 구조 올인원 스테이션. 하부 도우컨디셔너와 상부 오븐 모듈이 전용 통신 칩으로 바코드와 즉시 호환 연집됩니다.
+                    좁은 1인 매장의 한계 공간을 혁신적으로 극복하는 170cm 초대형 수직 올인원 스테이션. 하부 도우컨디셔너(해동·발효)와 상부 오븐 모듈이 전용 통신 칩으로 바코드 데이터와 즉시 연집 조정되는 명장 인증 하드웨어입니다.
                   </p>
 
                   <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
-                    <span className="text-xs text-stone-400 font-semibold">1인 매장 최적화 리딩 디바이스</span>
-                    <span className="text-xs font-bold text-[#2563eb] flex items-center gap-1 py-1 px-3 bg-blue-50 rounded-lg group-hover:translate-x-1 transition-transform">
-                      상세 정보 및 시ミュ레이터 열기 <ChevronRight className="w-3.5 h-3.5" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-stone-400 font-bold uppercase">B2B 대리점 특판가</span>
+                      <span className="text-base font-black text-stone-900 font-mono">₩ 6,500,000</span>
+                    </div>
+                    <span className="text-xs font-bold text-[#2563eb] flex items-center gap-1 py-1.5 px-3 bg-blue-50 rounded-lg group-hover:translate-x-1 transition-transform">
+                      상세 정보 및 시뮬레이터 <ChevronRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
                 </div>
@@ -852,37 +856,42 @@ export default function App() {
               
               {/* SECTION 1: Main Visual & Buying */}
               <div className="w-full flex flex-col items-center text-center py-12 border-b border-stone-200">
-                <div className="w-full max-w-3xl h-[400px] md:h-[500px] bg-[#f8fafc] rounded-3xl flex items-center justify-center relative overflow-hidden mb-10 border border-stone-150">
+                <div className="w-full max-w-3xl h-[500px] md:h-[680px] bg-[#f8fafc] rounded-3xl flex items-center justify-center relative overflow-hidden mb-10 border border-stone-150 p-4">
                   <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
                   
                   <img
-                    src="/src/assets/images/stainless_steel_baking_oven_1779955578372.png"
+                    src={ovenImage}
                     alt="KCT Smart Pro Premium Stainless"
-                    className="h-4/5 w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.08)]"
+                    className="h-full w-auto object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.12)] group-hover:scale-[1.01] transition-transform duration-500 rounded-2xl"
                     referrerPolicy="no-referrer"
                   />
                 </div>
 
-                <span className="inline-block px-3.5 py-1.5 bg-[#fff7ed] text-[#f97316] text-xs font-bold tracking-wider rounded-full mb-4 uppercase">
-                  AI 탑재 기기
-                </span>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="inline-block px-3.5 py-1.5 bg-[#fff7ed] text-[#f97316] text-xs font-bold tracking-wider rounded-full uppercase border border-orange-100">
+                    AI 프리미엄 탑재 기기
+                  </span>
+                  <span className="inline-block px-3.5 py-1.5 bg-blue-50 text-blue-600 text-xs font-bold tracking-wider rounded-full uppercase border border-blue-105">
+                    높이: 170cm 대형 규격
+                  </span>
+                </div>
 
                 <h1 className="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
-                  KCT Smart Pro
+                  KCT Smart Pro (170cm)
                 </h1>
 
                 <p className="text-sm sm:text-base text-stone-500 max-w-2xl mx-auto leading-relaxed font-semibold mb-8">
-                  공간의 제약 없이 누구나 완벽한 베이킹을 완성할 수 있습니다.<br />
-                  도우컨디셔너와 오븐이 하나의 데이터로 연결되어 최상의 맛을 구현합니다.
+                  실제 성인 키만 한 170cm 대형 수직 구조로, 카운터 뒤 단 1평의 공간만으로 해동, 정밀 온습도 발효, 고화력 굽기까지 통합 처리합니다.<br />
+                  전용 B2B 데이터 스캔과 연동되어 업계 대표 명장들의 발효 공식을 그대로 구현합니다.
                 </p>
 
-                <div className="text-2xl sm:text-3.5xl font-black text-stone-950 tracking-tight mb-6">
-                  일시불 ₩ 4,500,000
+                <div className="text-2xl sm:text-4xl font-black text-stone-950 tracking-tight mb-6 font-mono">
+                  일시불 ₩ 6,500,000
                 </div>
 
                 <button
-                  onClick={() => handleAddCustomToCart("eq-pro-01", "KCT Smart Pro (All-in-one)", 4500000, "bg-blue-50 text-[#2563eb]", "KCT Systems")}
-                  className="px-10 py-4 bg-stone-900 hover:bg-black text-white text-sm font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-lg shadow-stone-900/10"
+                  onClick={() => handleAddCustomToCart("eq-pro-01", "KCT Smart Pro (All-in-one)", 6500000, "bg-blue-50 text-[#2563eb]", "KCT Systems")}
+                  className="px-10 py-4 bg-stone-900 hover:bg-black text-white text-sm font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-xl shadow-stone-900/15"
                 >
                   기기 구매하기
                 </button>

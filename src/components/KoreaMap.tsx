@@ -1,6 +1,7 @@
 import React from "react";
 import { Info, HelpCircle } from "lucide-react";
 import { MAP_PINS_KOREA } from "../data";
+import koreaMapImage from "../assets/images/south_korea_vector_map_1779955935282.png";
 
 interface KoreaMapProps {
   selectedPinId: string | null;
@@ -43,7 +44,7 @@ export default function KoreaMap({
           
           {/* Geographically Accurate Minimalist South Korea Map Base */}
           <img
-            src="/src/assets/images/south_korea_vector_map_1779955935282.png"
+            src={koreaMapImage}
             alt="South Korea Geographic Base Map"
             className="absolute inset-0 w-full h-full object-contain opacity-[0.85] select-none pointer-events-none"
             referrerPolicy="no-referrer"

@@ -1,6 +1,7 @@
 import React from "react";
 import { Globe2, Info, HelpCircle } from "lucide-react";
 import { MAP_PINS_GLOBAL } from "../data";
+import globalWorldMap from "../assets/images/minimalist_world_map_1779955959002.png";
 
 interface GlobalMapProps {
   selectedPinId: string | null;
@@ -41,7 +42,7 @@ export default function GlobalMap({
           
           {/* Geographically Accurate World Map Base */}
           <img
-            src="/src/assets/images/minimalist_world_map_1779955959002.png"
+            src={globalWorldMap}
             alt="Global Logistics Base Map"
             className="absolute inset-0 w-full h-full object-contain opacity-[0.8] select-none pointer-events-none"
             referrerPolicy="no-referrer"
