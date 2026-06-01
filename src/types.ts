@@ -9,6 +9,7 @@ export interface DoughItem {
   statusText: string;
   barcode: string;
   category: "master" | "global";
+  subCategory: "hard" | "pastry" | "soft";
   imageLabel: string;
   iconBg: string;
   // Recommended baking settings

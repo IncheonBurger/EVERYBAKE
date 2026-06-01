@@ -59,7 +59,7 @@ export const DoughCard: React.FC<DoughCardProps> = ({
           <div className="absolute inset-0 opacity-[0.03] select-none pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:10px_10px]" />
           
           <span className="text-3xl filter drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
-            {item.id === "m-001" ? "🥐" : item.id === "m-002" ? "🍎" : item.id === "m-003" ? "🍫" : item.id === "g-001" ? "🍈" : "🥖"}
+            {Array.from(item.imageLabel)[0] || "🍞"}
           </span>
           <span className="text-xs font-bold text-stone-500 mt-2 tracking-wide font-mono uppercase bg-white/70 px-2 py-0.5 rounded-full shadow-xs">
             {item.imageLabel}

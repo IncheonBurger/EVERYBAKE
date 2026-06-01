@@ -43,11 +43,11 @@ import DoughCard from "./components/DoughCard";
 import PartnerPortal from "./components/PartnerPortal";
 import { CURATED_DOUGHS } from "./data";
 import { DoughItem } from "./types";
-import ovenImage from "./assets/images/smart_pro_oven_1780278141890.png";
+import ovenImage from "./assets/images/stainless_steel_combo_oven_1780301837442.png";
 import warmBakingFamilyImage from "./assets/images/warm_baking_family_1780289855930.png";
 import artisanBakerDetailImage from "./assets/images/artisan_baker_detail_1780289872811.png";
 import modernSmartOvenImage from "./assets/images/modern_smart_oven_close_1780289886400.png";
-import kctActualOvenStoryImage from "./assets/images/kct_actual_oven_story_1780296704183.png";
+import kctActualOvenStoryImage from "./assets/images/stainless_steel_combo_oven_1780301837442.png";
 
 interface CartItem {
   item: DoughItem;
@@ -280,7 +280,7 @@ export default function App() {
   const globalDoughs = CURATED_DOUGHS.filter(d => d.category === "global");
   
   // Tasty pick can filter customized or highly requested catalog items! 
-  const tastyPickDoughs = CURATED_DOUGHS.filter(d => d.id === "m-002" || d.id === "g-001");
+  const tastyPickDoughs = CURATED_DOUGHS.filter(d => d.id === "m-001" || d.id === "m-002" || d.id === "g-001" || d.id === "h-001" || d.id === "s-001" || d.id === "p-001" || d.id === "h-002");
 
   // Dynamic products rendering depending on what tab is selected
   const getTabDoughs = () => {
@@ -353,6 +353,7 @@ export default function App() {
         statusText: "동기화 즉시 배송",
         barcode: `880${Math.floor(1000000000 + Math.random() * 9000000000)}`,
         category: "global",
+        subCategory: "soft",
         imageLabel: "📦 비주얼 B2B 수급 원재료",
         iconBg: "bg-amber-100/60",
         settings: {
@@ -405,6 +406,7 @@ export default function App() {
       statusText: "당일 즉시 공급 가능",
       barcode: `880${Math.floor(1000000000 + Math.random() * 9000000000)}`,
       category: "global",
+      subCategory: "soft",
       imageLabel: "📦 비주얼 원재료 보장",
       iconBg,
       settings: {
@@ -864,13 +866,13 @@ export default function App() {
             </div>
 
             {/* Smart hardware product grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
               <div 
                 onClick={() => handleNav("equip-detail")}
-                className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:border-[#2563eb] hover:shadow-xl transition-all cursor-pointer group"
+                className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:border-[#2563eb] hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full"
               >
-                <div className="w-full bg-[#f8fafc] rounded-2xl py-12 mb-6 flex items-center justify-center relative overflow-hidden group-hover:bg-blue-50/20 transition-colors">
-                  <span className="absolute top-3 left-3 bg-[#2563eb] text-white text-[10px] font-extrabold tracking-wider px-3 py-1 rounded-full uppercase">
+                <div className="w-full bg-[#f8fafc] rounded-2xl h-72 mb-6 flex items-center justify-center relative overflow-hidden group-hover:bg-blue-50/20 transition-colors">
+                  <span className="absolute top-3 left-3 bg-[#2563eb] text-white text-[10px] font-extrabold tracking-wider px-3 py-1 rounded-full uppercase z-10">
                     KCT 독점판매
                   </span>
                   
@@ -880,29 +882,31 @@ export default function App() {
                   <img
                     src={ovenImage}
                     alt="KCT Smart Pro (All-in-one)"
-                    className="h-[400px] w-auto object-contain rounded-xl filter drop-shadow-lg group-hover:scale-[1.02] transition-transform duration-500"
+                    className="h-60 w-auto object-contain rounded-xl filter drop-shadow-md group-hover:scale-[1.02] transition-transform duration-500"
                     referrerPolicy="no-referrer"
                   />
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#2563eb] text-[10px] font-bold">
-                      <Cpu className="w-3.5 h-3.5 animate-pulse" /> AI 모듈 내장형 기기
-                    </span>
-                    <span className="text-stone-400 text-xs font-medium font-mono">CODE: KCT-SM-PRO (Height: 170cm)</span>
+                <div className="space-y-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#2563eb] text-[10px] font-bold">
+                        <Cpu className="w-3.5 h-3.5 animate-pulse" /> AI 모듈 내장형 기기
+                      </span>
+                      <span className="text-stone-400 text-xs font-medium font-mono">CODE: KCT-SM-PRO</span>
+                    </div>
+
+                    <h3 className="text-lg font-black text-stone-900 group-hover:text-[#2563eb] transition-colors mb-2 text-left">
+                      KCT 수직형 AI 도우컨디셔너+오븐 일체형 [Smart Pro] (170cm)
+                    </h3>
+                    
+                    <p className="text-stone-550 text-xs leading-relaxed text-left">
+                      좁은 1인 매장의 한계 공간을 혁신적으로 극복하는 170cm 초대형 수직 올인원 스테이션. 하부 도우컨디셔너(해동·발효)와 상부 오븐 모듈이 전용 통신 칩으로 바코드 데이터와 즉시 조정되는 명장 인증 하드웨어입니다.
+                    </p>
                   </div>
 
-                  <h3 className="text-xl font-black text-stone-900 group-hover:text-[#2563eb] transition-colors">
-                    KCT 수직형 AI 도우컨디셔너+오븐 일체형 [Smart Pro] (170cm)
-                  </h3>
-                  
-                  <p className="text-stone-500 text-xs leading-relaxed">
-                    좁은 1인 매장의 한계 공간을 혁신적으로 극복하는 170cm 초대형 수직 올인원 스테이션. 하부 도우컨디셔너(해동·발효)와 상부 오븐 모듈이 전용 통신 칩으로 바코드 데이터와 즉시 연집 조정되는 명장 인증 하드웨어입니다.
-                  </p>
-
-                  <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
-                    <div className="flex flex-col">
+                  <div className="pt-4 border-t border-stone-100 flex items-center justify-between mt-4">
+                    <div className="flex flex-col text-left">
                       <span className="text-[10px] text-stone-400 font-bold uppercase">B2B 대리점 특판가</span>
                       <span className="text-base font-black text-stone-900 font-mono">₩ 6,500,000</span>
                     </div>
@@ -914,21 +918,42 @@ export default function App() {
               </div>
 
               {/* Auxiliary teaser device */}
-              <div className="bg-white rounded-3xl p-6 border border-stone-250/60 shadow-xs opacity-75 flex flex-col justify-between">
-                <div className="h-60 rounded-2xl bg-stone-100 mb-6 flex flex-col items-center justify-center text-center p-6 border border-dashed border-stone-200">
+              <div className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs opacity-75 flex flex-col justify-between h-full">
+                <div className="w-full bg-[#f8fafc] rounded-2xl h-72 mb-6 flex flex-col items-center justify-center text-center p-6 border border-dashed border-stone-200 relative overflow-hidden">
                   <Laptop className="w-12 h-12 text-stone-400 mb-3" />
                   <span className="text-xs font-bold text-stone-500 mb-1">KCT Mini Oven Concept</span>
                   <span className="text-[10px] text-stone-400 max-w-xs uppercase font-mono tracking-wider bg-stone-200 px-2.5 py-0.5 rounded">
                     상용화 R&D 평가 단계
                   </span>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-base font-bold text-stone-800">
-                    KCT 스마트 무선 스팀 프레스기 (미니 쇼케이스)
-                  </h3>
-                  <p className="text-xs text-stone-500 leading-relaxed">
-                    카페 카운터 미니 쇼케이스 장형 배치에 맞춘 콤팩트 데스크톱 디바이스로, 소량 냉동 크로플 및 타르트 자동 소킹을 담당합니다.
-                  </p>
+                
+                <div className="space-y-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 text-stone-600 rounded-full text-[10px] font-bold">
+                        개념 설계용 디바이스
+                      </span>
+                      <span className="text-stone-400 text-xs font-medium font-mono">CODE: KCT-MINI-01</span>
+                    </div>
+
+                    <h3 className="text-lg font-bold text-stone-800 mb-2 text-left">
+                      KCT 스마트 무선 스팀 프레스기 (미니 쇼케이스)
+                    </h3>
+                    
+                    <p className="text-stone-500 text-xs leading-relaxed text-left">
+                      카페 카운터 미니 쇼케이스 장형 배치에 맞춘 콤팩트 데스크톱 디바이스로, 소량 냉동 크로플 및 타르트 자동 소킹을 담당합니다.
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-stone-100 flex items-center justify-between mt-4">
+                    <div className="flex flex-col text-left">
+                      <span className="text-[10px] text-stone-400 font-bold uppercase">예상 보급형 가격대</span>
+                      <span className="text-base font-bold text-stone-600 font-mono">출시 예정</span>
+                    </div>
+                    <span className="text-xs font-bold text-stone-400 flex items-center gap-1 py-1.5 px-3 bg-stone-100 rounded-lg">
+                      상용화 준비중
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -955,25 +980,12 @@ export default function App() {
               </div>
             </div>
 
-            {/* Apple style central stacked layout */}
-            <div className="flex flex-col items-center w-full">
+            {/* High-end side-by-side 2-Column Product Detail Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full mb-16">
               
-              {/* SECTION 1: Pure Hero Visual Showcase */}
-              <div className="w-full text-center py-8">
-                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-widest text-[#2563eb] mb-4 bg-blue-50/60 px-3.5 py-1.5 rounded-full border border-blue-100/50 font-mono">
-                  THE NEW BENCHMARK OF ARTISAN BAKING
-                </span>
-
-                <h1 className="text-4xl sm:text-6xl font-black text-stone-900 tracking-tight leading-tight mb-4 font-sans">
-                  KCT Smart Pro
-                </h1>
-                
-                <p className="text-stone-550 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-semibold mb-10">
-                  성인 키 높이의 170cm 수직 올인원 스테이션. 단 1평의 남는 매장 공간에서 명장의 비법 발효 데이터와 고화력 열 소성 제어로 완벽한 황금빛 크러스트를 스스로 창정해냅니다.
-                </p>
-
-                {/* Spectacular premium rendering presentation with light glow */}
-                <div className="w-full max-w-2xl bg-stone-50 rounded-[40px] px-6 py-12 flex items-center justify-center relative overflow-hidden mb-12 border border-stone-150/80 shadow-xs mx-auto">
+              {/* Left Column: Premium Showpiece Image Gallery */}
+              <div className="lg:col-span-6 w-full">
+                <div className="w-full bg-stone-50 rounded-[40px] px-8 py-16 flex items-center justify-center relative overflow-hidden border border-stone-150/80 shadow-xs">
                   <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
                   
                   {/* Subtle luxurious background accent */}
@@ -983,73 +995,91 @@ export default function App() {
                   <img
                     src={ovenImage}
                     alt="KCT Smart Pro Premium Showpiece"
-                    className="h-[420px] sm:h-[580px] w-auto object-contain filter drop-shadow-[0_24px_40px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-transform duration-700 ease-out rounded-2xl"
+                    className="h-[360px] md:h-[500px] w-auto object-contain filter drop-shadow-[0_24px_40px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-transform duration-700 ease-out rounded-2xl"
                     referrerPolicy="no-referrer"
                   />
                 </div>
+              </div>
 
-                {/* Centered, simple, linear single-column spec details */}
-                <div className="w-full max-w-2xl mx-auto text-left space-y-8 mb-12 border-b border-stone-100 pb-12 px-2">
-                  <div className="space-y-1 text-center">
-                    <span className="text-[10px] font-black text-stone-400 tracking-widest uppercase font-mono">CORE SPECIFICATION</span>
-                    <h2 className="text-xl font-bold text-stone-900 mb-6">주요 제원 및 기술 규격</h2>
+              {/* Right Column: Key Details, Specification, and Purchase */}
+              <div className="lg:col-span-6 w-full space-y-6 text-left">
+                <div>
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-[#2563eb] mb-3 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 font-mono">
+                    KCT EXCLUSIVE · AI SMART HARDWARE
+                  </span>
+
+                  <h1 className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight leading-tight mb-3">
+                    KCT Smart Pro
+                  </h1>
+                  
+                  <div className="flex items-center justify-between pb-4 border-b border-stone-100 mb-4">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50/50 text-[#2563eb] text-[10px] font-bold">
+                      <Cpu className="w-3.5 h-3.5 animate-pulse" /> AI 모듈 & 바코드 연동 탑재형 기기
+                    </span>
+                    <span className="text-stone-400 text-xs font-semibold font-mono">KCT-SM-PRO (170cm)</span>
                   </div>
 
-                  <div className="divide-y divide-stone-100/80">
-                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
-                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Chamber Height</span>
+                  <p className="text-stone-550 text-sm leading-relaxed font-semibold">
+                    성인 키 높이의 170cm 수직 올인원 스테이션. 전용 통신 칩이 대량 제과 명인의 냉동 생지 바코드 데이터를 수신하여 실시간 숙성 발효 및 고화력 열 소성을 정밀 조정해냅니다. 단 1평 공간에 최적화된 명장 인증 하드웨어입니다.
+                  </p>
+                </div>
+
+                {/* Key specs list */}
+                <div className="space-y-4 pt-2">
+                  <h3 className="text-xs font-black text-stone-400 tracking-widest uppercase font-mono">TECHNICAL SPECIFICATIONS</h3>
+                  
+                  <div className="divide-y divide-stone-100 border-t border-b border-stone-100">
+                    <div className="py-3 flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                      <span className="text-[11px] font-bold text-stone-400 uppercase w-32 font-mono tracking-wider pt-0.5">Chamber Height</span>
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-stone-900">170cm 초대형 수직 규격</p>
-                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">서서 작업하는 작업자의 최적 관절 각도를 배려하여 쾌적한 주방 동선과 인체공학적 피로 저하를 극대화한 구조 배치입니다.</p>
+                        <p className="text-xs font-bold text-stone-900">170cm 인체공학적 수직 배치</p>
+                        <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">서서 작업하는 작업자의 최적 관절 감각과 매장 내 쾌적한 보행 선형을 극대화한 스마트 챔버.</p>
                       </div>
                     </div>
 
-                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
-                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Connectivity</span>
+                    <div className="py-3 flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                      <span className="text-[11px] font-bold text-stone-400 uppercase w-32 font-mono tracking-wider pt-0.5">Connectivity</span>
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-stone-900">생지 바코드 자동 전송 WiFi 칩</p>
-                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">대량 공급되는 전국 제과 명인의 냉동 생지 바코드를 태크하면 맞춤 온습도 지수가 기기에 스스로 무선 세팅 완료됩니다.</p>
+                        <p className="text-xs font-bold text-stone-900">자동 동기화 무선 WiFi 칩 내장</p>
+                        <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">자체 바코드 센서와 전용 태블릿 앱 데이터 연집 방식으로 오븐/발효 세팅 자동 조율.</p>
                       </div>
                     </div>
 
-                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
-                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Fermentation System</span>
+                    <div className="py-3 flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                      <span className="text-[11px] font-bold text-stone-400 uppercase w-32 font-mono tracking-wider pt-0.5">Fermentation</span>
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-stone-900">AI 능동형 온습도 감측 센서</p>
-                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">매 순간의 계절성 실외 기압과 주방 내부 온도 격차를 민감하게 추적해 복잡한 이스트 활성화를 안전하게 조화 조율합니다.</p>
+                        <p className="text-xs font-bold text-stone-900">AI 능동 온습도 제어 시스템</p>
+                        <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">바깥 기온과 미세 수분 차이를 파악하여 이스트 발효 팽창력을 최상으로 유지하는 인공 지능 기법.</p>
                       </div>
                     </div>
 
-                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
-                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Baking Power</span>
+                    <div className="py-3 flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                      <span className="text-[11px] font-bold text-stone-400 uppercase w-32 font-mono tracking-wider pt-0.5">Baking Power</span>
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-stone-900">스팀 정밀 에이징 세라믹 플레이트</p>
-                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">유럽 아티장 스타일 하드 빵 구현을 위해 고온 압력 스팀 분사 노즐과 세라믹 하우징 오븐 플레이트가 만나 고귀한 크러스트를 생성합니다.</p>
+                        <p className="text-xs font-bold text-stone-900">고안개 고압 스팀 분출 & 세라믹 하우징</p>
+                        <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">정밀 아티장 스타일 브리오슈와 바게트 등 크러스트 형성을 위하 스팀 다류 통제 기능 기본 제공.</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Apple pricing details */}
-                <div className="max-w-2xl mx-auto space-y-4 mb-16">
-                  <div className="text-xs font-black uppercase tracking-wider text-stone-400 font-mono">EVERYBAKE PARTNER PRICE</div>
-                  <div className="flex flex-col justify-center items-center">
-                    <div className="text-center">
-                      <div className="text-sm text-[#2563eb] font-bold leading-none">B2B 결제 파트너 일시불가</div>
-                      <div className="text-4xl sm:text-5xl font-black text-stone-900 font-mono mt-2">₩ 6,500,000</div>
-                    </div>
+                {/* Purchase Area */}
+                <div className="bg-stone-50 rounded-2xl p-5 border border-stone-150/80 flex flex-col sm:flex-row justify-between items-center gap-4">
+                  <div className="text-left w-full sm:w-auto">
+                    <span className="text-[9px] font-black tracking-widest text-[#2563eb] uppercase font-mono block">PARTNER PRICING</span>
+                    <span className="text-xs text-stone-450 font-bold block mt-0.5">B2B 결제 전용 대리점 특판가</span>
+                    <span className="text-2xl sm:text-3xl font-black text-stone-900 font-mono tracking-tight block mt-1">₩ 6,500,000</span>
                   </div>
 
-                  <div className="pt-4 flex justify-center items-center">
-                    <button
-                      onClick={() => handleAddCustomToCart("eq-pro-01", "KCT Smart Pro (All-in-one)", 6500000, "bg-blue-50 text-[#2563eb]", "KCT Systems")}
-                      className="w-full sm:w-auto px-12 py-4 bg-stone-900 hover:bg-black text-white text-xs font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-md shadow-stone-800/20"
-                    >
-                      장바구니 담고 즉시 주문서 작성
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleAddCustomToCart("eq-pro-01", "KCT Smart Pro (All-in-one)", 6500000, "bg-blue-50 text-[#2563eb]", "KCT Systems")}
+                    className="w-full sm:w-auto px-6 py-3 bg-stone-900 hover:bg-black text-white text-xs font-black rounded-xl cursor-pointer transition-all active:scale-95 shadow-md shadow-stone-800/20 h-11 flex items-center justify-center"
+                  >
+                    장바구니 담고 즉시 주문서 작성
+                  </button>
                 </div>
               </div>
+            </div>
 
               {/* SECTION 2: APPLE-STYLE LINEAR STORYTELLING FLOW WITH MULTIPLE PREMIUM IMAGES */}
               <div className="w-full py-16 border-t border-stone-200/70 space-y-24">
@@ -1371,8 +1401,7 @@ export default function App() {
               </div>
 
             </div>
-          </div>
-        )}
+          )}
 
         {/* ==================================================== */}
         {/* 4. PREMIUM DOUGH MAIN VIEW (Interactive Map System)  */}
@@ -1499,25 +1528,123 @@ export default function App() {
                     <p className="text-xs text-stone-400">지정된 로케이션 상의 검증된 생지 원재료 노드가 비활성화 상태입니다.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {getTabDoughs().map((dough) => (
-                      <div key={dough.id} className="relative group">
-                        {/* Interactive custom built card matching schema */}
-                        <DoughCard
-                          item={dough}
-                          onAddToCart={handleAddToCart}
-                          onToggleNotification={handleToggleNotification}
-                          isNotificationApplied={notifications.includes(dough.id)}
-                          onScanShortcut={handleScanShortcut}
-                          activeInOven={ovenActiveDoughId === dough.id}
-                          onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
-                          onViewStory={(id) => {
-                            setSelectedDoughId(id);
-                            handleNav("dough-detail");
-                          }}
-                        />
+                  <div className="space-y-12">
+                    {/* 1. 하드 계열 (식사빵류) Section */}
+                    {getTabDoughs().filter(d => d.subCategory === "hard").length > 0 && (
+                      <div className="space-y-4">
+                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
+                              <span className="bg-blue-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">01</span>
+                              하드 계열 (식사빵류)
+                            </h3>
+                            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100/60 font-mono">
+                              오븐의 스팀 기능 & 발효 극대화 품격 💨
+                            </span>
+                          </div>
+                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                            유럽식 주식 빵으로, 담백한 맛이 특징이며 샌드위치 베이스로 많이 쓰입니다. 오븐의 스팀 기능과 발효가 매우 중요합니다. 대표 품목: 바게트, 치아바타, 깜빠뉴, 베이글, 프레첼 등
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          {getTabDoughs().filter(d => d.subCategory === "hard").map((dough) => (
+                            <div key={dough.id} className="relative group">
+                              <DoughCard
+                                item={dough}
+                                onAddToCart={handleAddToCart}
+                                onToggleNotification={handleToggleNotification}
+                                isNotificationApplied={notifications.includes(dough.id)}
+                                onScanShortcut={handleScanShortcut}
+                                activeInOven={ovenActiveDoughId === dough.id}
+                                onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                onViewStory={(id) => {
+                                  setSelectedDoughId(id);
+                                  handleNav("dough-detail");
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))}
+                    )}
+
+                    {/* 2. 페이스트리 계열 (비에누아즈리) Section */}
+                    {getTabDoughs().filter(d => d.subCategory === "pastry").length > 0 && (
+                      <div className="space-y-4">
+                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
+                              <span className="bg-amber-500 text-stone-950 text-[10px] uppercase font-mono px-2 py-0.5 rounded">02</span>
+                              페이스트리 계열 (비에누아즈리)
+                            </h3>
+                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100/60 font-mono">
+                              도우컨디셔너 정밀 온도/습도 관리 필수 ❄️
+                            </span>
+                          </div>
+                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                            버터 함량이 높아 겹겹이 결이 살아있는 빵입니다. 버터가 녹지 않도록 도우컨디셔너의 정밀한 온도/습도 관리가 필수적인 품종입니다. 대표 품목: 크루아상, 뺑오쇼콜라, 데니쉬, 크로플 등
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          {getTabDoughs().filter(d => d.subCategory === "pastry").map((dough) => (
+                            <div key={dough.id} className="relative group">
+                              <DoughCard
+                                item={dough}
+                                onAddToCart={handleAddToCart}
+                                onToggleNotification={handleToggleNotification}
+                                isNotificationApplied={notifications.includes(dough.id)}
+                                onScanShortcut={handleScanShortcut}
+                                activeInOven={ovenActiveDoughId === dough.id}
+                                onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                onViewStory={(id) => {
+                                  setSelectedDoughId(id);
+                                  handleNav("dough-detail");
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 3. 소프트 계열 (간식 및 조리빵류) Section */}
+                    {getTabDoughs().filter(d => d.subCategory === "soft").length > 0 && (
+                      <div className="space-y-4">
+                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
+                              <span className="bg-emerald-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">03</span>
+                              소프트 계열 (간식 및 조리빵류)
+                            </h3>
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100/60 font-mono">
+                              부드러운 식감 & 대중성 · 빠른 회전율 보증 🍞
+                            </span>
+                          </div>
+                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                            부드러운 식감으로 대중성이 높고 회전율이 빠른 기본 품종들입니다. 대표 품목: 우유/탕종식빵, 단팥빵, 소보로, 명란바게트, 소금빵(수요 증가에 따라 최적화) 등
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          {getTabDoughs().filter(d => d.subCategory === "soft").map((dough) => (
+                            <div key={dough.id} className="relative group">
+                              <DoughCard
+                                item={dough}
+                                onAddToCart={handleAddToCart}
+                                onToggleNotification={handleToggleNotification}
+                                isNotificationApplied={notifications.includes(dough.id)}
+                                onScanShortcut={handleScanShortcut}
+                                activeInOven={ovenActiveDoughId === dough.id}
+                                onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                onViewStory={(id) => {
+                                  setSelectedDoughId(id);
+                                  handleNav("dough-detail");
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
