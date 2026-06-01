@@ -10,6 +10,7 @@ interface DoughCardProps {
   onScanShortcut: (id: string) => void;
   activeInOven: boolean;
   onHoverCard: (region: string | null) => void;
+  onViewStory?: (id: string) => void;
 }
 
 export const DoughCard: React.FC<DoughCardProps> = ({
@@ -20,6 +21,7 @@ export const DoughCard: React.FC<DoughCardProps> = ({
   onScanShortcut,
   activeInOven,
   onHoverCard,
+  onViewStory,
 }) => {
   
   // Format price into elegant KRW
@@ -112,6 +114,16 @@ export const DoughCard: React.FC<DoughCardProps> = ({
             기기 바코드 주입 ⇡
           </button>
         </div>
+
+        {onViewStory && (
+          <button
+            type="button"
+            onClick={() => onViewStory(item.id)}
+            className="w-full mb-2 py-2 bg-orange-50/60 hover:bg-orange-50 text-[#f97316] hover:text-[#ea580c] rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-orange-100"
+          >
+            <span>📜 제품 스토리 & 상세설명 보기 ↗</span>
+          </button>
+        )}
 
         {item.stockStatus === "out" ? (
           <button

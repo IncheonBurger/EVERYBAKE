@@ -124,13 +124,9 @@ export const CURATED_DOUGHS: DoughItem[] = [
 ];
 
 export const MAP_PINS_KOREA = [
-  { id: "m-002", city: "서울", master: "박준현 명장", top: "28%", left: "42%", active: true },
-  { id: "m-003", city: "전주", master: "이영철 명장", top: "56%", left: "43%", active: true },
-  { id: "m-001", city: "부산", master: "김대한 명장", top: "72%", left: "74%", active: true },
-  { id: "daegu", city: "대구", master: "영남 테크노 파크 노드", top: "62%", left: "68%", active: false },
-  { id: "daejeon", city: "대전", master: "중부 물류 통합 거점", top: "46%", left: "51%", active: false },
-  { id: "gwangju", city: "광주", master: "호남 스마트 저장 챔버", top: "68%", left: "38%", active: false },
-  { id: "jeju", city: "제주", master: "서귀포 천연 효소 배양소", top: "91%", left: "34%", active: false },
+  { id: "m-002", city: "서울", master: "박준현 명장", top: "23%", left: "36%", active: true },
+  { id: "m-003", city: "전주", master: "이영철 명장", top: "55%", left: "38%", active: true },
+  { id: "m-001", city: "부산", master: "김대한 명장", top: "75%", left: "76%", active: true },
 ];
 
 export const MAP_PINS_GLOBAL = [

@@ -15,30 +15,30 @@ export default function GlobalMap({
   activeRegion,
 }: GlobalMapProps) {
   return (
-    <div className="w-full bg-white rounded-3xl p-6 relative overflow-hidden h-[450px] flex flex-col justify-between shadow-2xl border border-stone-200">
+    <div className="w-full bg-white rounded-3xl p-6 relative overflow-hidden h-[500px] md:h-[540px] flex flex-col justify-between shadow-2xl border border-stone-200">
       
       {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none select-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]" />
-
+ 
       {/* Map Heading */}
-      <div className="z-10 flex justify-between items-start">
+      <div className="z-10 flex flex-col sm:flex-row justify-between items-start gap-4">
         <div>
-          <span className="text-[10px] uppercase tracking-widest font-extrabold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100 flex items-center gap-1.5 w-fit">
-            <Globe2 className="w-3.5 h-3.5 text-blue-500 animate-spin-slow" />
+          <span className="inline-flex text-xs sm:text-sm uppercase tracking-widest font-extrabold text-blue-600 bg-blue-50 px-3.5 py-1.5 rounded-lg border border-blue-100 items-center gap-1.5 w-fit whitespace-nowrap">
+            <Globe2 className="w-4 h-4 text-blue-500 animate-spin-slow" />
             KCT Global Network Gateway
           </span>
-          <h3 className="text-stone-900 text-lg font-black mt-2">
+          <h3 className="text-stone-900 text-xl sm:text-2.5xl font-black mt-2 font-sans tracking-tight">
             글로벌 콜드체인 원료 수급 연동망
           </h3>
-          <p className="text-stone-500 text-xs mt-0.5">
+          <p className="text-stone-500 text-xs mt-0.5 font-medium">
             전 세계 유명 베이커리의 생지와 품질 데이터를 완벽하게 수집 및 항공 관제 연동합니다.
           </p>
         </div>
       </div>
-
+ 
       {/* Scale-locked contained Map Sandbox to verify perfect bounding and alignment */}
-      <div className="absolute inset-x-0 top-[90px] bottom-[72px] flex items-center justify-center select-none overflow-hidden p-4">
-        <div className="relative w-full h-full max-w-[500px] max-h-[280px] aspect-[1.8/1] flex items-center justify-center">
+      <div className="absolute inset-x-0 top-[110px] bottom-[72px] flex items-center justify-center select-none overflow-hidden p-4">
+        <div className="relative w-full h-full max-w-[640px] max-h-[340px] aspect-[1.8/1] flex items-center justify-center">
           
           {/* Geographically Accurate World Map Base */}
           <img

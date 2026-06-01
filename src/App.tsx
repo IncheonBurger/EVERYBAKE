@@ -1124,17 +1124,17 @@ export default function App() {
                     : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
                 }`}
               >
-                KCT 테이스티 픽 (맛 보장 베스트) ⭐
+                에브리베이크 테이스트 픽 (맛 보장 베스트) ⭐
               </button>
             </div>
 
-            {/* Interactive geographic sync layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+            {/* Interactive geographic sync layout - Integrated Stacked Layout */}
+            <div className="flex flex-col gap-10 mb-12 max-w-4xl mx-auto w-full">
               
-              {/* Map Column */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="bg-white rounded-3xl p-4 border border-stone-200/80 shadow-md">
-                  <h3 className="text-xs font-bold text-stone-400 mb-2 uppercase tracking-wider text-center">원재료 추적성 스마트 허브 관제</h3>
+              {/* Map Column (Generous display) */}
+              <div className="w-full space-y-4">
+                <div className="bg-white rounded-3xl p-5 border border-stone-200 shadow-xl">
+                  <h3 className="text-xs font-black text-stone-400 mb-3.5 uppercase tracking-widest text-center">원재료 실시간 위치 추적 스마트 관제</h3>
                   {activeDoughTab === "master" ? (
                     <KoreaMap
                       selectedPinId={selectedKoreaPin}
@@ -1148,30 +1148,30 @@ export default function App() {
                       activeRegion={hoveredRegion}
                     />
                   ) : (
-                    <div className="h-[450px] bg-sky-50 rounded-2xl border border-sky-100 flex flex-col items-center justify-center p-6 text-center space-y-4">
-                      <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-3xl shadow-sm">
-                        ✨
+                    <div className="h-[450px] md:h-[500px] bg-amber-50/40 rounded-3xl border border-amber-100 flex flex-col items-center justify-center p-8 text-center space-y-4 shadow-inner animate-fade-in">
+                      <div className="w-20 h-20 rounded-2xl bg-white border border-amber-100 flex items-center justify-center text-4xl shadow-md animate-bounce">
+                        ⭐
                       </div>
-                      <h4 className="text-stone-900 font-bold">KCT 테이스티 픽 관제 해제</h4>
-                      <p className="text-stone-500 text-xs leading-relaxed max-w-xs">
-                        맛 보장 테이스티 픽 라인업은 지역 상관없이 전국의 유명 가맹 사장님들 후기 만족도 점수가 4.98점에 달하는 독보적인 베스트 제품들만을 무작위 엄선했습니다.
+                      <h4 className="text-stone-900 text-xl font-black font-sans">에브리베이크 테이스트 픽</h4>
+                      <p className="text-stone-600 text-xs sm:text-sm leading-relaxed max-w-md font-medium">
+                        <strong>맛 보장 에브리베이크 테이스트 픽</strong> 라인업은 특정 지리적 연동에 구애받지 않고 전국 유명 베이커리 매장의 사장님들로부터 만족도 평점 4.98점을 획득한 프리미엄 베스트 셀러들만을 완벽 엄선한 컬렉션입니다.
                       </p>
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Product Catalog Cards Column */}
-              <div className="lg:col-span-7">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs font-bold text-stone-400">
-                    조회된 파트너 상품 ({getTabDoughs().length}개)
+              {/* Product Catalog Cards Column (Natural vertical follow) */}
+              <div className="w-full">
+                <div className="flex justify-between items-center mb-5 pb-3 border-b border-stone-150">
+                  <span className="text-sm font-black text-stone-800">
+                    조회된 파트너 생지 목록 ({getTabDoughs().length}개)
                   </span>
                   
                   {activeDoughTab === "master" && selectedKoreaPin && (
                     <button 
                       onClick={() => setSelectedKoreaPin(null)}
-                      className="text-xs text-[#2563eb] font-semibold hover:underline bg-transparent"
+                      className="text-xs text-[#2563eb] font-bold hover:underline bg-transparent"
                     >
                       지역 연동 필터 초기화
                     </button>
@@ -1179,7 +1179,7 @@ export default function App() {
                   {activeDoughTab === "global" && selectedGlobalPin && (
                     <button 
                       onClick={() => setSelectedGlobalPin(null)}
-                      className="text-xs text-[#2563eb] font-semibold hover:underline bg-transparent"
+                      className="text-xs text-[#2563eb] font-bold hover:underline bg-transparent"
                     >
                       국가 연동 필터 초기화
                     </button>
@@ -1196,15 +1196,6 @@ export default function App() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {getTabDoughs().map((dough) => (
                       <div key={dough.id} className="relative group">
-                        
-                        {/* Wrapper for clicking details */}
-                        <div onClick={() => {
-                          setSelectedDoughId(dough.id);
-                          handleNav("dough-detail");
-                        }} className="cursor-pointer mb-2 absolute top-2 right-2 z-10 bg-white/90 hover:bg-[#2563eb] hover:text-white border border-stone-200 hover:border-blue-600 text-stone-600 text-[10px] font-bold px-3 py-1 rounded-full transition-all">
-                          스토리 보기 ↗
-                        </div>
-
                         {/* Interactive custom built card matching schema */}
                         <DoughCard
                           item={dough}
@@ -1214,6 +1205,10 @@ export default function App() {
                           onScanShortcut={handleScanShortcut}
                           activeInOven={ovenActiveDoughId === dough.id}
                           onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                          onViewStory={(id) => {
+                            setSelectedDoughId(id);
+                            handleNav("dough-detail");
+                          }}
                         />
                       </div>
                     ))}
