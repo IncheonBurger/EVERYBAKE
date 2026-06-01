@@ -47,6 +47,7 @@ import ovenImage from "./assets/images/smart_pro_oven_1780278141890.png";
 import warmBakingFamilyImage from "./assets/images/warm_baking_family_1780289855930.png";
 import artisanBakerDetailImage from "./assets/images/artisan_baker_detail_1780289872811.png";
 import modernSmartOvenImage from "./assets/images/modern_smart_oven_close_1780289886400.png";
+import kctActualOvenStoryImage from "./assets/images/kct_actual_oven_story_1780296704183.png";
 
 interface CartItem {
   item: DoughItem;
@@ -959,8 +960,7 @@ export default function App() {
               
               {/* SECTION 1: Pure Hero Visual Showcase */}
               <div className="w-full text-center py-8">
-                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-widest text-[#f97316] mb-4 bg-orange-50/60 px-3.5 py-1.5 rounded-full border border-orange-100/50">
-                  <Sparkles className="w-3.5 h-3.5 text-[#f97316] animate-pulse" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-widest text-[#2563eb] mb-4 bg-blue-50/60 px-3.5 py-1.5 rounded-full border border-blue-100/50 font-mono">
                   THE NEW BENCHMARK OF ARTISAN BAKING
                 </span>
 
@@ -968,12 +968,12 @@ export default function App() {
                   KCT Smart Pro
                 </h1>
                 
-                <p className="text-stone-550 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-medium mb-10">
+                <p className="text-stone-550 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-semibold mb-10">
                   성인 키 높이의 170cm 수직 올인원 스테이션. 단 1평의 남는 매장 공간에서 명장의 비법 발효 데이터와 고화력 열 소성 제어로 완벽한 황금빛 크러스트를 스스로 창정해냅니다.
                 </p>
 
                 {/* Spectacular premium rendering presentation with light glow */}
-                <div className="w-full max-w-4xl bg-stone-50 rounded-[40px] px-6 py-16 flex items-center justify-center relative overflow-hidden mb-12 border border-stone-150/80 shadow-xs">
+                <div className="w-full max-w-2xl bg-stone-50 rounded-[40px] px-6 py-12 flex items-center justify-center relative overflow-hidden mb-12 border border-stone-150/80 shadow-xs mx-auto">
                   <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
                   
                   {/* Subtle luxurious background accent */}
@@ -983,65 +983,60 @@ export default function App() {
                   <img
                     src={ovenImage}
                     alt="KCT Smart Pro Premium Showpiece"
-                    className="h-[420px] sm:h-[600px] w-auto object-contain filter drop-shadow-[0_32px_50px_rgba(0,0,0,0.14)] hover:scale-[1.01] transition-transform duration-700 ease-out rounded-2xl"
+                    className="h-[420px] sm:h-[580px] w-auto object-contain filter drop-shadow-[0_24px_40px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-transform duration-700 ease-out rounded-2xl"
                     referrerPolicy="no-referrer"
                   />
-                  
-                  {/* Floating Specs Spec Sheets on the sides for desktop view (absolute) */}
-                  <div className="hidden lg:flex flex-col gap-6 absolute left-10 bottom-16 text-left max-w-xs">
-                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
-                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Chamber Height</div>
-                      <div className="text-sm font-extrabold text-stone-800">170cm 초대형 수직 규격</div>
-                      <div className="text-xs text-stone-500 mt-1">서서 일하는 작업자의 최적 관절 각도 정밀 배분</div>
-                    </div>
-                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
-                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Connectivity</div>
-                      <div className="text-sm font-extrabold text-stone-800">바코드 자동 전송 WiFi 칩</div>
-                      <div className="text-xs text-stone-500 mt-1">대량 전국 명인 생지 온습도 곡선 즉각 무선 세팅</div>
-                    </div>
-                  </div>
-
-                  <div className="hidden lg:flex flex-col gap-6 absolute right-10 bottom-16 text-left max-w-xs">
-                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
-                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Fermentation System</div>
-                      <div className="text-sm font-extrabold text-stone-800">AI 능동형 상태 감측 센서</div>
-                      <div className="text-xs text-stone-500 mt-1">대기 습도와 주위 환경 온도를 스스로 파악하는 효모 관리</div>
-                    </div>
-                    <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-stone-200/50 shadow-xs">
-                      <div className="text-[10px] font-black uppercase text-stone-400 font-mono">Baking Power</div>
-                      <div className="text-sm font-extrabold text-stone-800">스팀 분무 파워 컨트롤 세라믹</div>
-                      <div className="text-xs text-stone-500 mt-1">유럽식 아티장 하드 브레드 전용 즉각 고압 스팀 분배</div>
-                    </div>
-                  </div>
                 </div>
 
-                {/* Mobile visual specs list */}
-                <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto lg:hidden text-left mb-10">
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
-                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Chamber Height</span>
-                    <p className="text-xs font-bold text-stone-800">170cm 수직 규격</p>
+                {/* Centered, simple, linear single-column spec details */}
+                <div className="w-full max-w-2xl mx-auto text-left space-y-8 mb-12 border-b border-stone-100 pb-12 px-2">
+                  <div className="space-y-1 text-center">
+                    <span className="text-[10px] font-black text-stone-400 tracking-widest uppercase font-mono">CORE SPECIFICATION</span>
+                    <h2 className="text-xl font-bold text-stone-900 mb-6">주요 제원 및 기술 규격</h2>
                   </div>
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
-                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Connectivity</span>
-                    <p className="text-xs font-bold text-stone-800">바코드 무선 WiFi 연동</p>
-                  </div>
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
-                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Fermentation System</span>
-                    <p className="text-xs font-bold text-stone-800">AI 능동 온습도 감측</p>
-                  </div>
-                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/80">
-                    <span className="text-[9px] font-black text-stone-400 uppercase font-mono">Baking Power</span>
-                    <p className="text-xs font-bold text-stone-800">고압 스팀 분무 탑재</p>
+
+                  <div className="divide-y divide-stone-100/80">
+                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
+                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Chamber Height</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-stone-900">170cm 초대형 수직 규격</p>
+                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">서서 작업하는 작업자의 최적 관절 각도를 배려하여 쾌적한 주방 동선과 인체공학적 피로 저하를 극대화한 구조 배치입니다.</p>
+                      </div>
+                    </div>
+
+                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
+                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Connectivity</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-stone-900">생지 바코드 자동 전송 WiFi 칩</p>
+                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">대량 공급되는 전국 제과 명인의 냉동 생지 바코드를 태크하면 맞춤 온습도 지수가 기기에 스스로 무선 세팅 완료됩니다.</p>
+                      </div>
+                    </div>
+
+                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
+                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Fermentation System</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-stone-900">AI 능동형 온습도 감측 센서</p>
+                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">매 순간의 계절성 실외 기압과 주방 내부 온도 격차를 민감하게 추적해 복잡한 이스트 활성화를 안전하게 조화 조율합니다.</p>
+                      </div>
+                    </div>
+
+                    <div className="py-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
+                      <span className="text-xs font-black text-stone-400 uppercase w-48 font-mono tracking-wider pt-0.5">Baking Power</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-stone-900">스팀 정밀 에이징 세라믹 플레이트</p>
+                        <p className="text-xs text-stone-500 mt-1 leading-relaxed">유럽 아티장 스타일 하드 빵 구현을 위해 고온 압력 스팀 분사 노즐과 세라믹 하우징 오븐 플레이트가 만나 고귀한 크러스트를 생성합니다.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Apple pricing details */}
                 <div className="max-w-2xl mx-auto space-y-4 mb-16">
-                  <div className="text-xs font-black uppercase tracking-wider text-stone-400">EVERYBAKE PARTNER PRICE</div>
+                  <div className="text-xs font-black uppercase tracking-wider text-stone-400 font-mono">EVERYBAKE PARTNER PRICE</div>
                   <div className="flex flex-col justify-center items-center">
                     <div className="text-center">
-                      <div className="text-sm text-stone-500 leading-none">B2B 결제 파트너 일시불가</div>
-                      <div className="text-4xl sm:text-5xl font-black text-stone-900 font-mono mt-1.5">₩ 6,500,000</div>
+                      <div className="text-sm text-[#2563eb] font-bold leading-none">B2B 결제 파트너 일시불가</div>
+                      <div className="text-4xl sm:text-5xl font-black text-stone-900 font-mono mt-2">₩ 6,500,000</div>
                     </div>
                   </div>
 
@@ -1088,7 +1083,7 @@ export default function App() {
                       <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
                         30년 제빵 명인의 손가락 끝 감각, 그대로 내재화됩니다
                       </h3>
-                      <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
+                      <p className="text-stone-550 text-xs sm:text-sm leading-relaxed">
                         좋은 빵은 반죽의 은온과 구울 때 스며드는 미세 수분의 양에서 완벽함이 갈립니다. 전국구 명장이 가동을 통해 측정하던 발효 온습 곡선과 미세 수분 조절 설계 데이터를 디지털화하여, 초미풍 대류 팬과 세라믹 하우징 오븐이 최상의 한 판을 완성해 냅니다.
                       </p>
                     </div>
@@ -1111,7 +1106,7 @@ export default function App() {
                       <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
                         아침을 여는 소박한 행복, 엄마의 주방에서 피어난 따스한 웃음
                       </h3>
-                      <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
+                      <p className="text-stone-550 text-xs sm:text-sm leading-relaxed">
                         버터의 풍요로운 향기가 집안을 사르르 채우는 행복을 느껴보십시오. 조리 안전 차단 시스템이 어린 자녀들과의 소중한 베이킹 체험을 안전하게 수화하며, 전문가의 수고로운 매뉴얼 작업을 원터치 컨트롤 하나로 모두 줄여 주었습니다.
                       </p>
                     </div>
@@ -1122,8 +1117,8 @@ export default function App() {
                     {/* Immersive centered image */}
                     <div className="w-full rounded-[32px] overflow-hidden bg-stone-50 border border-stone-150 shadow-xs">
                       <img 
-                        src={modernSmartOvenImage} 
-                        alt="Minimalistic Apple-themed Design Close"
+                        src={kctActualOvenStoryImage} 
+                        alt="KCT Smart Pro Actual Product Showpiece"
                         className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
                         referrerPolicy="no-referrer"
                       />
@@ -1134,7 +1129,7 @@ export default function App() {
                       <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
                         대기 환경까지 스스로 측정 조절하는 극도로 정교한 발효
                       </h3>
-                      <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
+                      <p className="text-stone-550 text-xs sm:text-sm leading-relaxed">
                         주변 미세 습도와 주위의 사소한 계절성 온도 격차를 스스로 파악하여 효모가 안전하고 충만하게 부풀어 오르는 환경을 성립시킵니다. 수직 일체형 스테이션 디자인으로 공간 배치는 극도로 심플해지고 주방 동선은 탁월하게 개조됩니다.
                       </p>
                     </div>
