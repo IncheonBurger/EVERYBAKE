@@ -132,6 +132,32 @@ interface CommunityPost {
   votedByMe?: boolean;
 }
 
+interface PlazaComment {
+  id: string;
+  author: string;
+  role?: string;
+  content: string;
+  date: string;
+  isCustom?: boolean;
+}
+
+interface PlazaPost {
+  id: string;
+  category: "coop" | "used" | "share" | "job" | "interior";
+  title: string;
+  content: string;
+  author: string;
+  date: string;
+  location?: string;
+  detailInfo?: string;
+  targetAmount?: string;
+  priceInfo?: string;
+  urgentsInfo?: string;
+  participantsCount: number;
+  comments: PlazaComment[];
+  joinedByMe?: boolean;
+}
+
 export default function App() {
   // Navigation View Tracking
   // Current view can be: "home" | "equip-list" | "equip-detail" | "dough-main" | "dough-detail" | "coffee" | "community" | "inquiry" | "login" | "partner-portal"
@@ -274,6 +300,438 @@ export default function App() {
       date: "2026-05-15",
       votes: 56,
       status: "MD 검토 완료 (입점 예정)",
+    }
+  ]);
+
+  // States for 에브리베이크 알뜰 광장 (Flea Market Mutual Aid)
+  const [activeMainTab, setActiveMainTab] = useState<"why-not-sell" | "flea-market" | "interior">("why-not-sell");
+  const [activePlazaTab, setActivePlazaTab] = useState<"coop" | "used" | "share" | "job" | "interior">("coop");
+  const [selectedPlazaPostId, setSelectedPlazaPostId] = useState<string | null>(null);
+  
+  // Custom plaza post creation form states
+  const [newPlazaTitle, setNewPlazaTitle] = useState("");
+  const [newPlazaContent, setNewPlazaContent] = useState("");
+  const [newPlazaAuthor, setNewPlazaAuthor] = useState("");
+  const [newPlazaLocation, setNewPlazaLocation] = useState("");
+  const [newPlazaDetailInfo, setNewPlazaDetailInfo] = useState("");
+  const [newPlazaPriceInfo, setNewPlazaPriceInfo] = useState("");
+  const [newPlazaTargetAmount, setNewPlazaTargetAmount] = useState("");
+  const [newPlazaUrgentsInfo, setNewPlazaUrgentsInfo] = useState("");
+
+  // Plaza new comment input state
+  const [newPlazaCommentText, setNewPlazaCommentText] = useState("");
+  const [newPlazaCommentAuthor, setNewPlazaCommentAuthor] = useState("");
+
+  const [plazaPosts, setPlazaPosts] = useState<PlazaPost[]>([
+    // Category 1: coop (공동구매)
+    {
+      id: "plaza-coop-1",
+      category: "coop",
+      title: "📦 [공구 진행중] 손잡이형 크라프트 쇼핑백 대량 공동구매 (단가 40% 절감)",
+      content: "테이크아웃용 고품질 에코 무지 크라프트 쇼핑백 1만 개 타겟 대형 공동 발주를 개시합니다. 현재 참여도가 높아 단량 최대 혜택 확정되었습니다.",
+      author: "망원 브레드존 점주",
+      date: "2026-06-02",
+      location: "서울 마포구",
+      detailInfo: "무지 손잡이형 대형 가방 규격입니다. 에브리베이크 가맹점 스티커나 자체 맞춤 스탬프를 가볍게 찍어서 활용하기 정말 수월합니다. 벌크 할인 단가는 1박스(500장)당 원래 4.5만원 상당인 제품을 공구 성사 시 2.75만원에 득템하실 수 있습니다. 필요하신 수량을 박스 단위로 남겨 주세요!",
+      targetAmount: "목표 20박스 / 현재 17박스 모집 완료 (85%)",
+      priceInfo: "공구 할인가: 1박스(500장) 27,500원 (장당 55원)",
+      participantsCount: 8,
+      comments: [
+        { id: "pc-c1-1", author: "서교 빵빵이 점주", role: "Special Member", content: "저희 2박스(1,000장) 신청하겠습니다! 저번에 써보니 재질이 짱짱하고 좋더라구요.", date: "2026-06-02 10:15" },
+        { id: "pc-c1-2", author: "망원 2동 카페비엔나 사장", role: "Special Member", content: "저도 1박스 참여 희망합니다! 입금처나 신청 구글폼 공유 부탁드려도 될까요?", date: "2026-06-02 11:32" },
+        { id: "pc-c1-3", author: "합정 베이크팩토리", role: "Special Member", content: "저희 매장도 3박스 신청할게요! 쉐어 모집 올려주셔서 늘 감사합니다.", date: "2026-06-02 11:45" },
+        { id: "pc-c1-4", author: "상동 베이글마니아", role: "Premium Member", content: "혹시 택배 배송 가능한가요? 가능하다면 2박스 예약하고 싶어요.", date: "2026-06-02 12:01" }
+      ]
+    },
+    {
+      id: "plaza-coop-2",
+      category: "coop",
+      title: "📦 배달용 무지 종이봉투 12호 각대봉투 긴급 공구",
+      content: "배달 및 대량 포장에 넉넉히 알맞은 12호 각대봉투 통합 발주 추진합니다. 5,000장 이상 단위 묶음으로 도매 할인 적용 가능합니다.",
+      author: "성수 오븐스토리 점주",
+      date: "2026-06-01",
+      location: "서울 성동구",
+      detailInfo: "식빵이나 깜빠뉴 등 큼직한 빵 포장에 유용하게 매치되는 크라프트 무지 봉투입니다. 매장별 개별 단가 발주 시 무시할 수 없는 비용인데, 통합 벤더 직접 조율로 대폭 인하하였습니다.",
+      targetAmount: "목표 10,000장 / 현재 6,500장",
+      priceInfo: "장당 35원 (일반 도매가 58원)",
+      participantsCount: 5,
+      comments: [
+        { id: "pc-c2-1", author: "뚝섬 크루아상 점주", role: "Premium Member", content: "저희 2,000장 즉각 합류합니다! 정가보다 확실히 메리트 있네요.", date: "2026-06-01 15:40" },
+        { id: "pc-c2-2", author: "한양대 베이킹 점주", role: "Special Member", content: "저희 매장도 1,500장 예약 부탁드립니다! 공동구매 최고입니다 정말.", date: "2026-06-01 17:12" }
+      ]
+    },
+    {
+      id: "plaza-coop-3",
+      category: "coop",
+      title: "📦 [친환경 자재] 고품질 생분해 종이 빨대 벌크 공동 구매",
+      content: "여름 아이스 음료 시즌을 맞아 플라스틱 친환경 규제 완벽 이행 가능한 종이 빨대 대용량 100박스 공구를 진행합니다.",
+      author: "여의도 베이커리 대표",
+      date: "2026-05-31",
+      location: "서울 영등포구",
+      detailInfo: "시간이 지나도 눅눅해지지 않는 특수 코팅 친환경 종이 빨대입니다. 1,000개입 벌크 박스 사양으로 카페 음료 포지션이 있으신 사장님들께 강력 제안합니다.",
+      targetAmount: "목표 100박스 / 현재 45박스",
+      priceInfo: "1박스(1,000개) 8,900원 (최상급 원형 보정)",
+      participantsCount: 4,
+      comments: [
+        { id: "pc-c3-1", author: "신길 카페로 점주", role: "Special Member", content: "박스당 단가가 너무 은혜롭네요. 저희 매장 5박스 단번에 주문하겠습니다!", date: "2026-05-31 16:15" },
+        { id: "pc-c3-2", author: "여의도 IFC뒤편 사장", role: "Premium Member", content: "사용해봤던 제품인데 품질 보장됩니다. 저희도 3박스 줄 섭니다.", date: "2026-06-01 09:22" }
+      ]
+    },
+    {
+      id: "plaza-coop-4",
+      category: "coop",
+      title: "📦 리유저블 아이스컵 14oz & 컵홀더 통합 단체 발주",
+      content: "여름 디저트 판매 대비 단체 맞춤 무지 리유저블 컵과 크라프트 엠보싱 슬리브 홀더 박스 통합 할인 발주를 진행합니다.",
+      author: "인천 구월베이크 사장",
+      date: "2026-05-29",
+      location: "인천 남동구",
+      detailInfo: "내수성과 그립감이 뛰어난 플라스틱 리유저블 세트입니다. 에브리베이크 빵과 테이크아웃 세트 메뉴 구성에 최적의 단가 합작을 보장합니다.",
+      targetAmount: "목표 30박스 / 현재 28박스 (마감 임박)",
+      priceInfo: "1박스(500세트) 34,000원",
+      participantsCount: 12,
+      comments: [
+        { id: "pc-c4-1", author: "송도 베이커스 사장", role: "Special Member", content: "와 드디어 열렸네요! 소문 듣고 찾아왔습니다. 1박스 바로 선점할게요.", date: "2026-05-30 11:22" }
+      ]
+    },
+    {
+      id: "plaza-coop-5",
+      category: "coop",
+      title: "📦 [안전 위생자재] 투명 마스크 및 M사이즈 니트릴 장갑 통합 신청",
+      content: "구청 위생 점검 대비 투명 위생 밴드 마스크 및 빵 반죽 성형용 파우더프리 니트릴 장갑 단체 도매 도크 발주 신청 받습니다.",
+      author: "분당 서현베이커리 점주",
+      date: "2026-05-28",
+      location: "경기 성남시",
+      detailInfo: "식품용 안전 공식 등급 인증을 획득한 니트릴 장갑과 조절식 다회용 투명 쉴드입니다. 손가락 밀착감과 통기성이 발군입니다.",
+      targetAmount: "목표 50세트 / 현재 32세트",
+      priceInfo: "1세트 (투명마스크 5개 + 장갑 200매) 11,000원",
+      participantsCount: 3,
+      comments: [
+        { id: "pc-c5-1", author: "정자 멜론 점주", role: "Special Member", content: "밀가루 반죽 만질 때 꼭 필요했는데 마침 잘 되었네요. 2세트 가겠습니다.", date: "2026-05-28 14:02" },
+        { id: "pc-c5-2", author: "판교 구름빵 사장", role: "Premium Member", content: "니트릴 장갑 이 등급 제품이 땀이 덜 나더군요! 저도 3세트 할게요.", date: "2026-05-29 09:10" }
+      ]
+    },
+
+    // Category 2: used (중고장터)
+    {
+      id: "plaza-used-1",
+      category: "used",
+      title: "🤝 [상태최상] 우녹스 베이커럭스 오븐용 4단 트레이 랙 거치대 급처분",
+      content: "매장 인테리어 확장 및 레이아웃 이전으로 사용하지 않는 올 스테인리스 4단 트레이 오븐 스탠드를 초특가에 처분합니다.",
+      author: "합정 버터플라이 사장",
+      date: "2026-06-02",
+      location: "서울 마포구",
+      detailInfo: "우녹스 오븐이 안정감 있게 딱 안착 고정되는 완벽한 전용 호환 제품입니다. 내식성과 강도가 뛰어난 올 스테인리스 재질이며, 이동 및 고정이 매우 기동력 높은 오렌지 브레이크 바퀴가 장착되어 있어 매장 동선 정리에 베스트입니다.",
+      priceInfo: "중고 급처가: 90,000원 (신품 가격 24만원 상당)",
+      participantsCount: 3,
+      comments: [
+        { id: "pc-u1-1", author: "공덕 베이커블 점주", role: "Special Member", content: "제가 정말 찾던 랙 거치대네요! SUV 뒷좌석 폴딩하면 실릴지 여쭤보고 싶습니다.", date: "2026-06-02 13:02" },
+        { id: "pc-u1-2", author: "합정 버터플라이 사장", role: "Special Member", content: "네 사장님! 거치대 본체가 조립식은 아니라 부피는 조금 있지만 투싼이나 스포티지 급 SUV 뒷좌석을 폴딩하시면 가로로 충분히 적재됩니다! 저희 매장 앞에 가볍게 정차하시고 가져가시면 됩니다.", date: "2026-06-02 13:10" },
+        { id: "pc-u1-3", author: "신촌 빵집짱 사장", role: "Premium Member", content: "혹시 앞선 거래가 불발되면 저에게 무조건 순번 넘겨주세요! 즉시 현장 계좌 이체 보장합니다.", date: "2026-06-02 13:25" }
+      ]
+    },
+    {
+      id: "plaza-used-2",
+      category: "used",
+      title: "🤝 [급매] 업소용 국산 20쿼터 반죽기 (스파 믹서 SPA-800)",
+      content: "모터 기어 마모 일절 없는 영양 만점 스파 믹서 20쿼터 반죽기 판매합니다. 여분 믹싱 볼과 훅, 비터 포함 올 세트 구성.",
+      author: "경기 일산 식사베이크 점주",
+      date: "2026-06-01",
+      location: "경기 고양시",
+      detailInfo: "베이커리 가동에 최고의 내구성을 검증받은 국산 SPA-800 모델입니다. 빵 반죽부터 케이크 휘핑까지 아주 파워풀하게 돌아갑니다. 매장에 반죽기 늘리면서 여분으로 보관하다 정리합니다.",
+      priceInfo: "중고 판매가: 1,150,000원 (신품 정가 220만원)",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-u2-1", author: "일산동 빵돌이 사장", role: "Special Member", content: "스파 반죽기 기어 소음이나 벨트 상태는 어떤가요? 이상 없다면 내일 용달차 불러서 가져가고 싶어요.", date: "2026-06-01 19:40" },
+        { id: "pc-u2-2", author: "중산베이커 사장", role: "Premium Member", content: "모터 파워 진국인 명품 반죽기죠! 좋은 매물 엄청 저렴하게 올리셨네요.", date: "2026-06-01 20:10" }
+      ]
+    },
+    {
+      id: "plaza-used-3",
+      category: "used",
+      title: "🤝 [무료나눔/커피교환] 에브리베이크 일자형 식빵 전용 팬 10개 나눔",
+      content: "매장 제빵 메뉴 개편 및 단종으로 인하여 정성껏 세척/시즈닝해 둔 식빵 전용 테플론 코팅 팬 10개 일괄 무상 나눔합니다.",
+      author: "서울 서대문구 빵맛집",
+      date: "2026-06-01",
+      location: "서울 서대문구",
+      detailInfo: "테플론 골드 코팅 상태 80% 이상 준수합니다. 에브리베이크 명작 식빵 생지 전용 패닝 프레임에 제격입니다. 매장 방문 수령 선호하며, 정 마음에 드시면 매장에서 직접 내리는 아이스 아메리카노 한 잔만 쏴주세요!",
+      priceInfo: "무료 나눔 (따뜻한 응원/커피 교환 희망)",
+      participantsCount: 6,
+      comments: [
+        { id: "pc-u3-1", author: "연희동 식빵러 점주", role: "Special Member", content: "헐 대박! 저희 식빵팬 엄청 모자랐는데 연희동 매장이라 10분 내로 픽업 갈 수 있습니다! 아메리카노가 아니라 명품 에스프레소 세트로 사갈게요!! 제발 저 픽스 주세요!!", date: "2026-06-01 16:50" }
+      ]
+    },
+    {
+      id: "plaza-used-4",
+      category: "used",
+      title: "🤝 리치몬드 정품 6구 머핀팬 5세트 일상 잡화 일괄 처분",
+      content: "녹 방지 도금 및 열전도율 최상의 리치몬드 머핀팬 5세트 일괄 가져가실 점주님 구합니다. 코팅 상태 우수.",
+      author: "부산 해운대 브레드클럽",
+      date: "2026-05-30",
+      location: "부산 해운대구",
+      detailInfo: "구움과자나 제과 사이드 메뉴 가동용으로 탁월합니다. 개별 판매 없이 5개 일괄 일체형으로 깔끔하게 정리합니다.",
+      priceInfo: "5세트 일괄 30,000원",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-u4-1", author: "광안리 디저트짱 점주", role: "Special Member", content: "해운대 사장님! 혹시 반값택배나 우체국 착불 택배 거래도 대응해 주시나요? 가능하다면 당장 계좌 이체 드리겠습니다.", date: "2026-05-30 18:11" },
+        { id: "pc-u4-2", author: "좌동 브레드 매니저", role: "Premium Member", content: "픽업 대기 순번 걸어봅니다. 직거래 15분 대기 가능해요.", date: "2026-05-31 09:40" }
+      ]
+    },
+    {
+      id: "plaza-used-5",
+      category: "used",
+      title: "🤝 [장비급매] 하프 업소용 제빙기 50kg (네오트 브랜드) 필터 서비스",
+      content: "아이스 생산 기계 풀셋 교체 완료로 정상 조작 및 완전 분해 청소 세정 소독 완료한 안심 네오트 50kg 제빙기를 긴급 분양합니다.",
+      author: "동성로 가나안 카페 점주",
+      date: "2026-05-28",
+      location: "대구 중구",
+      detailInfo: "일일 제빵 구동에 든든한 최고 전력입니다. 노후 필터 무상으로 새것으로 갈아 끼워 둔 상태로 배관 케이블 풀 패키징 연결 상태로 출고 대기 중입니다.",
+      priceInfo: "중고 할인가: 350,000원 (실작동 여부 즉각 현장 검증)",
+      participantsCount: 4,
+      comments: [
+        { id: "pc-u5-1", author: "반월당 사장", role: "Premium Member", content: "내일 아침 9시에 SUV 스타렉스 동원해서 직공 수령하러 내려가도 될까요? 구매 확정입니다.", date: "2026-05-28 22:50" }
+      ]
+    },
+
+    // Category 3: share (무료나눔/소분)
+    {
+      id: "plaza-share-1",
+      category: "share",
+      title: "🎁 [밀가루 소분나눔] 프랑스 에밀리아 T55 밀가루 분할 쉐어 (10kg 분할 선착순)",
+      content: "가을 도매 통합 벌크 계약으로 입고된 국보급 프랑스 전용 밀가루 25kg 포대를 개봉했는데, 매장에서 다 소진하기 벅차서 깨끗한 지퍼백에 2kg씩 5명께 무상 소분 나눔합니다!",
+      author: "성수 밀가루장인 점주",
+      date: "2026-06-02",
+      location: "서울 성동구",
+      detailInfo: "크루아상이나 깜빠뉴 빵 표면 오밀조밀한 겹 레이어와 구운 풍미를 극한으로 높여 주는 최상급 T55 프랑스 원산지 유기농 밀가루입니다. 습한 기온에 뭉치지 않게 철저히 실리카겔 동봉하여 2kg씩 이중 밀봉 완료해 두었습니다. 매장에 오셔서 따뜻하게 받아가세요!",
+      targetAmount: "총 5팩 분량 / 현재 4팩 매칭 완료 (잔여 1팩)",
+      participantsCount: 4,
+      comments: [
+        { id: "pc-s1-1", author: "성수동 크로플 점주", role: "Special Member", content: "안녕하세요! 성수역 바로 옆 골목 매장인데 혹시 지금 수령하러 달려가도 될까요? 명장의 향기 가득한 T55 꼭 테스트해보고 싶었습니다!", date: "2026-06-02 11:20" },
+        { id: "pc-s1-2", author: "성수 밀가루장인 점주", role: "Special Member", content: "네 그럼요 사장님! 카운터 파트 직원에게 '나의공간 소분나눔 밀가루' 수령하러 방문했다고 안내해주시면 바로 2kg 신선 팩 건네드릴게요. 조심히 오세요!", date: "2026-06-02 11:25" },
+        { id: "pc-s1-3", author: "뚝섬 베이크하우스", role: "Special Member", content: "우와 정이 넘치시네요! 저도 한 팩 무조건 줄서봅니다. 브레이크 타임인 3시 전후로 픽업 가능할까요?", date: "2026-06-02 11:42" },
+        { id: "pc-s1-4", author: "한양대 밀 사장", role: "Premium Member", content: "퀵 요금 제가 선불 부담하고 오토바이 편으로 보내주실 수 있나요? 남았다면 무조건 배차하고 싶습니다!", date: "2026-06-02 12:05" }
+      ]
+    },
+    {
+      id: "plaza-share-2",
+      category: "share",
+      title: "🎁 기한 넉넉한 최고급 프랑스 이즈니 버터 Block 3kg 분량 나눔",
+      content: "구움과자 한정 기획 신메뉴 제조 후 남아 있는 미개봉 버터 덩어리들을 가맹 회원분들을 위해 위생 냉동 소분 분양합니다.",
+      author: "서울 마포구 연남동 디저트랩",
+      date: "2026-06-01",
+      location: "서울 마포구",
+      detailInfo: "유통기한 약 3주 정도 여유 있게 확보된 엘르앤비르/이즈니 1등급 고메 버터 블록입니다. 500g 블록 단위로 슬라이스 이중 포장 완료하여 총 6인분으로 혜택 돌립니다.",
+      targetAmount: "나눔 6블록 / 현재 5블록 배정 완료 (잔여 1블록)",
+      participantsCount: 5,
+      comments: [
+        { id: "pc-s2-1", author: "연남 빵순이 점주", role: "Premium Member", content: "이즈니 버터라니 눈물이 앞을 가립니다... 내일 오픈 준비 때 매장 잽싸게 들르겠습니다! 한 팩 찜해도 될까요?", date: "2026-06-01 17:35" },
+        { id: "pc-s2-2", author: "망원 버터수급 사장", role: "Special Member", content: "완전 줄 서봅니다! 신메뉴 프리팩 생지 테스트 오븐에 구워 보는 용도로 알뜰하게 잘 쓰겠습니다.", date: "2026-06-01 18:10" }
+      ]
+    },
+    {
+      id: "plaza-share-3",
+      category: "share",
+      title: "🎁 [천연 바닐라 수입액] 엑스트랙트 500ml -> 50ml 소분 나눔 혜택",
+      content: "베이킹 매니아 가맹점주 및 일반 홈베이커 동행 회원을 위한 최고급 천연 바닐라빈 엑스트랙 소분 병 나눔을 개시합니다.",
+      author: "수원 영통구 슬로우 베이커",
+      date: "2026-05-30",
+      location: "경기 수원시",
+      detailInfo: "정말 고급 향신료 향이 특징인 하이엔드 바닐라 엑기스입니다. 갈빛 유리 미니 소분 스포이드 박스병에 50ml씩 한 땀 한 땀 담아 두었습니다.",
+      targetAmount: "나눔 가능 수량 10병 / 현재 8병 수령 매칭 완료",
+      participantsCount: 8,
+      comments: [
+        { id: "pc-s3-1", author: "망포 베이클 베이커", role: "Special Member", content: "구움과자 풍미 유행의 구원자네요! 소중한 50ml 한 병 예약 확보할 수 있을까요?", date: "2026-05-30 20:30" }
+      ]
+    },
+    {
+      id: "plaza-share-4",
+      category: "share",
+      title: "🎁 유기농 건강 호밀 가루 5kg 깔끔 나눔 (호밀빵 베이킹 특화)",
+      content: "독일산 프리미엄 호밀가루 벌크 포대를 유상 구매해 쓰고 소량이 남아, 밀 수입이 전면 소통되는 마당에 이웃 사장님들과 무상 나눔합니다.",
+      author: "인천 송도 브레드웜 점주",
+      date: "2026-05-29",
+      location: "인천 연수구",
+      detailInfo: "풍미가 아주 고소하고 천연 제효가 수월해 깜빠뉴나 사워도우 만무할 때 아주 탁월한 무지 사양의 밀가루입니다.",
+      targetAmount: "나눔 완료",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-s4-1", author: "송도 1동 프렌즈 점주", role: "Special Member", content: "인근 송도 매장이라 저녁 퇴근 길에 귀하게 받아와서 손님 디저트 서비스 구울 때 유용하게 연출했습니다. 천사 같은 배려 진심 모십니다!", date: "2026-05-30 09:12" }
+      ]
+    },
+    {
+      id: "plaza-share-5",
+      category: "share",
+      title: "🎁 [마감완료] 키즈 베이킹용 무독성 스프링클 5종 종합세트 나눔",
+      content: "가정의 달 키즈 파티 원데이 클래스 정기 세션을 마치고 완전히 밀폐 보존하고 있는 미국산 수입 컬러 초코 스프링클 종합 선물 웰컴 세트를 양도합니다.",
+      author: "부산 동래구 쿠키아웃",
+      date: "2026-05-26",
+      location: "부산 동래구",
+      detailInfo: "총 1.5kg 상당이며 유라시아 프리미엄 코팅으로 오븐에 직접 구워도 원형 및 선명한 발색이 잘 보존되는 무독성 프리미엄 시럽 스프링클입니다.",
+      targetAmount: "배송 수령 완전 완료",
+      participantsCount: 1,
+      comments: [
+        { id: "pc-s5-1", author: "온천장 브레드 사장", role: "Special Member", content: "사장님 배려 덕에 우리 가맹점 찾아준 주말 꼬마 단골 손님들에게 너무 예쁜 메론빵 데코레이션을 기증할 수 있었습니다. 최고의 나눔 감사드립니다!", date: "2026-05-27 10:45" }
+      ]
+    },
+
+    // Category 4: job (긴급구인)
+    {
+      id: "plaza-job-1",
+      category: "job",
+      title: "🚨 [단기/긴급-SOS] 내일 오전 제빵보조 및 크루아상 샌드위치 포장 헬퍼 긴급 구인 (당일지급)",
+      content: "매장 전담 메인 베이킹 부기사님이 갑작스러운 중증 독감 판정으로 병원에 응급 입원하게 되어, 야간 해동 작업 완료된 명인 생지들의 새벽 성형 및 샌드위치 포장 도울 급전을 무장합니다.",
+      author: "압구정 몽소 점주",
+      date: "2026-06-02",
+      location: "서울 강남구",
+      detailInfo: "근무 시간: 내일 (6/3) 오전 06:00 ~ 12:00 (단 6시간 수용). 업무 내용: 야간 도우컨디셔너 해동 완벽 완료된 고메 벌크 생지 패닝 정밀 레이아웃 배열 배치, 오븐 타이머 관리 보조, 다 구워진 치아바타와 식빵 한 김 식혀 샌드위치 커팅 치즈 주입 및 전면 개별 랩핑 포장. 제빵 기본 기초가 있으신 학우분이나 동료 사장님들의 유경력자 구원의 조력을 긴급히 모십니다!",
+      targetAmount: "모집 인원: 1명 / 예약 정원 투입 협의 조율 중",
+      priceInfo: "시급 13,000원 상당 (총 6시간 가동 기준, 즉시 당일 퇴근 일시 이체 78,000원)",
+      participantsCount: 3,
+      comments: [
+        { id: "pc-j1-1", author: "강남구 제빵학도", role: "Junior Baker", content: "안녕하세요! 압구정 한림 파티세리 소속 교육과정 1년차 수료생입니다! 내일 다행히 개인 연차 휴무라 새벽 시간 비어있는데 바로 오븐 다루고 포장 기계 세팅 완벽 도와드릴 수 있습니다!", date: "2026-06-02 14:15" },
+        { id: "pc-j1-2", author: "압구정 몽소 점주", role: "Special Member", content: "앗! 정말 하늘에서 내려 온 구세주 같은 학생분이시군요! 압구정역 3번 출구 바로 앞 매장입니다. 오픈카카오톡 채널로 가벼운 이력 문자 하나만 남겨 주시면 당장 내일 새벽 조율 확정하여 출근 카드 기입해 놓겠습니다!", date: "2026-06-02 14:22" },
+        { id: "pc-j1-3", author: "대치 브레드보조", role: "Senior Baker", content: "오성급 가맹 호텔 주방보조 출신 경력자입니다. 혹시 위에 계신 학도분 일정에 펑크 발생하거나 돌발 대비용 서브 비상 수단으로 번호 쪽지 전송해 둡니다. 필요시 연락 바랍니다!", date: "2026-06-02 14:40" }
+      ]
+    },
+    {
+      id: "plaza-job-2",
+      category: "job",
+      title: "🚨 [오늘 야간] 위생 안심 가동을 위한 오븐 2대 내부 정밀 고온 스팀 세척 헬퍼 (초보가능)",
+      content: "식약처 위생 평가 시즌 대비하여, 고온 카본 찌든 때 지우는 고열 오븐 세척 및 냉장 쇼케이스 내부 필터 탈탈 털이 3시간 집중 헬퍼 단기 구인합니다.",
+      author: "마포구 서교동 프랑스베이커리",
+      date: "2026-06-01",
+      location: "서울 마포구",
+      detailInfo: "시간: 오늘 밤 21:00 ~ 24:00 (야간 3시간 가동). 보호 안경과 고무장갑, 고성능 친환경 탈산 세제는 전면 지급해 드립니다. 땀 한 바가지 시원하게 빼고 퇴근 빵 세트와 함께 일당 계좌로 두둑히 당장 보장해 드립니다.",
+      priceInfo: "3시간 가동 일급 50,000원 즉시 보증",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-j2-1", author: "신촌 매니아", role: "Baker Friend", content: "군필자 체력 넘쳐납니다! 청소랑 뒤풀이 찌든 이물질 밀어내는 작업은 전문가 수준으로 확실히 비워낼 수 있습니다. 연락처 문자 드렸습니다!", date: "2026-06-01 18:40" },
+        { id: "pc-j2-2", author: "이대 고인물", role: "Baker Friend", content: "손 진도 엄청 빠릅니다. 오븐 전해 가동 경험 풍부해요. 혹시 정원 다 찼나요?", date: "2026-06-01 19:10" }
+      ]
+    },
+    {
+      id: "plaza-job-3",
+      category: "job",
+      title: "🚨 [주말 대타] 토/일 오전 피크타임 쇼케이스 정돈 및 간편 포스 대타 소방수 모집",
+      content: "사전 지정된 기존 주말 아르바이트생의 개인 관혼상제 연도 사정으로 이틀 동안 오전 피크 타임 매장 서빙 및 계산대 보조 급하게 수배합니다.",
+      author: "서울 관악구 샤로수 베이크",
+      date: "2026-05-31",
+      location: "서울 관악구",
+      detailInfo: "토요일, 일요일 양일간 08:00 ~ 14:00 (각 6시간씩 근무). 포스 계산 및 에브리베이크 장비에서 갓 구워져 나오는 크로와상들 쇼케이스 정밀 핀셋 배열 작업만 해주시면 됩니다.",
+      priceInfo: "시급 11,000원 정산 지급",
+      participantsCount: 4,
+      comments: [
+        { id: "pc-j3-1", author: "서울대입구 자취러", role: "Junior Clerk", content: "에브리베이크 메론빵 전문 계산 가맹점 근무 경력 8개월 정도 있습니다! 포스기 연동 버튼이랑 오븐 타이머 알람 즉시 캐치 가능해요. 주말 양일 전 타임 시원하게 지원합니다!", date: "2026-05-31 16:30" }
+      ]
+    },
+    {
+      id: "plaza-job-4",
+      category: "job",
+      title: "🚨 [천안] 6월 5일 단체 단팥빵 500알 패닝 및 포앙 보틀 보조 긴급 서포터 모집",
+      content: "인근 고등학교 정기 중간고사 깜짝 간식 단체 발주 500세트를 수주받아, 전력 투구 일손이 딱 빵 반죽 계량 보탬 한 분 원합니다.",
+      author: "충남 천안 뚜쥬루골목 점주",
+      date: "2026-05-30",
+      location: "충남 천안시",
+      detailInfo: "근무 시간: 오전 07:00 ~ 13:00 (6시간). 숙련자분이 오셔서 정밀 성형을 한 손으로 짱짱하게 도와주시면 천안 최고 호두파이랑 명인 소금빵 보답 팩도 무상 포장해 드립니다.",
+      priceInfo: "일당 85,000원 퇴근 즉시 정산 보장",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-j4-1", author: "천안 단대생 제빵인", role: "Junior Baker", content: "시간 딱 수용 가능합니다. 성형이랑 호두 계량 성실하고 정확하게 해낼게요. 믿어주십시오!", date: "2026-05-30 19:42" }
+      ]
+    },
+    {
+      id: "plaza-job-5",
+      category: "job",
+      title: "🚨 내일 디저트 카페 갓 오픈 전초 기지 청소 및 바이브 레이아웃 기물 세팅 조력",
+      content: "새로운 오렌지 감각 인테리어를 마친 매장 창틀 유리 닦기와 정수 필터 구배 라인 배수 호스 결착 체크를 가볍게 돕는 단기 보조 일손 구해요.",
+      author: "대전 서구 둔산카페 사장",
+      date: "2026-05-28",
+      location: "대전 서구",
+      detailInfo: "노동 강도 아주 낮으며, 08:00 ~ 11:00 (단 3시간). 음료 전력 원두 세팅 에스프레소 시음도 넉넉하게 가능합니다.",
+      priceInfo: "3시간 깔끔 일급 40,000원",
+      participantsCount: 3,
+      comments: [
+        { id: "pc-j5-1", author: "탄방동 빵러버", role: "Baker Friend", content: "개점 축하드립니다! 기물 옴기기 및 포장 봉투 접기 제 역할 야무지게 해드릴게요. 당장 가능!", date: "2026-05-28 20:15" }
+      ]
+    },
+
+    // Category 5: interior (인테리어 견적)
+    {
+      id: "plaza-interior-1",
+      category: "interior",
+      title: "🛠️ [견적요청] 12평 소형 베이커리 매장 도우컨 제빵실 유리 칸막이벽 및 급배수 연장 시공",
+      content: "이번에 에브리베이크 나의공간을 통해 스마트 도우컨디셔너 대형 1대와 스마트 로터리 터치 오븐을 동시 추가 도입하게 되었습니다. 매장 안전 공간 확보를 위해 뒤편에 투명 강화유리 가벽 칸막이를 슬라이딩 도어 형태로 세우고 파워 업 배수라인 연장 공사 전문가 사장님들의 견적을 시원하게 소환합니다.",
+      author: "용산 크루아상팩토리 사장",
+      date: "2026-06-02",
+      location: "서울 용산구",
+      detailInfo: "총 전용면적 약 12평이며, 이 중 제빵 연구용 가용 공간 3.5평을 가벽으로 레이아웃 구획하고자 합니다. 바닥 타일은 방수 전용 세라믹 논슬립 타일 덧방 처리가 필요하며 오븐 가동 시 누전 차단 및 배수 찌꺼기 거름 호스 고정 배관 작업이 필수적입니다. 희망 예산은 가용 한계치 350만원 이하로 책정하고 있고, 손님 영업에 영향이 가지 않도록 다음 주 평일 야간 공사 세션(20시 ~ 익일 새벽 4시)으로 컴팩트 완료되길 원합니다. 오셔서 견적 가득 남겨 주십시요!",
+      urgentsInfo: "예산 한계: 350만원 이내 부가세 포함 / 시공 희망일: 6월 중순 평일 야간 기동 가늠",
+      participantsCount: 3,
+      comments: [
+        { id: "pc-i1-1", author: "🔧 공간디자인 연우 (시공전문)", role: "인테리어 전문업체", content: "안녕하세요 사장님! 서울 전역 상업 공간 요식업 설비 및 방수 가벽 시공을 15년째 집도하고 있는 '공간디자인 연우'입니다. 에브리베이크 콤보 오븐 및 밀 가습용 스마트 배수관 오차 없는 슬라이딩 3연동 섀시 시공을 기 당사 매장 제휴 가맹 8회 시공 경험으로 눈감고도 완벽 규격 밀착해 드릴 수 있습니다! 매장 도면 기본 CAD 레이아웃 시안 무료 서비스 제공 드립니다. 010-3323-XXXX 로 편안하게 콜이나 문자 주시면 즉시 내일 오전 사장님 둔산/용산 매장에 방문하여 공사 실측 해드리고, 마진 일체 비워내어 총합 320만원선(부가세 포함, 친환경 자재 마감)으로 깔끔하게 한밤중 야간 무소음 철거 완공 보장 드리겠습니다. 연락 부탁드립니다!", date: "2026-06-02 12:45" },
+        { id: "pc-i1-2", author: "🛠️ 탑클래스 인테리어 기획", role: "상업시공업체", content: "용산구 한남 삼각지 현장 상주 중인 상업 인테리어 직영 시공팀 탑클래스입니다! 방수 조적 시공 및 세라믹 타일 덧방, 12mm 통강화유리 가벽 스틸 마감까지 하여 290만원 초특급 가성비 완공으로 마감 단차 1mm 하자 없이 책임 시공해 놓겠습니다! 포트폴리오 문자 전송 드렸으니 당장 협의 주십시요. (010-4491-xxxx)", date: "2026-06-02 13:01" },
+        { id: "pc-i1-3", author: "📐 라온 하이브 디자인 대표", role: "설계전문업체", content: "도우컨디셔너 작동 시 순간 전력 배선 차단 트립과 고열 환풍 닥트 시로코팬 교차 기계 결합부 마감 불량이 화재 원인이 되곤 합니다. 저희는 전기안전 배선 자격증 및 소방 면허 전문 엔지니어가 포함되어 안심 구조로 원활하게 세팅해 드립니다. 카카오톡 제안서 발송해 드렸습니다!", date: "2026-06-02 13:20" }
+      ]
+    },
+    {
+      id: "plaza-interior-2",
+      category: "interior",
+      title: "🛠️ 5평 테이크아웃 전문점 합판 목공 카운터 대차 및 아크릴 간판 시공 견적",
+      content: "자작나무 친환경 목재로 베이킹 쇼케이스 3단 하중 버티는 수공 카운터를 커스텀 제작하고, 외벽 전면에 분위기 좋은 에브리베이크 오렌지 아크릴 큐브 간판 부착 견적 요청합니다.",
+      author: "서울 서초구 신상 디저트 사장",
+      date: "2026-06-01",
+      location: "서울 서초구",
+      detailInfo: "아주 작은 소형 공간이나 손님 시선 초입 파사드가 가장 중요합니다. 카운터에는 내부 대용량 생지 보틀 냉장고가 들어갈 수 있게 슬롯 타공이 필요합니다.",
+      urgentsInfo: "예산선: 500만원 내외 / 6월 이내 정식 완공 대기",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-i2-1", author: "🔧 테라디자인 목공소", role: "가구인테리어업체", content: "안녕하세요! 자작나무 합판 무독성 독일제 바니시 마감 가구 전문 제작팀 테라디자인입니다. 하부 빌트인 슬롯 매립 구조 설계에 능통하오니 연락주세요! 견적 450만원 선 조율 가능합니다.", date: "2026-06-01 10:45" },
+        { id: "pc-i2-2", author: "🛠️ 우드스페이스", role: "가구인테리어업체", content: "최저 단가 정밀 시공 약속합니다! 쇼케이스 습기 누출 차단 단열 가공 포함 시방서 무료 제공 드리겠습니다.", date: "2026-06-01 11:15" }
+      ]
+    },
+    {
+      id: "plaza-interior-3",
+      category: "interior",
+      title: "🛠️ 오래된 전통 동네 빵집 중앙 바닥 논슬립 테라조 데코타일 8평 전면 시공",
+      content: "기존 가루와 물기로 군데군데 때가 끼고 낡아 미끄러운 저가 장판 데코타일 8평분을 깔끔하게 다 걷어내고 내수성과 청결 전반에 기여하는 최고급 테라조 바닥 타일 시공 견적 구합니다.",
+      author: "강원 춘천 브레드메이킹 점주",
+      date: "2026-05-30",
+      location: "강원 춘천시",
+      detailInfo: "기존 점포 내부 쇼케이스들은 바닥 단차 받침대로 그대로 두고, 빵집 동선 라인만 야간에 깔끔하게 데코타일 전문 덧방 칼 마감 해주실 유능한 동네 전문가 사장님 우대합니다.",
+      urgentsInfo: "희망 견적가: 120만원 내외 부가세 포함",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-i3-1", author: "🛠️ 강원타일 일체", role: "지역 타일업체", content: "춘천 시내 퇴게동 자재창고 보유 업체입니다! 번거로운 가구 이동 최소화하고 바닥 덧방 기준 친환경 이태리 프렐 아크릴 수성 접착제 가동하여 110만원에 올 마감 야간 원데이 처리해 드릴게요!", date: "2026-05-30 16:45" }
+      ]
+    },
+    {
+      id: "plaza-interior-4",
+      category: "interior",
+      title: "🛠️ 주방 열기 및 빵 굽는 습기 배출용 시로코팬 환풍기 1.5마력 업그레이드 연장 설치",
+      content: "터치 오븐 연속 동작 시 배출되는 오븐 위 연기가 기존 팬으론 순환이 부족합니다. 시로코팬 1.5마력 최상 압력 모터로 증설하고 연장 배관 벽을 밖으로 3미터 올리는 마력 구동 견적 원해요.",
+      author: "경기 수원 인계베이커리 점주",
+      date: "2026-05-29",
+      location: "경기 수원시",
+      detailInfo: "현 배관 라인이 노후화되어 진동 및 소음 차단 댐퍼 고무 패킹 추가 결착이 함께 필요합니다. 이웃 점포 불만 없도록 무소음 특수 팬 보강도 검토바랍니다.",
+      urgentsInfo: "시공 예산: 90만원 내외",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-i4-1", author: "🔧 수원닥트공사 대장", role: "지역 닥트시공사", content: "수원 인계동 상주 인력입니다! 저소음 이중 날개 설계 1.5마력 시로코팬과 진동 흡수 완충 패드, 외벽 칼브럭 지지대 마감 등 올인원 패키징으로 정확하게 80만원에 배기량 최고로 맞춰 드릴게요!", date: "2026-05-29 18:20" }
+      ]
+    },
+    {
+      id: "plaza-interior-5",
+      category: "interior",
+      title: "🛠️ [부분도색] 영 디자이너 비주얼 프레임 파사드 웨인스코팅 웨스턴 오렌지 컬러 도색",
+      content: "아주 노후된 기존 연갈색 하이샷시 프레임들을 에브리베이크 명품 시그니처 오렌지 칼라 및 매트한 샌드 브라운 수입 세라믹 코팅 페인트로 도장 및 매장에 세련된 유럽풍 감각을 채워 넣고 싶습니다.",
+      author: "대구 수성구 버터멜로우",
+      date: "2026-05-27",
+      location: "대구 수성구",
+      detailInfo: "외부 노출 페인팅이라 직사광선 및 눈비에 가볍게 일어나지 않는 친환경 웨더쉴드 유성 페인트 혹은 실외 전용 방수 세라믹 실리콘 혼합 도료 필수 사용 요청합니다.",
+      urgentsInfo: "예산: 150만원 이하 / 당일 야간 시공 지양",
+      participantsCount: 2,
+      comments: [
+        { id: "pc-i5-1", author: "🎨 컬러하우스 대구 직영점", role: "전문 도색 도장업체", content: "수성구 상가 외부 수입 팬톤 페이트 조색 전문 시공사 컬러하우스입니다! 파사드 샌딩 연마 전처리 확실히 한 후에 하도 프라이머 2회 및 야외 우레탄 탑코트 2회 완격 도장하여 세월이 흘러도 변색 없는 쨍한 에브리 오레지로 연출해 드릴게요. 견적 130만원 제안합니다.", date: "2026-05-27 15:40" }
+      ]
     }
   ]);
 
@@ -702,6 +1160,157 @@ export default function App() {
     setNewCommAuthor("");
   };
 
+  const handleJoinPlazaPost = (postId: string) => {
+    setPlazaPosts(prev => 
+      prev.map(post => {
+        if (post.id === postId) {
+          const alreadyJoined = post.joinedByMe;
+          const delta = alreadyJoined ? -1 : 1;
+          const updatedComments = [...post.comments];
+          if (!alreadyJoined) {
+            updatedComments.push({
+              id: `pc-join-${Date.now()}`,
+              author: "나의공간 점주 (나)",
+              role: "가맹회원",
+              content: post.category === "coop" 
+                ? "🙋‍♂️ 저 공동구매 참전하겠습니다! 물량 확보 부탁드립니다."
+                : post.category === "job"
+                ? "🙋‍♂️ 일정 확인 후 지원 문의 남겼습니다! 쪽지나 유선 연락 부탁드립니다."
+                : post.category === "used"
+                ? "🙋‍♂️ 제가 먼저 직거래 구매 예약 요청드립니다! 답변 기다리겠습니다."
+                : post.category === "interior"
+                ? "🙋‍♂️ 저희 매장 구조에 대해 상세 견적 및 실측 문의 드렸습니다."
+                : "🙋‍♂️ 저도 참여(신청) 신청합니다!",
+              date: new Date().toISOString().replace("T", " ").substring(0, 16)
+            });
+          } else {
+            // Remove the auto-joined comment
+            const idx = updatedComments.findIndex(c => c.author === "나의공간 점주 (나)" && c.id.startsWith("pc-join-"));
+            if (idx !== -1) updatedComments.splice(idx, 1);
+          }
+          return {
+            ...post,
+            joinedByMe: !alreadyJoined,
+            participantsCount: post.participantsCount + delta,
+            comments: updatedComments
+          };
+        }
+        return post;
+      })
+    );
+  };
+
+  const handleAddPlazaComment = (postId: string, e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPlazaCommentText.trim()) return;
+    const author = newPlazaCommentAuthor.trim() || "나의공간 점주 (나)";
+    const newComment: PlazaComment = {
+      id: `pc-comment-${Date.now()}`,
+      author,
+      role: author.includes("업체") || author.includes("시공") || author.includes("디자인") ? "인테리어 전문업체" : "가맹회원",
+      content: newPlazaCommentText.trim(),
+      date: new Date().toISOString().replace("T", " ").substring(0, 16),
+      isCustom: true
+    };
+
+    setPlazaPosts(prev => 
+      prev.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            comments: [...post.comments, newComment]
+          };
+        }
+        return post;
+      })
+    );
+    setNewPlazaCommentText("");
+  };
+
+  const handleCreatePlazaPost = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPlazaTitle.trim() || !newPlazaContent.trim()) return;
+
+    const author = newPlazaAuthor.trim() || "익명 가맹점주";
+    const newPost: PlazaPost = {
+      id: `plaza-custom-${Date.now()}`,
+      category: activePlazaTab,
+      title: newPlazaTitle.trim(),
+      content: newPlazaContent.trim(),
+      author,
+      date: new Date().toISOString().split("T")[0],
+      location: newPlazaLocation.trim() || "서울 마포구",
+      detailInfo: newPlazaDetailInfo.trim() || "상세 내용을 확인해 주세요.",
+      priceInfo: newPlazaPriceInfo.trim() || undefined,
+      targetAmount: newPlazaTargetAmount.trim() || undefined,
+      urgentsInfo: newPlazaUrgentsInfo.trim() || undefined,
+      participantsCount: 0,
+      comments: []
+    };
+
+    setPlazaPosts([newPost, ...plazaPosts]);
+    
+    // Clear forms
+    setNewPlazaTitle("");
+    setNewPlazaContent("");
+    setNewPlazaAuthor("");
+    setNewPlazaLocation("");
+    setNewPlazaDetailInfo("");
+    setNewPlazaPriceInfo("");
+    setNewPlazaTargetAmount("");
+    setNewPlazaUrgentsInfo("");
+
+    // Simulate auto bid/reply from contractor/bakers after 1.5 seconds!
+    setTimeout(() => {
+      setPlazaPosts(prev => 
+        prev.map(post => {
+          if (post.id === newPost.id) {
+            const replies: PlazaComment[] = [];
+            if (activePlazaTab === "coop") {
+              replies.push({
+                id: `pc-auto-c1`,
+                author: "마포 합정 베이커리",
+                role: "Special Member",
+                content: "오!! 아주 합리적인 공동구매 기획이네요. 저희 매장도 물량 확보 함께 참여하고 싶습니다!!",
+                date: new Date().toISOString().replace("T", " ").substring(0, 16)
+              });
+            } else if (activePlazaTab === "interior") {
+              replies.push({
+                id: `pc-auto-i1`,
+                author: "🔧 공간디자인 연우 (시공전문)",
+                role: "인테리어 전문업체",
+                content: "새 실시간 견적 요청 알림 보고 즉각 제안 드립니다! EveryBake 시공 경력 풍부한 노하우로 24시간 내 무상 출장 방문 실측 및 매칭도면 기획 드리겠습니다. 콜 주십시오 (010-3323-XXXX).",
+                date: new Date().toISOString().replace("T", " ").substring(0, 16)
+              });
+            } else if (activePlazaTab === "job") {
+              replies.push({
+                id: `pc-auto-j1`,
+                author: "스마트 제빵 보조원",
+                role: "Junior Baker",
+                content: "안녕하세요! 근무 일정 수용 가능하고 인근 거주중이라 긴급 배치 지원 희망합니다. 번호 남겨주시면 감사드리겠습니다!",
+                date: new Date().toISOString().replace("T", " ").substring(0, 16)
+              });
+            } else {
+              replies.push({
+                id: `pc-auto-g1`,
+                author: "성수동 베이킹 사장",
+                role: "Premium Member",
+                content: "와 저한테 아주 제격인 조건이네요! 거래 연동 희망하여 쪽지 전달해 드렸습니다.",
+                date: new Date().toISOString().replace("T", " ").substring(0, 16)
+              });
+            }
+            return {
+              ...post,
+              participantsCount: 1,
+              comments: replies
+            };
+          }
+          return post;
+        })
+      );
+    }, 1500);
+  };
+
   // B2B proposal submit (with automatic delayed feedback from KCT team)
   const handleAddInquiry = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1049,12 +1658,12 @@ export default function App() {
                 플랫폼 전용 비즈니스 영역 선택
               </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                 
                 {/* 1. 도우컨디셔너 / 오븐 */}
                 <div 
                   onClick={() => handleNav("equip-list")}
-                  className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
+                  className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
                   id="cat-card-1"
                 >
                   <div className="w-16 h-16 rounded-full bg-orange-50 text-[#f97316] flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
@@ -1076,7 +1685,7 @@ export default function App() {
                 {/* 2. 프리미엄 생지 */}
                 <div 
                   onClick={() => handleNav("dough-main")}
-                  className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
+                  className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
                   id="cat-card-2"
                 >
                   <div className="w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
@@ -1098,7 +1707,7 @@ export default function App() {
                 {/* 3. 커피 원두 / 머신 */}
                 <div 
                   onClick={() => handleNav("coffee")}
-                  className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
+                  className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
                   id="cat-card-3"
                 >
                   <div className="w-16 h-16 rounded-full bg-stone-100 text-stone-700 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
@@ -1120,7 +1729,7 @@ export default function App() {
                 {/* 4. 원부자재 */}
                 <div 
                   onClick={() => handleNav("ingredients")}
-                  className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
+                  className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
                   id="cat-card-ingredients"
                 >
                   <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-605 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
@@ -1142,7 +1751,7 @@ export default function App() {
                 {/* 5. 에브리베이크 커뮤니티 */}
                 <div 
                   onClick={() => handleNav("community")}
-                  className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
+                  className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
                   id="cat-card-4"
                 >
                   <div className="w-16 h-16 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
@@ -1164,7 +1773,7 @@ export default function App() {
                 {/* 5. 입점 및 제휴 문의 */}
                 <div 
                   onClick={() => handleNav("inquiry")}
-                  className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
+                  className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
                   id="cat-card-5"
                 >
                   <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
@@ -2181,209 +2790,1092 @@ export default function App() {
         {/* ==================================================== */}
         {currentView === "dough-detail" && (
           <div className="max-w-5xl mx-auto px-6 py-8 animate-fade-in">
-            <button 
-              onClick={() => handleNav("dough-main")}
-              className="mb-6 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
-            >
-              <ChevronLeft className="w-4 h-4" /> 목록으로
-            </button>
+              <button 
+                onClick={() => handleNav("dough-main")}
+                className="mb-6 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4" /> 목록으로
+              </button>
 
-            {/* Apple style central stacked layout */}
-            <div className="flex flex-col items-center w-full">
-              
-              {/* SECTION 1: Product Visual & Buying */}
-              <div className="w-full flex flex-col items-center text-center py-12 border-b border-stone-200">
-                <div className="w-full max-w-3xl h-[360px] bg-[#f8fafc] rounded-3xl flex items-center justify-center relative overflow-hidden mb-10 border border-stone-150">
-                  <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
-                  
-                  <span className="text-8xl filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.12)] transform hover:scale-110 transition-transform duration-300">
-                    {selectedDough.id === "m-001" ? "🥐" : selectedDough.id === "m-002" ? "🍎" : selectedDough.id === "m-003" ? "🍫" : selectedDough.id === "g-001" ? "🍈" : "🥖"}
-                  </span>
-                  
-                  <span className="absolute bottom-4 text-[10px] font-extrabold uppercase font-mono tracking-widest text-stone-400 bg-white shadow-xs px-3.5 py-1 rounded-full border border-stone-150">
-                    {selectedDough.imageLabel}
-                  </span>
-                </div>
-
-                <span className="inline-block px-3.5 py-1.5 bg-orange-50 text-[#f97316] text-xs font-bold tracking-wider rounded-full mb-4 border border-orange-100">
-                  {selectedDough.category === "master" ? "대한민국 명장 라인업" : "글로벌 시그니처 큐레이션"}
-                </span>
-
-                <h1 className="text-3xl sm:text-4.5xl font-black text-stone-900 tracking-tight leading-tight mb-2">
-                  {selectedDough.name}
-                </h1>
+              {/* Apple style central stacked layout */}
+              <div className="flex flex-col items-center w-full">
                 
-                <p className="text-sm font-semibold text-stone-400 mb-6 font-mono uppercase tracking-wider">
-                  MASTERPIECE BY. {selectedDough.masterName} (ORIGIN: {selectedDough.region})
-                </p>
-
-                <p className="text-sm sm:text-base text-stone-500 max-w-2xl mx-auto leading-relaxed font-semibold mb-8">
-                  천연 르방 원작 발효 비율을 엄선하여 에브리베이크 IoT 오븐과 완벽한 동기화를 만들어냅니다.<br />
-                  매장에서 가장 신선한 빵의 향기를 손님들에게 선물해 보세요.
-                </p>
-
-                <div className="text-2xl sm:text-3.5xl font-black text-stone-950 tracking-tight mb-6">
-                  박스당 ₩ {selectedDough.price.toLocaleString()}
-                </div>
-
-                <button
-                  onClick={() => handleAddToCart(selectedDough)}
-                  className="px-10 py-4 bg-stone-900 hover:bg-black text-white text-sm font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-lg shadow-stone-900/10 flex items-center justify-center gap-2"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>주문 카트에 담기</span>
-                </button>
-              </div>
-
-              {/* SECTION 2: Master Story & Specifications */}
-              <div className="w-full flex flex-col items-center py-16 border-b border-stone-200">
-                <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight mb-4">
-                  명장 제베 스토리 & 권장 굽기 파라미터
-                </h2>
-                <p className="text-stone-550 text-sm max-w-xl text-center leading-relaxed font-semibold mb-10">
-                  전문화된 파라미터들이 에브리베이크 스마트 오븐과 즉각적으로 동기화됩니다. 바코드 스캔 시스템을 통해 일관된 완벽함을 유지할 수 있습니다.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl text-left">
-                  {/* Story Card */}
-                  <div className="bg-white p-6.5 rounded-2xl border border-stone-200/80 shadow-xs flex flex-col justify-between">
-                    <div>
-                      <h4 className="text-sm font-extrabold text-stone-900 mb-3 flex items-center gap-1.5">
-                        <FileText className="w-4 h-4 text-[#f97316]" />
-                        KCT 명인 검증 검토 스토리
-                      </h4>
-                      <p className="text-xs text-stone-500 leading-relaxed font-medium">
-                        본 반죽은 천연 르방 유산균 발효 비율을 극한으로 조절하여 구울 때의 볼륨감과 크러스트의 바삭함이 명장의 비법 그대로 살아납니다. 에브리베이크 스마트 오븐의 바코드 스캔 시스템과 완벽히 매칭되어 있으며, 소량 해동 후 즉시 구우셔도 균일한 기공 구조를 유지하는 특허 레시피입니다.
-                      </p>
-                    </div>
+                {/* SECTION 1: Product Visual & Buying */}
+                <div className="w-full flex flex-col items-center text-center py-12 border-b border-stone-200">
+                  <div className="w-full max-w-3xl h-[360px] bg-[#f8fafc] rounded-3xl flex items-center justify-center relative overflow-hidden mb-10 border border-stone-150">
+                    <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+                    
+                    <span className="text-8xl filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.12)] transform hover:scale-110 transition-transform duration-300">
+                      {selectedDough.id === "m-001" ? "🥐" : selectedDough.id === "m-002" ? "🍎" : selectedDough.id === "m-003" ? "🍫" : selectedDough.id === "g-001" ? "🍈" : "🥖"}
+                    </span>
+                    
+                    <span className="absolute bottom-4 text-[10px] font-extrabold uppercase font-mono tracking-widest text-[#a8a29e] bg-white shadow-xs px-3.5 py-1 rounded-full border border-stone-150">
+                      {selectedDough.imageLabel}
+                    </span>
                   </div>
 
-                  {/* Param Spec Card */}
-                  <div className="bg-stone-50 p-6.5 rounded-2xl border border-stone-200 shadow-xs space-y-3 flex flex-col justify-between">
-                    <div>
-                      <h4 className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2.5">OVEN PARAMETERS</h4>
-                      <div className="space-y-2 text-xs">
-                        <div className="flex justify-between py-1 border-b border-stone-200/60">
-                          <span className="text-stone-400">해동 지점:</span>
-                          <span className="font-extrabold text-stone-800">{selectedDough.settings.defrostTemp}°C ({selectedDough.settings.defrostTime}분)</span>
-                        </div>
-                        <div className="flex justify-between py-1 border-b border-stone-200/60">
-                          <span className="text-stone-400">숙성 발효:</span>
-                          <span className="font-extrabold text-stone-800">{selectedDough.settings.fermentTemp}°C ({selectedDough.settings.fermentHumidity}%)</span>
-                        </div>
-                        <div className="flex justify-between py-1 border-b border-stone-200/60">
-                          <span className="text-stone-400">소성 온도:</span>
-                          <span className="font-extrabold text-stone-800">{selectedDough.settings.bakeTemp}°C ({selectedDough.settings.bakeTime}분)</span>
-                        </div>
-                        <div className="flex justify-between py-1">
-                          <span className="text-stone-400">기압식 스팀:</span>
-                          <span className="font-extrabold text-stone-800">{selectedDough.settings.steam ? "작동(Steam)" : "해당 없음"}</span>
+                  <span className="inline-block px-3.5 py-1.5 bg-orange-50 text-[#f97316] text-xs font-bold tracking-wider rounded-full mb-4 border border-orange-100">
+                    {selectedDough.category === "master" ? "대한민국 명장 라인업" : "글로벌 시그니처 큐레이션"}
+                  </span>
+
+                  <h1 className="text-3xl sm:text-4.5xl font-black text-stone-900 tracking-tight leading-tight mb-2">
+                    {selectedDough.name}
+                  </h1>
+                  
+                  <p className="text-sm font-semibold text-stone-400 mb-6 font-mono uppercase tracking-wider">
+                    MASTERPIECE BY. {selectedDough.masterName} (ORIGIN: {selectedDough.region})
+                  </p>
+
+                  <p className="text-sm sm:text-base text-stone-500 max-w-2xl mx-auto leading-relaxed font-semibold mb-8">
+                    천연 르방 원작 발효 비율을 엄선하여 에브리베이크 IoT 오븐과 완벽한 동기화를 만들어냅니다.<br />
+                    매장에서 가장 신선한 빵의 향기를 손님들에게 선물해 보세요.
+                  </p>
+
+                  <div className="text-2xl sm:text-3.5xl font-black text-stone-950 tracking-tight mb-6">
+                    박스당 ₩ {selectedDough.price.toLocaleString()}
+                  </div>
+
+                  <button
+                    onClick={() => handleAddToCart(selectedDough)}
+                    className="px-10 py-4 bg-stone-900 hover:bg-black text-white text-sm font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-lg shadow-stone-900/10 flex items-center justify-center gap-2"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>주문 카트에 담기</span>
+                  </button>
+                </div>
+
+                {/* SECTION 2: Master Story & Specifications */}
+                <div className="w-full flex flex-col items-center py-16 border-b border-stone-200">
+                  <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight mb-4">
+                    명장 제베 스토리 & 권장 굽기 파라미터
+                  </h2>
+                  <p className="text-[#a8a29e] text-sm max-w-xl text-center leading-relaxed font-semibold mb-10">
+                    전문화된 파라미터들이 에브리베이크 스마트 오븐과 즉각적으로 동기화됩니다. 바코드 스캔 시스템을 통해 일관된 완벽함을 유지할 수 있습니다.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl text-left">
+                    {/* Story Card */}
+                    <div className="bg-white p-6.5 rounded-2xl border border-stone-200/80 shadow-xs flex flex-col justify-between">
+                      <div>
+                        <h4 className="text-sm font-extrabold text-stone-900 mb-3 flex items-center gap-1.5">
+                          <FileText className="w-4 h-4 text-[#f97316]" />
+                          KCT 명인 검증 검토 스토리
+                        </h4>
+                        <p className="text-xs text-stone-500 leading-relaxed font-medium">
+                          본 반죽은 천연 르방 유산균 발효 비율을 극한으로 조절하여 구울 때의 볼륨감과 크러스트의 바삭함이 명장의 비법 그대로 살아납니다. 에브리베이크 스마트 오븐의 바코드 스캔 시스템과 완벽히 매칭되어 있으며, 소량 해동 후 즉시 구우셔도 균일한 기공 구조를 유지하는 특허 레시피입니다.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Param Spec Card */}
+                    <div className="bg-stone-50 p-6.5 rounded-2xl border border-stone-200 shadow-xs space-y-3 flex flex-col justify-between">
+                      <div>
+                        <h4 className="text-xs font-black uppercase tracking-wider text-[#a8a29e] mb-2.5">OVEN PARAMETERS</h4>
+                        <div className="space-y-2 text-xs">
+                          <div className="flex justify-between py-1 border-b border-stone-200/60">
+                            <span className="text-[#a8a29e]">해동 지점:</span>
+                            <span className="font-extrabold text-stone-800">{selectedDough.settings.defrostTemp}°C ({selectedDough.settings.defrostTime}분)</span>
+                          </div>
+                          <div className="flex justify-between py-1 border-b border-stone-200/60">
+                            <span className="text-[#a8a29e]">숙성 발효:</span>
+                            <span className="font-extrabold text-stone-800">{selectedDough.settings.fermentTemp}°C ({selectedDough.settings.fermentHumidity}%)</span>
+                          </div>
+                          <div className="flex justify-between py-1 border-b border-stone-200/60">
+                            <span className="text-[#a8a29e]">소성 온도:</span>
+                            <span className="font-extrabold text-stone-800">{selectedDough.settings.bakeTemp}°C ({selectedDough.settings.bakeTime}분)</span>
+                          </div>
+                          <div className="flex justify-between py-1">
+                            <span className="text-[#a8a29e]">기압식 스팀:</span>
+                            <span className="font-extrabold text-[#44403c]">{selectedDough.settings.steam ? "지원 (분사 2.5초)" : "미지원"}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
               </div>
+            </div>
+          )}
 
-              {/* SECTION 3: Customer Feedback & Live Reviews */}
-              <div className="w-full flex flex-col items-center py-16">
-                <h2 className="text-2xl sm:text-3.5xl font-black text-stone-900 tracking-tight text-center mb-2">
-                  고객 후기
-                </h2>
-                <p className="text-sm sm:text-base text-stone-500 max-w-xl mx-auto text-center leading-relaxed font-semibold mb-12">
-                  에브리베이크와 함께 일상을 바꾼 고객님들의 이야기입니다.
-                </p>
+        {/* ==================================================== */}
+        {/* 7. COMMUNITY BOARD VIEW                             */}
+        {/* ==================================================== */}
+        {currentView === "community" && (
+          <div className="max-w-6xl mx-auto px-6 py-8 animate-fade-in">
+            <button 
+              onClick={() => handleNav("home")}
+              className="mb-6 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" /> 홈으로 이동
+            </button>
 
-                <div className="w-full max-w-3xl text-left space-y-8">
-                  {/* Reviews Form */}
-                  <form onSubmit={(e) => handleAddDoughReview(e, selectedDough.id)} className="bg-stone-50 p-6 rounded-2xl border border-stone-200 space-y-4">
-                    <h3 className="text-xs font-black uppercase tracking-wider text-stone-500">실제 생지 도입 후기를 남겨주세요</h3>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* 메인 커뮤니티 대형 헤더 및 소개부 (주제별 동적 반영) */}
+            <div className="mb-8 space-y-2 text-center max-w-3xl mx-auto">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">EveryBake Business League</span>
+              <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight leading-tight">
+                {activeMainTab === "why-not-sell" && "💡 이거 왜 안 팔아? 에브리베이크"}
+                {activeMainTab === "flea-market" && "🛒 에브리베이크 알뜰 광장"}
+                {activeMainTab === "interior" && "🛠️ 빵집 인테리어 견적 매칭"}
+              </h1>
+              <p className="text-stone-550 text-sm mt-1.5 leading-relaxed font-semibold">
+                {activeMainTab === "why-not-sell" && (
+                  <>전국 사장님들이 직접 원하시는 물품의 신규 입점 계약을 제안하는 실시간 상생 건의 보드입니다. <strong className="text-[#f97316]">30추천 도달 시</strong> 대형 도매 MD팀이 즉각 공급처 직거래 발굴에 착수합니다.</>
+                )}
+                {activeMainTab === "flea-market" && (
+                  <>자재 대량 공동구매부터 남은 재고 중고 할인 처분, 대용량 식자재 소분 상호 나눔, 당일 단기 긴급 제빵 알바 연동까지! 전국 매장의 비용 혁신 마켓 플레이스입니다.</>
+                )}
+                {activeMainTab === "interior" && (
+                  <>노후화된 기기 교체나 인테리어 파사드 파트 보수가 고민이신 사장님들이 시공 모집글을 남기시면, 전문 공인 인테리어 빌더들이 <strong className="text-[#f97316]">공개 비교 견적 제안</strong> 및 포트폴리오 상담을 실시간 연동해 드립니다.</>
+                )}
+              </p>
+            </div>
+
+            {/* 세 개의 대분류 커뮤니티 탭 (깔끔하고 시각적으로 뚜렷한 정렬) */}
+            <div className="flex flex-col sm:flex-row justify-center items-stretch gap-3 mb-10 w-full max-w-4xl mx-auto border-b border-stone-200 pb-6">
+              {[
+                { id: "why-not-sell", label: "💡 이거 왜 안 팔아? 에브리베이크", desc: "도입 희망 상품 건의 및 투표" },
+                { id: "flea-market", label: "🛒 에브리베이크 알뜰 광장", desc: "공구·중고거래·소분나눔·당일인력" },
+                { id: "interior", label: "🛠️ 빵집 인테리어 매칭", desc: "보수/디자인 요청 및 견적 비교" }
+              ].map((mainTab) => (
+                <button
+                  key={mainTab.id}
+                  onClick={() => {
+                    setActiveMainTab(mainTab.id as any);
+                    setSelectedPlazaPostId(null); // 다른 메인 탭 전환 시 상세 정보 초기화
+                  }}
+                  className={`flex-1 text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
+                    activeMainTab === mainTab.id
+                      ? "bg-stone-900 border-transparent text-white shadow-md scale-[1.01]"
+                      : "bg-white hover:bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-400"
+                  }`}
+                >
+                  <p className="text-xs sm:text-sm font-black tracking-tight">{mainTab.label}</p>
+                  <p className={`text-[10px] mt-1 ${activeMainTab === mainTab.id ? "text-stone-300" : "text-stone-400"} font-bold`}>
+                    {mainTab.desc}
+                  </p>
+                </button>
+              ))}
+            </div>
+
+            {/* ============================================== */}
+            {/* 1) 이거 왜 안 팔아? 에브리베이크 뷰          */}
+            {/* ============================================== */}
+            {activeMainTab === "why-not-sell" && (
+              <div className="space-y-6">
+                {/* Comm Toggles */}
+                <div className="flex justify-center gap-2 mb-8 bg-stone-105 p-1.5 rounded-2xl w-fit mx-auto border border-stone-200">
+                  <button
+                    onClick={() => setActiveCommTab("dough")}
+                    className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      activeCommTab === "dough"
+                        ? "bg-[#f97316] text-white shadow-sm"
+                        : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
+                    }`}
+                  >
+                    🥐 프리미엄 생지 공동제안
+                  </button>
+                  <button
+                    onClick={() => setActiveCommTab("coffee")}
+                    className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      activeCommTab === "coffee"
+                        ? "bg-[#f97316] text-white shadow-sm"
+                        : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
+                    }`}
+                  >
+                    ☕ 원두 및 커피기기 제안
+                  </button>
+                  <button
+                    onClick={() => setActiveCommTab("raw")}
+                    className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      activeCommTab === "raw"
+                        ? "bg-[#f97316] text-white shadow-sm"
+                        : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
+                    }`}
+                  >
+                    🌾 원부자재 제안
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+                  {/* Proposals List (Left) */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-extrabold text-stone-500 uppercase tracking-widest">
+                        제안된 아이디어 ({communityPosts.filter(p => p.category === activeCommTab).length}개)
+                      </span>
+                      <span className="text-[10px] text-[#f97316] font-bold">
+                        실시간 투표 반영 완료
+                      </span>
+                    </div>
+
+                    {communityPosts.filter(p => p.category === activeCommTab).length === 0 ? (
+                      <div className="bg-white p-12 text-center rounded-3xl border border-stone-200 flex flex-col items-center justify-center space-y-3 col-span-full">
+                        <span className="text-4xl text-stone-300">💡</span>
+                        <h4 className="text-stone-800 font-bold">등록된 제안이 아직 없습니다</h4>
+                        <p className="text-xs text-stone-400">우측 폼을 이용해 첫 번째로 사장님의 혁명적인 입점 건의를 올려 보세요!</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {communityPosts.filter(p => p.category === activeCommTab).map((post) => (
+                          <div key={post.id} className="bg-white p-6 rounded-2xl border border-stone-200 shadow-xs hover:shadow-md transition-all space-y-4">
+                            <div className="flex justify-between items-start">
+                              <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md ${
+                                post.status.includes("예정")
+                                  ? "bg-emerald-50 text-emerald-700 border border-emerald-150"
+                                  : post.status.includes("MD")
+                                  ? "bg-amber-50 text-amber-700 border border-amber-100"
+                                  : "bg-stone-100 text-stone-600 border border-stone-150"
+                              }`}>
+                                {post.status}
+                              </span>
+                              <span className="text-[10px] text-stone-400 font-mono">{post.date}</span>
+                            </div>
+
+                            <div className="space-y-1.5">
+                              <h3 className="text-sm sm:text-base font-black text-stone-900 leading-snug">{post.title}</h3>
+                              <p className="text-xs text-stone-605 leading-relaxed font-semibold">{post.content}</p>
+                            </div>
+
+                            <div className="pt-2 border-t border-stone-100 flex justify-between items-center text-xs">
+                              <div className="flex items-center gap-1.5 text-stone-500 font-semibold text-[11px]">
+                                <User className="w-3.5 h-3.5 text-stone-400" />
+                                <span>{post.author}</span>
+                              </div>
+
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs font-bold text-stone-400">
+                                  추천 수 <strong className="text-stone-800 ml-0.5">{post.votes}개</strong>
+                                </span>
+                                
+                                <button
+                                  type="button"
+                                  onClick={() => handleVotePost(post.id)}
+                                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer transition-all ${
+                                    post.votedByMe
+                                      ? "bg-orange-50 text-[#f97316] border border-orange-200"
+                                      : "bg-stone-50 hover:bg-orange-50 text-stone-700 border border-stone-200 hover:border-orange-200"
+                                  }`}
+                                >
+                                  <ThumbsUp className={`w-3.5 h-3.5 ${post.votedByMe ? "fill-current" : ""}`} />
+                                  <span>{post.votedByMe ? "추천 완료" : "추천하기"}</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Suggestions Form (Right) */}
+                  <div className="lg:col-span-12 xl:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs">
+                    <h3 className="text-xs font-extrabold text-stone-950 mb-2 flex items-center gap-1.5">
+                      🛡️ 신제품 도매 입점 긴급 제안 등록
+                    </h3>
+                    <p className="text-stone-450 text-[10px] mb-4 leading-relaxed">
+                      매장에 절실하게 필요한 냉동 벌크 식자재 브랜드, 규격화된 수입 제안 등을 올려주시면 전국 사장님들의 소중한 한 표가 모아 자사 수입 협상력으로 작동합니다.
+                    </p>
+
+                    <form onSubmit={handleAddCommunityPost} className="space-y-4">
                       <div>
-                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">성함 또는 매장명</label>
+                        <label className="block text-[10px] uppercase font-bold text-[#f97316] mb-1">매장명 / 사장님 존함</label>
                         <input
                           type="text"
                           required
-                          value={newDoughAuthor}
-                          onChange={(e) => setNewDoughAuthor(e.target.value)}
-                          placeholder="예: 서울 마포구 C베이커리"
-                          className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-900 focus:border-stone-900 outline-hidden"
+                          value={newCommAuthor}
+                          onChange={(e) => setNewCommAuthor(e.target.value)}
+                          placeholder="예: 망원 브레드룸 지점장"
+                          className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden font-medium"
                         />
                       </div>
+
                       <div>
-                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">만족도 별점</label>
-                        <select 
-                          value={newDoughStars}
-                          onChange={(e) => setNewDoughStars(parseInt(e.target.value))}
-                          className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-900 focus:border-stone-900 outline-hidden"
-                        >
-                          <option value="5">★★★★★ (5점 만점)</option>
-                          <option value="4">★★★★☆ (4점 우수)</option>
-                          <option value="3">★★★☆☆ (3점 보통)</option>
-                          <option value="2">★★☆☆☆ (2점 미흡)</option>
-                          <option value="1">★☆☆☆☆ (1점 매우불만)</option>
-                        </select>
+                        <label className="block text-[10px] uppercase font-bold text-[#f97316] mb-1">건의 제안 제목</label>
+                        <input
+                          type="text"
+                          required
+                          value={newCommTitle}
+                          onChange={(e) => setNewCommTitle(e.target.value)}
+                          placeholder="예: 프랑스 포리쉐 수입 밀가루 T55 소분 계약 건의"
+                          className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden font-medium"
+                        />
                       </div>
-                    </div>
 
-                    <div>
-                      <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">맛과 품질은 어떠셨나요?</label>
-                      <textarea
-                        required
-                        rows={3}
-                        value={newDoughContent}
-                        onChange={(e) => setNewDoughContent(e.target.value)}
-                        placeholder="매장에서 구우신 후 손님들의 반응이나 고유한 결, 버터 풍미 등의 우수한 사양을 담아 기재해 주세요."
-                        className="w-full text-xs rounded-xl border border-stone-250 bg-white p-3 focus:ring-1 focus:ring-stone-900 focus:border-stone-900 outline-hidden resize-none"
-                      />
-                    </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-[#f97316] mb-1">상세 협력 제안내용</label>
+                        <textarea
+                          required
+                          rows={4}
+                          value={newCommContent}
+                          onChange={(e) => setNewCommContent(e.target.value)}
+                          placeholder="희망 규격 및 대량 공동 구매시 예상 소화 박스, 자사 유통망 경유 희망 이유를 설득력 있게 서술해 주시면 사장님들이 더 많이 추천합니다."
+                          className="w-full text-xs rounded-xl border border-stone-250 bg-white p-3 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden resize-none font-medium"
+                        />
+                      </div>
 
-                    <div className="flex justify-end">
                       <button
                         type="submit"
-                        className="px-6 py-2.5 bg-stone-905 hover:bg-black text-white rounded-xl text-xs font-bold transition-all shadow cursor-pointer flex items-center gap-1.5"
+                        className="w-full py-3.5 bg-[#f97316] hover:bg-orange-600 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_2px_8px_rgba(249,115,22,0.25)] cursor-pointer"
                       >
-                        <Send className="w-3.5 h-3.5" />
-                        <span>후기 등록</span>
+                        사장님 실시간 보드 공개 전송
                       </button>
-                    </div>
-                  </form>
-
-                  {/* Render review list */}
-                  <div className="divide-y divide-stone-150 space-y-6 pt-4 text-left">
-                    {(doughReviews[selectedDough.id] || []).length > 0 ? (
-                      (doughReviews[selectedDough.id] || []).map((item) => (
-                        <div key={item.id} className="pt-6 first:pt-0 space-y-2">
-                          <div className="flex justify-between items-center text-xs">
-                            <span className="font-extrabold text-stone-950">{item.author}</span>
-                            <span className="text-[10px] text-stone-400 font-mono">{item.date}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-yellow-500">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <Star 
-                                key={i} 
-                                className={`w-3.5 h-3.5 ${i < item.stars ? "fill-yellow-400 text-yellow-400" : "text-stone-200"}`} 
-                                referrerPolicy="no-referrer"
-                              />
-                            ))}
-                          </div>
-                          <p className="text-sm text-stone-700 leading-relaxed font-semibold">
-                            {item.content}
-                          </p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-xs text-stone-400 py-4 text-center">처음으로 백업 후기를 등록해 보세요!</p>
-                    )}
+                    </form>
                   </div>
                 </div>
               </div>
+            )}
 
-            </div>
+            {/* ============================================== */}
+            {/* 2) 에브리베이크 알뜰 광장 뷰                    */}
+            {/* ============================================== */}
+            {activeMainTab === "flea-market" && (
+              <div className="space-y-6">
+                
+                {selectedPlazaPostId ? (
+                  /* ============================================== */
+                  /* A. 알뜰 광장 상세 대리인 및 실시간 거래 채팅 피드 */
+                  /* ============================================== */
+                  (() => {
+                    const post = plazaPosts.find(p => p.id === selectedPlazaPostId);
+                    if (!post) return <p className="text-center">게시글을 찾을 수 없습니다.</p>;
+                    return (
+                      <div className="bg-white rounded-3xl border border-stone-200 shadow-md p-6 sm:p-8 animate-fade-in space-y-6">
+                        <div className="flex flex-wrap justify-between items-center gap-4 border-b border-stone-100 pb-5">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedPlazaPostId(null)}
+                            className="flex items-center gap-1.5 text-xs font-black text-[#f97316] hover:text-orange-600 bg-orange-50 hover:bg-orange-100 px-3.5 py-1.75 rounded-xl transition-all cursor-pointer"
+                          >
+                            <ChevronLeft className="w-4 h-4" /> 목록형 광장으로 돌아가기
+                          </button>
+                          
+                          <div className="flex items-center gap-2 font-mono text-[11px] text-stone-400">
+                            <span>등록일: {post.date}</span>
+                            <span>|</span>
+                            <span className="flex items-center gap-0.5 text-stone-500 font-bold">
+                              <MapPin className="w-3.5 h-3.5 text-stone-400" /> {post.location}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                          
+                          {/* Left Column: 상세 품목 공기안 및 계약 요약 */}
+                          <div className="lg:col-span-7 space-y-6">
+                            <div className="space-y-4">
+                              <div className="flex items-center gap-2">
+                                <span className="bg-orange-100 text-[#f97316] font-bold text-[9px] uppercase px-2 py-0.5 rounded">
+                                  {post.category === "coop" && "📦 포장 자재 공동구매"}
+                                  {post.category === "used" && "🤝 단기 재고 중고장터"}
+                                  {post.category === "share" && "🎁 대용량 소분 무료나눔"}
+                                  {post.category === "job" && "🚨 당일 땜빵/알바 급구"}
+                                </span>
+                                <span className="text-xs text-emerald-600 font-extrabold">● 모집/공구 진행중 (실시간)</span>
+                              </div>
+                              
+                              <h2 className="text-xl sm:text-2xl font-black text-stone-900 tracking-tight leading-snug">{post.title}</h2>
+                              
+                              <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3.5">
+                                <div className="flex items-center gap-2 text-xs font-bold text-stone-550">
+                                  <User className="w-4 h-4 text-[#f97316]" />
+                                  <span>작성 점주: <strong>{post.author}</strong></span>
+                                  <span className="text-stone-300">|</span>
+                                  <span>구역 위치: <strong>{post.location}</strong></span>
+                                </div>
+                                <p className="text-xs text-stone-600 leading-relaxed font-semibold whitespace-pre-wrap">{post.content}</p>
+                              </div>
+                            </div>
+
+                            {/* 세부 수치 데이터 박스 */}
+                            <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-5 space-y-4">
+                              <h4 className="text-xs font-black text-stone-850 flex items-center gap-1">
+                                <CheckCircle2 className="w-4 h-4 text-[#f97316]" /> 광장 매칭 실시간 마일스톤
+                              </h4>
+                              
+                              <div className="grid grid-cols-2 gap-4">
+                                {post.priceInfo && (
+                                  <div className="bg-white p-3.5 rounded-xl border border-stone-150">
+                                    <span className="block text-[10px] text-stone-400 font-bold">공급 제안 단가</span>
+                                    <span className="text-sm font-black text-stone-900 font-mono mt-0.5 block">{post.priceInfo}</span>
+                                  </div>
+                                )}
+                                {post.targetAmount && (
+                                  <div className="bg-white p-3.5 rounded-xl border border-stone-150">
+                                    <span className="block text-[10px] text-stone-400 font-bold">목표 수주량 / 분량</span>
+                                    <span className="text-sm font-black text-stone-900 font-mono mt-0.5 block">{post.targetAmount}</span>
+                                  </div>
+                                )}
+                                {post.urgentsInfo && (
+                                  <div className="bg-white p-3.5 rounded-xl border border-stone-150 col-span-2">
+                                    <span className="block text-[10px] text-stone-400 font-bold">일정 조율 및 우대 조건</span>
+                                    <span className="text-xs font-extrabold text-[#f97316] mt-0.5 block">{post.urgentsInfo}</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="space-y-2 pt-2 border-t border-orange-100/50">
+                                <div className="flex justify-between items-center text-xs font-bold text-stone-700">
+                                  <span>현재 매장 참여율 ({post.participantsCount}개 매장 확보)</span>
+                                  <span className="text-[#f97316]">{post.participantsCount > 4 ? "공구 성사 확률 98%!" : "추가 참여 대기"}</span>
+                                </div>
+                                <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden border border-stone-250">
+                                  <div 
+                                    className="h-full bg-gradient-to-r from-orange-400 to-[#f97316] transition-all duration-500" 
+                                    style={{ width: `${Math.min(100, (post.participantsCount / 8) * 100)}%` }}
+                                  />
+                                </div>
+                                <p className="text-[10px] text-stone-400 font-bold">목표 인원/매장 도달 시 EveryBake 프렌즈 전용 즉시 배송 바우처가 자동 활성화됩니다.</p>
+                              </div>
+
+                              {/* Interactive Join / Participate Button */}
+                              <button
+                                type="button"
+                                onClick={() => handleJoinPlazaPost(post.id)}
+                                className={`w-full py-3.5 rounded-xl text-xs font-black transition-all cursor-pointer uppercase tracking-wider flex items-center justify-center gap-1.5 ${
+                                  post.joinedByMe
+                                    ? "bg-stone-150 hover:bg-stone-200 text-stone-700 border border-stone-300"
+                                    : "bg-[#f97316] hover:bg-orange-600 text-white shadow-md hover:shadow-lg"
+                                }`}
+                              >
+                                {post.joinedByMe ? "🤝 나의 매장 광장 참여 취소하기" : "🤝 여기에 내 가게도 무상 즉시 참전하기"}
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Right Column: 세부 실시간 대화식 스레드 (댓글) */}
+                          <div className="lg:col-span-5 bg-stone-50 border border-stone-200 rounded-2xl p-4 sm:p-6 space-y-5">
+                            <div className="border-b border-stone-150 pb-3 flex justify-between items-center">
+                              <h3 className="text-xs font-black text-stone-900">
+                                💬 점주 및 업체간 조율 스레드 ({post.comments.length}개)
+                              </h3>
+                              <span className="text-[9px] text-emerald-600 font-extrabold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                                LIVE STREAMING
+                              </span>
+                            </div>
+
+                            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 divide-y divide-stone-200/50">
+                              {post.comments.map((comment) => (
+                                <div key={comment.id} className="pt-3.5 first:pt-0 space-y-1">
+                                  <div className="flex justify-between items-baseline">
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-xs font-extrabold text-stone-850">{comment.author}</span>
+                                      <span className="text-[8px] bg-stone-150 text-stone-500 font-black px-1.5 py-0.2 rounded">
+                                        {comment.role}
+                                      </span>
+                                    </div>
+                                    <span className="text-[9px] text-stone-400 font-mono font-bold">{comment.date}</span>
+                                  </div>
+                                  <p className="text-xs text-stone-605 leading-relaxed font-semibold">{comment.content}</p>
+                                </div>
+                              ))}
+
+                              {post.comments.length === 0 && (
+                                <p className="text-xs text-stone-400 text-center py-8">아직 공동의 대화가 없습니다. 첫 대화를 제언해 보십시오!</p>
+                              )}
+                            </div>
+
+                            {/* 댓글 작성란 양식 */}
+                            <form 
+                              onSubmit={(e) => handleAddPlazaComment(post.id, e)}
+                              className="bg-white border border-stone-200 rounded-xl p-3 space-y-3 shadow-xs"
+                            >
+                              <div className="flex items-center gap-2">
+                                <label className="text-[9px] font-extrabold text-stone-400 uppercase">점주명 / 매장명</label>
+                                <input
+                                  type="text"
+                                  value={newPlazaCommentAuthor}
+                                  onChange={(e) => setNewPlazaCommentAuthor(e.target.value)}
+                                  placeholder="예: 망원 크로플점주 (미기입시 익명)"
+                                  className="w-full text-[10px] font-bold text-stone-800 border-none outline-none p-0 focus:ring-0 placeholder-stone-300"
+                                />
+                              </div>
+                              <div className="relative">
+                                <textarea
+                                  required
+                                  rows={2}
+                                  value={newPlazaCommentText}
+                                  onChange={(e) => setNewPlazaCommentText(e.target.value)}
+                                  placeholder="참여 수량이나 질문 혹은 '몇 명 참가할의사 남깁니다!' 등의 대화를 나누어 보세요."
+                                  className="w-full text-xs font-medium text-stone-750 border-none outline-none p-0 pr-10 focus:ring-0 placeholder-stone-350 resize-none"
+                                />
+                                <button
+                                  type="submit"
+                                  className="absolute right-0 bottom-0 p-1.5 bg-[#f97316] text-white hover:bg-orange-650 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
+                                >
+                                  <Send className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  /* ============================================== */
+                  /* B. 알뜰 광장 메인 리스트 및 공동구매/구인 글쓰기 폼 */
+                  /* ============================================== */
+                  <div className="space-y-6">
+                    {/* Al-tteul Plaza Sub-Category Tabs */}
+                    <div className="flex flex-wrap gap-2.5 bg-stone-100 p-1.5 rounded-2xl w-full border border-stone-200">
+                      {[
+                        { id: "coop", label: "📦 포장자재 공동구매", desc: "박스/비닐백 도매 합산" },
+                        { id: "used", label: "🤝 단기 재고 중고장터", desc: "도구 교환 및 아울렛" },
+                        { id: "share", label: "🎁 부재료 소분 무료나눔", desc: "대량 유기농 원재료 소분" },
+                        { id: "job", label: "🚨 당일 땜빵 제빵인력", desc: "구인 긴급 조달 땜빵" }
+                      ].map((subCat) => (
+                        <button
+                          key={subCat.id}
+                          type="button"
+                          onClick={() => setActivePlazaTab(subCat.id as any)}
+                          className={`flex-1 min-w-[130px] text-center px-4 py-3 rounded-xl transition-all cursor-pointer ${
+                            activePlazaTab === subCat.id
+                              ? "bg-white text-[#f97316] font-extrabold shadow-sm text-xs border border-stone-200"
+                              : "text-stone-605 hover:bg-white/50 text-xs font-bold border border-transparent"
+                          }`}
+                        >
+                          <p className="font-extrabold">{subCat.label}</p>
+                          <p className="text-[9px] text-stone-400 mt-0.5 font-semibold">{subCat.desc}</p>
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* 광장 목록 정보 그리드 */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+                      
+                      {/* Left Column: 게시글 목록 */}
+                      <div className="lg:col-span-7 space-y-4">
+                        <div className="flex justify-between items-center bg-stone-50 border border-stone-200 p-3 rounded-xl">
+                          <span className="text-xs font-extrabold text-stone-600 uppercase tracking-wider">
+                            목록 결과 현황 ({plazaPosts.filter(p => p.category === activePlazaTab).length}개 가맹점)
+                          </span>
+                          <span className="text-[10px] text-[#f97316] font-bold">
+                            전국 지점 제휴 우대 정책
+                          </span>
+                        </div>
+
+                        <div className="space-y-4.5">
+                          {plazaPosts.filter(p => p.category === activePlazaTab).map((post) => (
+                            <div 
+                              key={post.id}
+                              onClick={() => setSelectedPlazaPostId(post.id)}
+                              className="bg-white p-5.5 rounded-2xl border border-stone-200 hover:border-[#f97316] shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer group space-y-3 relative"
+                            >
+                              <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[9px] font-black uppercase bg-stone-100 text-stone-600 px-2 py-0.5 rounded border border-stone-200">
+                                    {post.location}
+                                  </span>
+                                  {post.priceInfo && (
+                                    <span className="text-[9px] font-black bg-orange-50 text-[#f97316] px-2 py-0.5 rounded border border-orange-100 font-mono">
+                                      {post.priceInfo}
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-[10px] text-stone-400 font-mono">{post.date}</span>
+                              </div>
+
+                              <div className="space-y-1">
+                                <h4 className="text-sm sm:text-base font-black text-stone-900 group-hover:text-[#f97316] transition-colors leading-snug">
+                                  {post.title}
+                                </h4>
+                                <p className="text-xs text-stone-500 font-semibold line-clamp-2 leading-relaxed">
+                                  {post.content}
+                                </p>
+                              </div>
+
+                              <div className="pt-2 border-t border-stone-100 flex justify-between items-center text-[11px] text-stone-400 font-bold">
+                                <div className="flex items-center gap-1 text-stone-600">
+                                  <User className="w-3.5 h-3.5 text-stone-400" />
+                                  <span>{post.author}</span>
+                                </div>
+                                
+                                <div className="flex items-center gap-3">
+                                  <span>참여 매장 <strong className="text-stone-850">{post.participantsCount}개</strong></span>
+                                  <span className="text-stone-200">|</span>
+                                  <span className="text-[#f97316] bg-orange-50 px-2 py-0.5 rounded-md flex items-center gap-0.5 border border-orange-100 text-[10px]">
+                                    <MessageSquare className="w-3 h-3" /> 댓글 {post.comments.length}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Right Column: 알뜰 광장 직접 제안하기 등록 폼 */}
+                      <div className="lg:col-span-12 xl:col-span-5 bg-stone-900 text-white rounded-3xl p-6 sm:p-8 border border-stone-950 shadow-xl space-y-5">
+                        <div className="space-y-1.5">
+                          <h3 className="text-xs font-black tracking-widest text-[#f97316] uppercase">
+                            🛒 알뜰 광장 점주 모집 공지글 등록
+                          </h3>
+                          <p className="text-stone-400 text-[10px] leading-relaxed">
+                            공동구매 물량 조율이나 중고 자재의 판매 건, 부재료 무상 나눔 제안, 긴급 당일 일손 보조 충원 요구까지! 상세 양식을 배포하면 전 가맹 채널에 실시간 푸쉬 가이드가 작동합니다.
+                          </p>
+                        </div>
+
+                        <form onSubmit={handleCreatePlazaPost} className="space-y-4">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[9px] uppercase font-bold text-stone-400 mb-1">상호명 / 점주님 존함</label>
+                              <input
+                                type="text"
+                                required
+                                value={newPlazaAuthor}
+                                onChange={(e) => setNewPlazaAuthor(e.target.value)}
+                                placeholder="예: 상수 베이킹웍스 점주"
+                                className="w-full text-xs rounded-xl border border-stone-700 bg-stone-800 text-white px-3 py-2.5 focus:ring-1 focus:ring-[#f97316] outline-hidden font-medium"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[9px] uppercase font-bold text-stone-400 mb-1">상업 구역 (시/군)</label>
+                              <input
+                                type="text"
+                                required
+                                value={newPlazaLocation}
+                                onChange={(e) => setNewPlazaLocation(e.target.value)}
+                                placeholder="예: 서울 마포구 상암동"
+                                className="w-full text-xs rounded-xl border border-stone-700 bg-stone-800 text-white px-3 py-2.5 focus:ring-1 focus:ring-[#f97316] outline-hidden font-medium"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[9px] uppercase font-bold text-stone-400 mb-1">모집 공지글 제목</label>
+                            <input
+                              type="text"
+                              required
+                              value={newPlazaTitle}
+                              onChange={(e) => setNewPlazaTitle(e.target.value)}
+                              placeholder={
+                                activePlazaTab === "coop" ? "예: 무지 크라프트 포장백 5만장 대량 도매 공구(45% 다운)" :
+                                activePlazaTab === "used" ? "예: 리치몬드 도우쉐이퍼 (15kg용) 중고 인하 판매" :
+                                activePlazaTab === "share" ? "예: 가든 허브 건조 분말 (5kg 분량) 무료 소분 나눔합니다" :
+                                "예: 이번주 토요일 새벽 단기 제빵 보조 일손 구합니다 (시급 1.3만)"
+                              }
+                              className="w-full text-xs rounded-xl border border-stone-700 bg-stone-800 text-white px-3 py-2.5 focus:ring-1 focus:ring-[#f97316] outline-hidden font-medium"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[9px] uppercase font-bold text-stone-400 mb-1">원부자재 및 긴급 땜빵 설명</label>
+                            <textarea
+                              required
+                              rows={3}
+                              value={newPlazaContent}
+                              onChange={(e) => setNewPlazaContent(e.target.value)}
+                              placeholder="상세한 공구 협량 사항이나 상태 사양, 근무 시각 등 요구 조건을 전달해 주세요."
+                              className="w-full text-xs rounded-xl border border-stone-700 bg-stone-800 text-white p-3 focus:ring-1 focus:ring-[#f97316] outline-hidden resize-none font-medium"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3 pt-1 border-t border-stone-800">
+                            <div>
+                              <label className="block text-[9px] uppercase font-bold text-stone-400 mb-1">유지단가 / 시급 제안</label>
+                              <input
+                                type="text"
+                                value={newPlazaPriceInfo}
+                                onChange={(e) => setNewPlazaPriceInfo(e.target.value)}
+                                placeholder="예: 시급 13,000원 / 박스당 1.2만"
+                                className="w-full text-xs rounded-xl border border-stone-700 bg-stone-800 text-white px-3 py-2.5 focus:ring-1 focus:ring-[#f97316] outline-hidden font-medium"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[9px] uppercase font-bold text-stone-400 mb-1">목표 물량 / 필요 시각</label>
+                              <input
+                                type="text"
+                                value={newPlazaTargetAmount}
+                                onChange={(e) => setNewPlazaTargetAmount(e.target.value)}
+                                placeholder="예: 200박스 한도 / 선착순 5점포"
+                                className="w-full text-xs rounded-xl border border-stone-700 bg-stone-800 text-white px-3 py-2.5 focus:ring-1 focus:ring-[#f97316] outline-hidden font-medium"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[9px] uppercase font-bold text-stone-400 mb-1">작성자 상세 요구 조건 (우대/일정)</label>
+                            <input
+                              type="text"
+                              value={newPlazaUrgentsInfo}
+                              onChange={(e) => setNewPlazaUrgentsInfo(e.target.value)}
+                              placeholder="예: 근거리 매점 사장님 직인 선호 / 동종 업계 경력 우대"
+                              className="w-full text-xs rounded-xl border border-stone-700 bg-stone-800 text-white px-3 py-2.5 focus:ring-1 focus:ring-[#f97316] outline-hidden font-medium"
+                            />
+                          </div>
+
+                          <button
+                            type="submit"
+                            className="w-full py-3.5 bg-[#f97316] hover:bg-orange-600 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_2px_8px_rgba(249,115,22,0.25)] cursor-pointer"
+                          >
+                            광장 실시간 보드에 배포하기
+                          </button>
+                        </form>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ============================================== */}
+            {/* 3) 빵집 인테리어 견적 매칭 뷰                     */}
+            {/* ============================================== */}
+            {activeMainTab === "interior" && (
+              <div className="space-y-6 animate-fade-in">
+                
+                {selectedPlazaPostId ? (
+                  /* ============================================== */
+                  /* A. 인테리어 시공 요청 상세와 전문업체들의 역경매 비딩 현황 */
+                  /* ============================================== */
+                  (() => {
+                    const post = plazaPosts.find(p => p.id === selectedPlazaPostId);
+                    if (!post) return <p className="text-center">요청글을 찾을 수 없습니다.</p>;
+                    
+                    return (
+                      <div className="bg-white rounded-3xl border border-stone-200 shadow-md p-6 sm:p-8 space-y-6">
+                        <div className="flex flex-wrap justify-between items-center gap-4 border-b border-stone-100 pb-5">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedPlazaPostId(null)}
+                            className="flex items-center gap-1.5 text-xs font-black text-[#f97316] hover:text-orange-650 bg-orange-50 hover:bg-orange-100 px-3.5 py-1.75 rounded-xl transition-all cursor-pointer"
+                          >
+                            <ChevronLeft className="w-4 h-4" /> 프로젝트 목록으로 가기
+                          </button>
+                          
+                          <div className="flex items-center gap-2 font-mono text-[11px] text-stone-400">
+                            <span>접수 코드: {post.id}</span>
+                            <span>|</span>
+                            <span className="flex items-center gap-0.5 text-stone-500 font-bold">
+                              <MapPin className="w-3.5 h-3.5" /> {post.location}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                          
+                          {/* Left Column: 사장님의 인테리어 보수 설계 제안서 요약 */}
+                          <div className="lg:col-span-6 space-y-5">
+                            <div className="space-y-3">
+                              <span className="bg-stone-900 text-white font-black text-[9px] px-2.5 py-1 rounded inline-block">
+                                🛠️ 실시간 비교 역비딩 진행 중
+                              </span>
+                              <h2 className="text-xl sm:text-2xl font-black text-stone-900 leading-tight">
+                                {post.title}
+                              </h2>
+                            </div>
+
+                            <div className="p-5 bg-stone-50 border border-stone-200 rounded-2xl space-y-4">
+                              <div className="flex items-center gap-2 text-xs font-bold text-stone-600">
+                                <User className="w-4 h-4 text-[#f97316]" />
+                                <span>의뢰 점주: <strong>{post.author}</strong></span>
+                              </div>
+                              
+                              <p className="text-xs text-stone-605 leading-relaxed font-semibold whitespace-pre-wrap">{post.content}</p>
+                              
+                              {post.detailInfo && (
+                                <div className="pt-3 border-t border-stone-200 space-y-1.5">
+                                  <span className="text-[10px] uppercase font-bold text-stone-400 block">원하는 소재 규격 및 특이사항</span>
+                                  <p className="text-xs text-stone-600/90 font-medium leading-relaxed bg-white p-3 rounded-xl border border-stone-150">{post.detailInfo}</p>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="bg-orange-50 border border-orange-100 rounded-2xl p-5 space-y-3.5">
+                              <h4 className="text-xs font-black text-stone-850 flex items-center gap-1.5">
+                                📌 점주 예산 한도선 및 타겟정보
+                              </h4>
+                              <div className="space-y-2 text-xs font-bold text-stone-700">
+                                <div className="flex justify-between">
+                                  <span>지정구역 한도 범위:</span>
+                                  <span className="text-stone-950 font-mono text-sm font-black">{post.urgentsInfo || "협의 조율"}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>희망 시공 완료 일수:</span>
+                                  <span className="text-stone-900">도면 확정 후 3일 이내 초단기 시공 완결</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>시스템 가이드 적용여부:</span>
+                                  <span className="text-emerald-700">EveryBake 프랜즈 표준 매뉴얼 컬러 테마 준수</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Right Column: 공인 인테리어 업체사장님들의 역견적 비딩 스트림 */}
+                          <div className="lg:col-span-6 bg-[#f8fafc] border border-blue-105 rounded-2xl p-4 sm:p-6 space-y-5">
+                            <div className="border-b border-stone-200 pb-3 flex justify-between items-center">
+                              <div>
+                                <h3 className="text-xs font-black text-[#1e3a8a] flex items-center gap-1">
+                                  🔧 공인 인테리어 도장/도색 전문 비딩 스레드
+                                </h3>
+                                <p className="text-[9px] text-[#2563eb] font-bold mt-0.5">매칭 성사 시 무상 하자 보증 2년 자동 특약 발송</p>
+                              </div>
+                              <span className="text-[9px] text-white font-extrabold bg-[#2563eb] px-2 py-0.5 rounded shadow-sm">
+                                BIDS ACTIVE ({post.comments.length})
+                              </span>
+                            </div>
+
+                            {/* 역경매 입찰 카드 형태로 고퀄 가시성 연출 */}
+                            <div className="space-y-4 max-h-[430px] overflow-y-auto pr-2 divide-y divide-stone-200/40">
+                              {post.comments.map((comment) => {
+                                const isProfessional = comment.role.includes("업체") || comment.author.includes("디자인") || comment.author.includes("아트") || comment.author.includes("연우") || comment.author.includes("클래스");
+                                return (
+                                  <div key={comment.id} className="pt-4 first:pt-0 space-y-2.5">
+                                    <div className="flex justify-between items-start">
+                                      <div className="space-y-0.5">
+                                        <div className="flex items-center gap-1.5">
+                                          <span className="text-xs font-black text-stone-900">
+                                            {isProfessional ? `🏆 ${comment.author}` : comment.author}
+                                          </span>
+                                          <span className={`text-[8px] font-black px-1.5 py-0.2 rounded-md ${
+                                            isProfessional 
+                                              ? "bg-blue-100 text-blue-700 border border-blue-200" 
+                                              : "bg-stone-100 text-stone-500"
+                                          }`}>
+                                            {comment.role}
+                                          </span>
+                                        </div>
+                                        {isProfessional && (
+                                          <div className="flex items-center gap-1 text-[9px] text-amber-500 font-extrabold">
+                                            <span>⭐⭐⭐⭐⭐</span>
+                                            <span className="text-stone-400 font-normal">| 공인 빌더인적</span>
+                                          </div>
+                                        )}
+                                      </div>
+                                      <span className="text-[10px] text-stone-400 font-mono">{comment.date}</span>
+                                    </div>
+
+                                    {/* 업체 견적 제안 상세 및 컨택 가이드 */}
+                                    <div className={`p-4 rounded-xl text-xs font-semibold leading-relaxed border ${
+                                      isProfessional 
+                                        ? "bg-white border-blue-100 text-stone-700 shadow-xs" 
+                                        : "bg-stone-50 border-stone-200 text-stone-605"
+                                    }`}>
+                                      <p className="whitespace-pre-wrap">{comment.content}</p>
+                                      
+                                      {isProfessional && (
+                                        <div className="mt-3 pt-2.5 border-t border-dashed border-stone-150 flex justify-between items-center text-[10px]">
+                                          <span className="text-emerald-700 font-bold block">↳ 24시간 내 무상 가맹 실측 대응</span>
+                                          <button 
+                                            type="button"
+                                            onClick={() => alert("선택업체와 보안 전용 스마트 실시간 상담 창이 활성화되었습니다.")}
+                                            className="text-[#2563eb] hover:underline font-black bg-transparent border-none p-0 cursor-pointer flex items-center gap-0.5 text-[10px]"
+                                          >
+                                            상세 견적 조율 창 개설하기 &rarr;
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+
+                              {post.comments.length === 0 && (
+                                <p className="text-xs text-stone-400 text-center py-8">접수된 전문 업체의 견적이 없습니다. 우측 폼으로 입찰을 진행해 보십시오.</p>
+                              )}
+                            </div>
+
+                            {/* 전문업체 견적 입찰 참여 양식 폼 */}
+                            <form 
+                              onSubmit={(e) => handleAddPlazaComment(post.id, e)}
+                              className="bg-white border border-[#2563eb]/20 rounded-xl p-3 space-y-3.5 shadow-sm"
+                            >
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                <div className="flex-1 flex items-center gap-1.5">
+                                  <label className="text-[8px] font-black text-stone-400 uppercase tracking-tighter shrink-0">입찰 참여자/디자인사</label>
+                                  <input
+                                    type="text"
+                                    value={newPlazaCommentAuthor}
+                                    onChange={(e) => setNewPlazaCommentAuthor(e.target.value)}
+                                    placeholder="예: 공간디자인 탑클래스"
+                                    className="w-full text-xs font-bold text-stone-950 border-b border-stone-200 focus:border-[#2563eb] outline-none p-1 placeholder-stone-300 bg-transparent"
+                                  />
+                                </div>
+                              </div>
+                              <div className="relative">
+                                <textarea
+                                  required
+                                  rows={3}
+                                  value={newPlazaCommentText}
+                                  onChange={(e) => setNewPlazaCommentText(e.target.value)}
+                                  placeholder="인테리어 제원 제안 사양과 실시간 총 견적 제안 (예: 250만원 제안), 2년 AS 무상 혜택 적용 여부를 자유롭게 설명 기입하세요."
+                                  className="w-full text-xs font-semibold text-stone-700 border-none outline-none p-0 pr-12 focus:ring-0 placeholder-stone-350 resize-none leading-relaxed"
+                                />
+                                <button
+                                  type="submit"
+                                  className="absolute right-0 bottom-0 py-2 px-3 bg-[#2563eb] text-white hover:bg-blue-700 rounded-lg transition-colors cursor-pointer flex items-center gap-1 text-xs font-black shadow"
+                                >
+                                  <span>견적 입찰등록</span>
+                                  <Send className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  /* ============================================== */
+                  /* B. 인테리어 시공 의뢰 프로젝트 목록 및 긴급 역경매 접수 폼 */
+                  /* ============================================== */
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+                    
+                    {/* Left Column: 사장님들의 인테리어 수리/시공 요청목록 (정확히 5개 가맹점 탑칩) */}
+                    <div className="lg:col-span-7 space-y-4">
+                      <div className="flex justify-between items-center bg-stone-50 border border-stone-200 p-3.5 rounded-xl">
+                        <span className="text-xs font-extrabold text-stone-600 uppercase tracking-wider">
+                          실시간 시공의뢰 매칭 현황 ({plazaPosts.filter(p => p.category === "interior").length}개 프로젝트)
+                        </span>
+                        <span className="text-[10px] text-[#f97316] font-bold">
+                          공인 시공 파트너 비딩
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-4">
+                        {plazaPosts.filter(p => p.category === "interior").map((post) => (
+                          <div 
+                            key={post.id}
+                            onClick={() => setSelectedPlazaPostId(post.id)}
+                            className="bg-white p-5.5 rounded-2xl border border-stone-200 hover:border-[#f97316] shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer group space-y-3.5"
+                          >
+                            <div className="flex justify-between items-center">
+                              <span className="text-[10px] font-black uppercase text-stone-500 bg-stone-100 border border-stone-200 px-2 py-0.5 rounded-md">
+                                의뢰구역: {post.location}
+                              </span>
+                              <span className="text-[10px] bg-orange-50 text-[#f97316] px-2.5 py-0.5 rounded-full font-black font-mono border border-orange-100">
+                                {post.urgentsInfo || "협의 조율"}
+                              </span>
+                            </div>
+
+                            <div className="space-y-1">
+                              <h4 className="text-sm sm:text-base font-black text-stone-900 group-hover:text-[#f97316] transition-colors leading-snug">
+                                {post.title}
+                              </h4>
+                              <p className="text-xs text-stone-500 font-semibold line-clamp-2 leading-relaxed">
+                                {post.content}
+                              </p>
+                            </div>
+
+                            <div className="pt-2 border-t border-stone-100 flex justify-between items-center text-[11px] text-stone-400 font-bold">
+                              <span>작성 점주: <strong className="text-stone-850">{post.author}</strong></span>
+                              <span className="text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-md flex items-center gap-0.5 text-[10px]">
+                                🏆 업체 제안 {post.comments.length}개 비딩중
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Right Column: 신규 시공의뢰 설계 등록 폼 */}
+                    <div className="lg:col-span-12 xl:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/85 shadow-md space-y-4">
+                      <div>
+                        <h3 className="text-xs font-black text-stone-950 flex items-center gap-1">
+                          🛠️ 가맹 신규 시공/유지보수 실시간 의뢰 양식
+                        </h3>
+                        <p className="text-stone-400 text-[10px] leading-relaxed mt-1">
+                          쇼케이스 유리가 고장났거나 부분 도장 및 파사드 오렌지 아크릴 컬러 도색, 매장 전선 배관 설비 교체 등 견적 제안이 절실한 모든 보수 기획안을 남기세요.
+                        </p>
+                      </div>
+
+                      <form onSubmit={handleCreatePlazaPost} className="space-y-4">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[9px] uppercase font-semibold text-[#f97316] mb-1">상호 / 의뢰자</label>
+                            <input
+                              type="text"
+                              required
+                              value={newPlazaAuthor}
+                              onChange={(e) => setNewPlazaAuthor(e.target.value)}
+                              placeholder="예: 영등포 크로플팩토리 점주"
+                              className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden font-medium"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[9px] uppercase font-semibold text-[#f97316] mb-1">시공 지역 (시/구)</label>
+                            <input
+                              type="text"
+                              required
+                              value={newPlazaLocation}
+                              onChange={(e) => setNewPlazaLocation(e.target.value)}
+                              placeholder="예: 서울 영등포구 당산동"
+                              className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden font-medium"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[9px] uppercase font-semibold text-[#f97316] mb-1">시공의뢰 한글 설명 제목</label>
+                          <input
+                            type="text"
+                            required
+                            value={newPlazaTitle}
+                            onChange={(e) => setNewPlazaTitle(e.target.value)}
+                            placeholder="예: [부분 도장] 파사드 하이샷시 프레임을 에브리 오렌지 컬러로 도색 의뢰"
+                            className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden font-medium"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[9px] uppercase font-semibold text-[#f97316] mb-1">필요한 하드웨어 시공/의뢰설명</label>
+                          <textarea
+                            required
+                            rows={3}
+                            value={newPlazaContent}
+                            onChange={(e) => setNewPlazaContent(e.target.value)}
+                            placeholder="노후된 부분을 찍은 사진 규격이나 외부 도색 부위에 대한 구체적인 자재 사양, 혹은 전선 배선 설비 길이 등을 서술하십시오."
+                            className="w-full text-xs rounded-xl border border-stone-250 bg-white p-3 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden resize-none font-medium"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 pt-1 border-t border-stone-100">
+                          <div>
+                            <label className="block text-[9px] uppercase font-semibold text-[#f97316] mb-1">책정 예산 선</label>
+                            <input
+                              type="text"
+                              value={newPlazaUrgentsInfo}
+                              onChange={(e) => setNewPlazaUrgentsInfo(e.target.value)}
+                              placeholder="예: 최대 150만원 이내 조율"
+                              className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden font-medium"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[9px] uppercase font-semibold text-[#f97316] mb-1">희망 시공 완료 일수</label>
+                            <input
+                              type="text"
+                              value={newPlazaTargetAmount}
+                              onChange={(e) => setNewPlazaTargetAmount(e.target.value)}
+                              placeholder="예: 다음주 수요일 야간 시공 희망"
+                              className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden font-medium"
+                            />
+                          </div>
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="w-full py-3.5 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md cursor-pointer"
+                        >
+                          공인 시공 망에 비교 견적 접수하기
+                        </button>
+                      </form>
+                    </div>
+
+                  </div>
+                )}
+              </div>
+            )}
+
           </div>
         )}
 
+        {/* ==================================================== */}
+        {/* 6. COFFEE STATION VIEW                               */}
+        {/* ==================================================== */}
         {currentView === "coffee" && (
           <div className="max-w-5xl mx-auto px-6 py-8 animate-fade-in">
             <button 
@@ -2393,69 +3885,54 @@ export default function App() {
               <ChevronLeft className="w-4 h-4" /> 뒤로가기
             </button>
 
-            <div className="mb-8 space-y-2">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">Coffee & Devices</span>
-              <h1 className="text-3xl font-black text-stone-900 tracking-tight">커피 머신 & 원두 스마트 라우팅</h1>
-              <p className="text-stone-550 text-sm">
-                에브리베이크와 전략적 단가 공동 구매 계약을 체결한 B2B 특판 원두, 커피 머신 패키지, 프리미엄 바리스타 용품 라인업입니다. 온·습도 완벽 통제 통합 배송으로 공급합니다.
+            <div className="mb-8 space-y-2 text-left">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">B2B COFFEE STATION</span>
+              <h1 className="text-3xl font-black text-[#1c1917] tracking-tight">상업용 기기 & 로스팅 스페셜티 원두</h1>
+              <p className="text-stone-550 text-xs sm:text-sm">
+                대한민국 초일류 브루바 및 프랜차이즈에 공급되는 고스펙 머신과 WBC 입상 로스터 원두입니다. B2B 파트너 특별 우대 단가로 제안합니다.
               </p>
             </div>
 
-            {/* Main categories (Big Tabs) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+            {/* Coffee Main Category Switcher Tabs */}
+            <div className="flex flex-wrap gap-2 mb-6 border-b border-stone-200 pb-4">
               {[
-                { id: "machine", label: "🔌 머신 및 기기", desc: "에스프레소 머신, 그라인더, 브ру잉 기기" },
-                { id: "bean", label: "☕ 원두", desc: "블렌드, 싱글 오리진, 디카페인" },
-                { id: "barista", label: "🔨 바리스타 용품", desc: "필터, 탬퍼, 세정제 등" }
-              ].map((cat) => {
-                const isActive = selectedCoffeeMainCat === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      setSelectedCoffeeMainCat(cat.id as any);
-                      setSelectedCoffeeSubCat("all");
-                    }}
-                    className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                      isActive
-                        ? "bg-stone-900 text-white border-stone-900 shadow-md transform scale-[1.01]"
-                        : "bg-white text-stone-800 border-stone-200 hover:border-stone-450 hover:shadow-2xs"
-                    }`}
-                  >
-                    <span className="text-sm font-extrabold tracking-tight">{cat.label}</span>
-                    <span className={`text-[10px] mt-1.5 block ${isActive ? "text-stone-300 font-semibold" : "text-stone-400 font-medium"}`}>
-                      {cat.desc}
-                    </span>
-                  </button>
-                );
-              })}
+                { id: "machine", label: "상업용 머신/기기" },
+                { id: "bean", label: "단가 맞춤형 대용량 원두" },
+                { id: "barista", label: "바리스타 필수 소모품" }
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    setSelectedCoffeeMainCat(cat.id);
+                    setSelectedCoffeeSubCat("all");
+                  }}
+                  className={`px-4.5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    selectedCoffeeMainCat === cat.id
+                      ? "bg-[#1c1917] text-white shadow-md"
+                      : "bg-white hover:bg-stone-100 text-[#44403c] border border-stone-200"
+                  }`}
+                >
+                  {cat.id === "machine" ? "☕ " : cat.id === "bean" ? "🫘 " : "🛠️ "}
+                  {cat.label}
+                </button>
+              ))}
             </div>
 
-            {/* Subcategory sub-tabs inside the active main category */}
-            <div className="flex flex-wrap gap-2 mb-6 border-b border-stone-200 pb-4">
-              <button
-                onClick={() => setSelectedCoffeeSubCat("all")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
-                  selectedCoffeeSubCat === "all"
-                    ? "bg-[#f97316] text-white shadow-xs"
-                    : "bg-white hover:bg-stone-100 text-stone-700 border border-stone-200"
-                }`}
-              >
-                전체 보기
-              </button>
-
+            {/* Coffee Sub-category Selection based on main category */}
+            <div className="flex flex-wrap gap-1.5 mb-6">
               {selectedCoffeeMainCat === "machine" && [
+                { id: "all", label: "기기 전체" },
                 { id: "espresso", label: "에스프레소 머신" },
                 { id: "grinder", label: "그라인더" },
-                { id: "brewing", label: "브루잉 기기" }
+                { id: "brewer", label: "자동 브루잉/기타" }
               ].map((sub) => (
                 <button
                   key={sub.id}
                   onClick={() => setSelectedCoffeeSubCat(sub.id)}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
                     selectedCoffeeSubCat === sub.id
-                      ? "bg-[#f97316] text-white shadow-xs"
-                      : "bg-white hover:bg-stone-100 text-stone-700 border border-stone-200"
+                      ? "bg-[#f97316] text-[#ffffff] shadow-xs"
+                      : "bg-white hover:bg-stone-100 text-[#44403c] border border-stone-200"
                   }`}
                 >
                   {sub.label}
@@ -2768,193 +4245,6 @@ export default function App() {
             selectedEventId={selectedEventId}
             setSelectedEventId={setSelectedEventId}
           />
-        )}
-
-        {/* ==================================================== */}
-        {/* 7. COMMUNITY BOARD VIEW                             */}
-        {/* ==================================================== */}
-        {currentView === "community" && (
-          <div className="max-w-5xl mx-auto px-6 py-8 animate-fade-in">
-            <button 
-              onClick={() => handleNav("home")}
-              className="mb-6 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
-            >
-              <ChevronLeft className="w-4 h-4" /> 홈으로 이동
-            </button>
-
-            <div className="mb-8 space-y-2 text-center max-w-3xl mx-auto">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">EveryBake Share & Grow</span>
-              <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight leading-tight">에브리베이크 상생 공동체</h1>
-              <p className="text-stone-550 text-sm mt-1.5">
-                전국 자영업 사장님들과 함께 만드는 스마트 상생 보드입니다. 원하는 생지 배합, 단체 원두 입점 및 자재 수요를 제안하십시오. <strong className="text-[#f97316]">30표 이상 추천 시 대형 도매 MD팀이 직접 입점 계약</strong>에 착수합니다.
-              </p>
-            </div>
-
-            {/* Comm Toggles */}
-            <div className="flex justify-center gap-2 mb-8 bg-stone-105 p-1.5 rounded-2xl w-fit mx-auto border border-stone-200">
-              <button
-                onClick={() => setActiveCommTab("dough")}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeCommTab === "dough"
-                    ? "bg-[#f97316] text-white shadow-sm"
-                    : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
-                }`}
-              >
-                🥐 프리미엄 생지 공동제안
-              </button>
-              <button
-                onClick={() => setActiveCommTab("coffee")}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeCommTab === "coffee"
-                    ? "bg-[#f97316] text-white shadow-sm"
-                    : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
-                }`}
-              >
-                ☕ 원두 및 커피기기 제안
-              </button>
-              <button
-                onClick={() => setActiveCommTab("raw")}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeCommTab === "raw"
-                    ? "bg-[#f97316] text-white shadow-sm"
-                    : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
-                }`}
-              >
-                🌾 원부자재 제안
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
-              
-              {/* Proposals List (Left) */}
-              <div className="lg:col-span-7 space-y-4">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-extrabold text-stone-500 uppercase tracking-widest">
-                    제안된 아이디어 ({communityPosts.filter(p => p.category === activeCommTab).length}개)
-                  </span>
-                  <span className="text-[10px] text-[#f97316] font-bold">
-                    실시간 투표 반영 완료
-                  </span>
-                </div>
-
-                {communityPosts.filter(p => p.category === activeCommTab).length === 0 ? (
-                  <div className="bg-white p-12 text-center rounded-3xl border border-stone-200 flex flex-col items-center justify-center space-y-3">
-                    <span className="text-4xl text-stone-300">💡</span>
-                    <h4 className="text-stone-800 font-bold">등록된 제안이 아직 없습니다</h4>
-                    <p className="text-xs text-stone-400">우측 폼을 이용해 첫 번째로 사장님의 혁명적인 입점 건의를 올려 보세요!</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {communityPosts.filter(p => p.category === activeCommTab).map((post) => (
-                      <div key={post.id} className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:shadow transition-all space-y-4">
-                        
-                        <div className="flex justify-between items-start">
-                          <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md ${
-                            post.status.includes("예정")
-                              ? "bg-emerald-50 text-emerald-700 border border-emerald-150"
-                              : post.status.includes("MD")
-                              ? "bg-amber-50 text-amber-700 border border-amber-100"
-                              : "bg-stone-100 text-stone-600 border border-stone-150"
-                          }`}>
-                            {post.status}
-                          </span>
-                          
-                          <span className="text-[10px] text-stone-400 font-mono">{post.date}</span>
-                        </div>
-
-                        <div className="space-y-1.5 animate-fade-in">
-                          <h3 className="text-sm sm:text-base font-black text-stone-900 leading-snug">{post.title}</h3>
-                          <p className="text-xs text-stone-605 leading-relaxed font-semibold">{post.content}</p>
-                        </div>
-
-                        <div className="pt-2 border-t border-stone-100 flex justify-between items-center text-xs">
-                          <div className="flex items-center gap-1.5 text-stone-500 font-semibold text-[11px]">
-                            <User className="w-3.5 h-3.5 text-stone-400" />
-                            <span>{post.author}</span>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-xs font-bold text-stone-400">
-                              추천 수 <strong className="text-stone-800 ml-0.5">{post.votes}개</strong>
-                            </span>
-                            
-                            <button
-                              onClick={() => handleVotePost(post.id)}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer transition-all ${
-                                post.votedByMe
-                                  ? "bg-orange-50 text-[#f97316] border border-orange-200"
-                                  : "bg-stone-50 hover:bg-orange-50 text-stone-700 border border-stone-200 hover:border-orange-200"
-                              }`}
-                            >
-                              <ThumbsUp className={`w-3.5 h-3.5 ${post.votedByMe ? "fill-current" : ""}`} />
-                              <span>{post.votedByMe ? "추천 완료" : "추천하기"}</span>
-                            </button>
-                          </div>
-                        </div>
-
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Suggestions Form (Right) */}
-              <div className="lg:col-span-12 xl:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-md">
-                <h3 className="text-sm font-black text-stone-950 mb-2 flex items-center gap-1.5">
-                  🛡️ 신규 물자 및 공동구매 제안 양식
-                </h3>
-                <p className="text-stone-400 text-[10px] mb-4.5 leading-relaxed">
-                  매장 운영에 필수적인 생지 벌크나 카페 포장 백, 가성비 원두 등 원하는 아이디어를 자유롭게 건의해 보세요.
-                </p>
-
-                <form onSubmit={handleAddCommunityPost} className="space-y-4.5">
-                  <div>
-                    <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1.5">매장명 / 작성자</label>
-                    <input
-                      type="text"
-                      required
-                      value={newCommAuthor}
-                      onChange={(e) => setNewCommAuthor(e.target.value)}
-                      placeholder="예: 망원 브레드룸 점주"
-                      className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1.5">건의 제목</label>
-                    <input
-                      type="text"
-                      required
-                      value={newCommTitle}
-                      onChange={(e) => setNewCommTitle(e.target.value)}
-                      placeholder="예: 영양 만점 유기농 통밀 베이글 도입"
-                      className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1.5">상세 건의사항</label>
-                    <textarea
-                      required
-                      rows={4}
-                      value={newCommContent}
-                      onChange={(e) => setNewCommContent(e.target.value)}
-                      placeholder="최소 구성 단위수나 희망하는 도매 박스 단가, 제품의 예상 메트릭스를 적어주시면 사장님들이 투표하기 수월해집니다."
-                      className="w-full text-xs rounded-xl border border-stone-250 bg-white p-3 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-3.5 bg-[#f97316] hover:bg-orange-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-[0_2px_8px_rgba(249,115,22,0.25)] cursor-pointer"
-                  >
-                    사장님 실시간 상생 보드에 전송
-                  </button>
-                </form>
-              </div>
-
-            </div>
-          </div>
         )}
 
         {/* ==================================================== */}

@@ -35,7 +35,7 @@ export default function Header({
   ];
 
   const links = isLoggedIn 
-    ? [...baseLinks, { id: "partner-portal", name: "🥐 에브리베이크 나의공간" }]
+    ? [...baseLinks, { id: "partner-portal", name: "🥐 나의공간" }]
     : baseLinks;
 
   const handleMobileNav = (view: string) => {
@@ -70,14 +70,14 @@ export default function Header({
         </div>
 
         {/* Navigation Links (Desktop) */}
-        <div className="hidden md:flex items-center md:gap-2.5 lg:gap-3.5 xl:gap-5.5 shrink-0">
+        <div className="hidden md:flex items-center md:gap-1.5 lg:gap-2.5 xl:gap-4 shrink-0">
           {links.map((link) => (
             <button
               key={link.id}
               onClick={() => onNav(link.id)}
-              className={`md:text-[11px] lg:text-xs xl:text-[13px] font-bold tracking-tight transition-colors relative py-1.5 cursor-pointer whitespace-nowrap ${
+              className={`md:text-[10px] lg:text-[11px] xl:text-xs font-black tracking-tight transition-colors relative py-1.5 cursor-pointer whitespace-nowrap ${
                 currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail")
-                  ? "text-[#f97316] font-extrabold"
+                  ? "text-[#f97316] font-black"
                   : "text-stone-600 hover:text-[#f97316]"
               }`}
             >
@@ -90,7 +90,7 @@ export default function Header({
         </div>
 
         {/* Search Bar (Desktop) - positioned between categories and shopping bag/actions */}
-        <div className="hidden lg:flex items-center flex-1 max-w-[120px] xl:max-w-[190px] mx-2 xl:mx-4">
+        <div className="hidden lg:flex items-center flex-1 max-w-[100px] xl:max-w-[160px] mx-1.5 xl:mx-3">
           <div className="relative w-full">
             <input
               type="text"
@@ -129,11 +129,10 @@ export default function Header({
           <button 
             type="button"
             onClick={() => handleMobileNav("inquiry")}
-            className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-[#f97316] hover:bg-orange-650 text-white transition-all cursor-pointer shadow-[0_2px_8px_rgba(249,115,22,0.15)] hover:shadow-md flex items-center gap-0.5 shrink-0"
+            className="hidden sm:flex px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-[#f97316] hover:bg-orange-650 text-white transition-all cursor-pointer shadow-[0_2px_8px_rgba(249,115,22,0.15)] hover:shadow-md items-center gap-0.5 shrink-0"
             id="partners-inquiry-btn"
           >
-            <span className="hidden sm:inline">입점 및 제휴 문의</span>
-            <span className="inline sm:hidden">제휴문의</span>
+            <span>입점 및 제휴 문의</span>
             <ChevronRight className="w-3 h-3" />
           </button>
 
@@ -141,7 +140,7 @@ export default function Header({
             <button
               type="button"
               onClick={onLogout}
-              className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all cursor-pointer border border-stone-200 flex items-center gap-0.5 shrink-0"
+              className="hidden sm:flex px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all cursor-pointer border border-stone-200 items-center gap-0.5 shrink-0"
               id="partners-logout-btn"
             >
               <LogOut className="w-3 h-3 text-stone-500" strokeWidth={2.5} />
@@ -151,7 +150,7 @@ export default function Header({
             <button
               type="button"
               onClick={() => handleMobileNav("login")}
-              className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-900 hover:bg-black text-white transition-all cursor-pointer flex items-center gap-0.5 shrink-0"
+              className="hidden sm:flex px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-900 hover:bg-black text-white transition-all cursor-pointer items-center gap-0.5 shrink-0"
               id="partners-login-btn"
             >
               <LogIn className="w-3 h-3 text-stone-200" strokeWidth={2.5} />
