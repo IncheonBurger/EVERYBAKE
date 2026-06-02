@@ -45,6 +45,7 @@ import KoreaMap from "./components/KoreaMap";
 import GlobalMap from "./components/GlobalMap";
 import DoughCard from "./components/DoughCard";
 import PartnerPortal from "./components/PartnerPortal";
+import EventsView from "./components/EventsView";
 import { CURATED_DOUGHS, INGREDIENTS_DATA, IngredientItem, COFFEE_DATA, CoffeeItem } from "./data";
 import { DoughItem } from "./types";
 import ovenImage from "./assets/images/stainless_steel_combo_oven_1780301837442.png";
@@ -161,6 +162,7 @@ export default function App() {
   const [selectedGlobalPin, setSelectedGlobalPin] = useState<string | null>(null);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [ovenActiveDoughId, setOvenActiveDoughId] = useState<string | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
   // States for reviews on KCT Smart Pro Machine (equip-detail)
   const [equipReviews, setEquipReviews] = useState<Review[]>([
@@ -344,7 +346,23 @@ export default function App() {
 
   // Premium Page transition sequence with requested custom slogan and cute flying breads
   const handleNav = (viewId: string) => {
-    const majorCategories = ["equip-list", "dough-main", "coffee", "ingredients", "community"];
+    // Reset specific subcategory states back to initial defaults on navigating
+    if (viewId === "dough-main") {
+      setActiveDoughTab("master");
+      setSelectedKoreaPin(null);
+      setSelectedGlobalPin(null);
+    } else if (viewId === "coffee") {
+      setSelectedCoffeeMainCat("machine");
+      setSelectedCoffeeSubCat("all");
+    } else if (viewId === "ingredients") {
+      setSelectedIngredientSubCat("powder");
+    } else if (viewId === "events") {
+      setSelectedEventId(null);
+    } else if (viewId === "community") {
+      setActiveCommTab("dough");
+    }
+
+    const majorCategories = ["equip-list", "dough-main", "coffee", "ingredients", "community", "events"];
     const isMajorNav = majorCategories.includes(viewId);
 
     if (isMajorNav) {
@@ -369,9 +387,9 @@ export default function App() {
             setIsTransitioning(false);
             setTransitionFadeState("idle");
             setPendingView(null);
-          }, 500);
-        }, 700);
-      }, 600);
+          }, 300);
+        }, 400);
+      }, 350);
     } else {
       // Instant transition without delay or overlay screen for subcategories, details, or other helper views
       setCurrentView(viewId);
@@ -2738,6 +2756,21 @@ export default function App() {
         )}
 
         {/* ==================================================== */}
+        {/* 6.5 EVENTS & PROMOTIONS VIEW                         */}
+        {/* ==================================================== */}
+        {currentView === "events" && (
+          <EventsView
+            allDoughs={CURATED_DOUGHS}
+            getCurrentView={() => currentView}
+            onNav={handleNav}
+            onAddToCart={handleAddToCart}
+            onAddCustomToCart={handleAddCustomToCart}
+            selectedEventId={selectedEventId}
+            setSelectedEventId={setSelectedEventId}
+          />
+        )}
+
+        {/* ==================================================== */}
         {/* 7. COMMUNITY BOARD VIEW                             */}
         {/* ==================================================== */}
         {currentView === "community" && (
@@ -3195,7 +3228,7 @@ export default function App() {
       {/* 🥖 Beautiful Page Transition Screen Overlay with Flying Breads */}
       {isTransitioning && (
         <div 
-          className={`fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-[#1c1917] transition-all duration-500 ease-out ${
+          className={`fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-[#1c1917] transition-all duration-300 ease-out ${
             transitionFadeState === "in" ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
           } overflow-hidden`}
         >
@@ -3216,11 +3249,11 @@ export default function App() {
 
           {/* Slogan Container and logo representation */}
           <div className="relative z-20 text-center px-6 max-w-sm sm:max-w-md space-y-7">
-            <div className="w-24 h-24 bg-white/20 border border-white/35 rounded-[22px] mx-auto flex items-center justify-center mb-6 shadow-xl shadow-orange-500/5 overflow-hidden p-2.5 animate-bounce">
+            <div className="w-48 h-48 sm:w-64 sm:h-64 mx-auto flex items-center justify-center mb-4 transition-all drop-shadow-[0_15px_30px_rgba(249,115,22,0.4)] animate-bounce duration-1000">
               <img 
                 src={everyBakeLogo} 
                 alt="EveryBake Logo" 
-                className="w-full h-full object-contain filter brightness-110" 
+                className="w-full h-full object-contain" 
                 referrerPolicy="no-referrer"
               />
             </div>

@@ -251,14 +251,14 @@ export default function PartnerPortal({
         <div className="max-w-md mx-auto my-12 bg-white rounded-3xl border border-stone-200 shadow-2xl overflow-hidden animate-fade-in" id="portal-login-screen">
           <div className="bg-gradient-to-br from-stone-900 to-stone-950 p-8 text-white relative">
             <div className="absolute top-4 right-4 text-[9px] font-mono tracking-widest text-[#f97316] border border-orange-500/30 px-2 py-0.5 rounded uppercase">
-              B2B Auth Sandbox
+              EveryBake Friends
             </div>
             <div className="w-10 h-10 rounded-xl bg-[#f97316] flex items-center justify-center font-black text-lg shadow-md mb-3">
-              E
+              🥐
             </div>
-            <h2 className="text-xl font-black font-sans tracking-tight">EveryBake B2B 점주 포털</h2>
+            <h2 className="text-xl font-black font-sans tracking-tight">EveryBake 나의공간</h2>
             <p className="text-stone-400 text-xs mt-1 leading-relaxed">
-              도우컨디셔너/오븐 연동 IoT 스마트 제어와 대한민국 명장 생지 원클릭 공급 시스템을 통합 가공합니다.
+              점주님들의 스마트 장비 제어와 원재료 대량 발주부터, 홈베이킹 마니아 고객들도 함께 누리는 특별한 멤버십 혜택 공간입니다.
             </p>
           </div>
           
@@ -268,13 +268,13 @@ export default function PartnerPortal({
                 onClick={() => { setIsRegisterMode(false); setErrorMessage(""); }}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${!isRegisterMode ? "bg-white text-stone-950 shadow-sm" : "text-stone-500 hover:text-stone-900"}`}
               >
-                기존 스마트 점주 로그인
+                해피 패밀리 로그인
               </button>
               <button
                 onClick={() => { setIsRegisterMode(true); setErrorMessage(""); }}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${isRegisterMode ? "bg-white text-stone-950 shadow-sm" : "text-stone-500 hover:text-stone-900"}`}
               >
-                신규 점주 파트너스 신청
+                멤버십 신규 등록
               </button>
             </div>
 
@@ -379,18 +379,18 @@ export default function PartnerPortal({
           
           {/* Header Dashboard Banner */}
           <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
-            <div className="absolute right-0 top-0 bottom-0 opacity-[0.02] text-stone-900 text-9xl font-black font-sans leading-none pointer-events-none select-none select-none">B2B</div>
+            <div className="absolute right-0 top-0 bottom-0 opacity-[0.02] text-stone-900 text-9xl font-black font-sans leading-none pointer-events-none select-none select-none">FAMILY</div>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center border border-orange-100 shrink-0">
                 <UserCheck className="w-7 h-7 text-[#f97316]" />
               </div>
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-stone-400 text-xs font-black uppercase tracking-widest">EVERYBAKE SMART PARTNERS</span>
-                  <span className="px-2 py-0.5 bg-green-50 text-green-700 text-[10px] font-extrabold border border-green-200 rounded">● B2B 프리미엄 가맹회원</span>
+                  <span className="text-stone-400 text-xs font-black uppercase tracking-widest">EVERYBAKE SPECIAL MEMBER</span>
+                  <span className="px-2 py-0.5 bg-green-50 text-green-700 text-[10px] font-extrabold border border-green-200 rounded">● 패밀리 프리미엄 회원</span>
                 </div>
                 <h2 className="text-xl font-black text-stone-900 tracking-tight mt-1">
-                  소금빵 명가 푸드 팩토리 B2B 점포 관제 허브
+                  소금빵 명가 푸드 팩토리 해피 패밀리 나의공간
                 </h2>
                 <p className="text-stone-500 text-xs font-semibold mt-0.5">
                   도우컨디셔너와 스마트 오븐을 원격 관측하고 명인의 신선 생지를 자동화 공급받고 있습니다.

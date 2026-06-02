@@ -26,15 +26,16 @@ export default function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const baseLinks = [
-    { id: "equip-list", name: "도우컨디셔너 / 오븐" },
-    { id: "dough-main", name: "프리미엄 생지 라이브러리" },
-    { id: "coffee", name: "커피 원두 / 머신" },
+    { id: "equip-list", name: "도우컨디셔너/오븐" },
+    { id: "dough-main", name: "생지 라이브러리" },
+    { id: "coffee", name: "커피/원두/머신" },
     { id: "ingredients", name: "원부자재" },
-    { id: "community", name: "에브리베이크 커뮤니티" },
+    { id: "events", name: "🔥 이벤트/혜택" },
+    { id: "community", name: "커뮤니티" },
   ];
 
   const links = isLoggedIn 
-    ? [...baseLinks, { id: "partner-portal", name: "🔒 B2B 점주 포털" }]
+    ? [...baseLinks, { id: "partner-portal", name: "🥐 에브리베이크 나의공간" }]
     : baseLinks;
 
   const handleMobileNav = (view: string) => {
@@ -44,15 +45,15 @@ export default function Header({
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-stone-200 z-40 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Brand Logo - Maximized Left Position, Larger Icon and Bold typography */}
         <div 
-          className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group select-none mr-2"
+          className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none mr-3 sm:mr-4 shrink-0"
           onClick={() => handleMobileNav("home")}
           id="partners-logo-nav"
         >
-          <div className="w-9 h-9 rounded-xl overflow-hidden bg-stone-50 border border-stone-250 flex items-center justify-center transition-transform group-hover:scale-105 shadow-2xs shrink-0 p-0.5">
+          <div className="w-13 h-13 sm:w-17 sm:h-17 transition-all group-hover:scale-105 shrink-0 flex items-center justify-center">
             <img 
               src={everyBakeLogo} 
               alt="EveryBake" 
@@ -60,21 +61,21 @@ export default function Header({
               referrerPolicy="no-referrer" 
             />
           </div>
-          <div className="flex items-center sm:block">
-            <span className="font-black text-[15px] sm:text-[17px] text-stone-900 tracking-tight">EveryBake</span>
-            <span className="ml-1 sm:ml-1.5 text-[8px] sm:text-[8.5px] uppercase font-bold tracking-widest text-[#f97316] bg-orange-50 border border-orange-100/50 px-1 sm:px-1.5 py-0.5 rounded shrink-0">
-              B2B
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="font-extrabold text-[17px] sm:text-[22px] text-stone-950 tracking-tighter leading-none group-hover:text-[#f97316] transition-colors">EveryBake</span>
+            <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-widest text-[#f97316] bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded-lg shrink-0">
+              프렌즈
             </span>
           </div>
         </div>
 
         {/* Navigation Links (Desktop) */}
-        <div className="hidden md:flex items-center gap-7">
+        <div className="hidden md:flex items-center md:gap-2.5 lg:gap-3.5 xl:gap-5.5 shrink-0">
           {links.map((link) => (
             <button
               key={link.id}
               onClick={() => onNav(link.id)}
-              className={`text-xs font-semibold tracking-tight transition-colors relative py-1.5 cursor-pointer ${
+              className={`md:text-[11px] lg:text-xs xl:text-[13px] font-bold tracking-tight transition-colors relative py-1.5 cursor-pointer whitespace-nowrap ${
                 currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail")
                   ? "text-[#f97316] font-extrabold"
                   : "text-stone-600 hover:text-[#f97316]"
@@ -89,7 +90,7 @@ export default function Header({
         </div>
 
         {/* Search Bar (Desktop) - positioned between categories and shopping bag/actions */}
-        <div className="hidden md:flex items-center flex-1 max-w-[140px] lg:max-w-[210px] mx-2 lg:mx-4">
+        <div className="hidden lg:flex items-center flex-1 max-w-[120px] xl:max-w-[190px] mx-2 xl:mx-4">
           <div className="relative w-full">
             <input
               type="text"
@@ -173,7 +174,7 @@ export default function Header({
 
       {/* Mobile Menu Dropdown Panel */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-stone-150 bg-white/98 backdrop-blur-2xl py-4 px-4 shadow-xl space-y-2 animate-fade-in absolute left-0 right-0 top-16 z-50">
+        <div className="md:hidden border-t border-stone-150 bg-white/98 backdrop-blur-2xl py-4 px-4 shadow-xl space-y-2 animate-fade-in absolute left-0 right-0 top-18 z-50">
           {/* Mobile Search input */}
           <div className="px-1.5 mb-3">
             <div className="relative w-full">
@@ -245,7 +246,7 @@ export default function Header({
                 className="w-full bg-[#f97316] hover:bg-orange-600 text-white text-xs font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow"
               >
                 <LogIn className="w-4 h-4" />
-                <span>B2B 로그인</span>
+                <span>나의공간 로그인</span>
               </button>
             )}
           </div>
