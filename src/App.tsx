@@ -32,8 +32,11 @@ import {
   MapPin,
   Menu,
   ShoppingBag,
-  Bell
+  Bell,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
+import { motion } from "motion/react";
 import Header from "./components/Header";
 import CartSidebar from "./components/CartSidebar";
 import OvenSim from "./components/OvenSim";
@@ -41,9 +44,43 @@ import KoreaMap from "./components/KoreaMap";
 import GlobalMap from "./components/GlobalMap";
 import DoughCard from "./components/DoughCard";
 import PartnerPortal from "./components/PartnerPortal";
-import { CURATED_DOUGHS } from "./data";
+import { CURATED_DOUGHS, INGREDIENTS_DATA, IngredientItem, COFFEE_DATA, CoffeeItem } from "./data";
 import { DoughItem } from "./types";
 import ovenImage from "./assets/images/stainless_steel_combo_oven_1780301837442.png";
+import everyBakeLogo from "./assets/images/everybake_logo_1780361685384.png";
+
+// Helper function to return deterministic premium sales count
+export const getDoughSales = (id: string): number => {
+  const salesMap: Record<string, number> = {
+    "s-001": 3420, // 신안 소금빵
+    "t-007": 3280, // 동네소금빵
+    "t-003": 3110, // 동네크루아상
+    "t-006": 2950, // 동네메론빵
+    "m-001": 2890, // 크루아상
+    "g-001": 2750, // 긴자 메론빵
+    "t-001": 2680, // 동네깜빠뉴
+    "t-005": 2520, // 동네더티초코
+    "g-002": 2410, // 프렌치 바게트
+    "t-002": 2350, // 동네사워도우
+    "t-004": 2220, // 동네애플파이
+    "m-002": 2120, // 애플파이
+    "s-003": 1980, // 밤식빵
+    "p-001": 1940, // 발로나 더티초코
+    "h-001": 1840, // 깜빠뉴
+    "h-002": 1590, // 사워도우
+    "h-004": 1450, // 치아바타
+    "m-003": 1380, // 뺑오쇼콜라
+    "h-006": 1250, // 베이글
+    "p-002": 1185, // 몽블랑
+    "p-005": 980,  // 크로플
+  };
+  if (salesMap[id]) return salesMap[id];
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash % 450) + 210; 
+};
 import warmBakingFamilyImage from "./assets/images/warm_baking_family_1780289855930.png";
 import artisanBakerDetailImage from "./assets/images/artisan_baker_detail_1780289872811.png";
 import modernSmartOvenImage from "./assets/images/modern_smart_oven_close_1780289886400.png";
@@ -265,12 +302,81 @@ export default function App() {
   const [inqDetails, setInqDetails] = useState("");
   const [inqPhone, setInqPhone] = useState("");
   const [showInqSuccessAlert, setShowInqSuccessAlert] = useState(false);
+  const [selectedIngredientSubCat, setSelectedIngredientSubCat] = useState<"powder" | "liquid" | "fat" | "sugar" | "ferment" | "additive">("powder");
+  const [selectedCoffeeMainCat, setSelectedCoffeeMainCat] = useState<"machine" | "bean" | "barista">("machine");
+  const [selectedCoffeeSubCat, setSelectedCoffeeSubCat] = useState<string>("all");
 
-  // Auto scroll reset on view transitions
+  // Core micro-interaction states
+  interface BreadClickParticle {
+    id: number;
+    x: number;
+    y: number;
+    emoji: string;
+  }
+  const [clickParticles, setClickParticles] = useState<BreadClickParticle[]>([]);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionFadeState, setTransitionFadeState] = useState<"idle" | "in" | "out">("idle");
+  const [pendingView, setPendingView] = useState<string | null>(null);
+
+  // Global mouse cursor-click satisfying bread sprinkle pop
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      // Choose random cute baking emojis
+      const emojis = ["🍞", "🥐", "🥖", "🥯", "🥨", "🥞", "🧁", "🍩", "🍪"];
+      const rEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      const newP: BreadClickParticle = {
+        id: Date.now() + Math.random(),
+        x: e.clientX,
+        y: e.clientY,
+        emoji: rEmoji
+      };
+      
+      // Keep only up to 15 particles in DOM to maintain perfect lighter weight footprint
+      setClickParticles(prev => [...prev.slice(-14), newP]);
+    };
+    
+    window.addEventListener("click", handleGlobalClick);
+    return () => window.removeEventListener("click", handleGlobalClick);
+  }, []);
+
+  // Premium Page transition sequence with requested custom slogan and cute flying breads
   const handleNav = (viewId: string) => {
-    setCurrentView(viewId);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const majorCategories = ["equip-list", "dough-main", "coffee", "ingredients", "community"];
+    const isMajorNav = majorCategories.includes(viewId);
+
+    if (isMajorNav) {
+      if (isTransitioning) return;
+      
+      setPendingView(viewId);
+      setTransitionFadeState("in");
+      setIsTransitioning(true);
+      
+      // Smooth transition steps:
+      // 1. Change active view and scroll instantly when overlay is fully black
+      setTimeout(() => {
+        setCurrentView(viewId);
+        window.scrollTo({ top: 0, behavior: "instant" });
+        
+        // 2. Play transition exit screen fade-out after user reads the slogan
+        setTimeout(() => {
+          setTransitionFadeState("out");
+          
+          // 3. Fully complete transition cycle
+          setTimeout(() => {
+            setIsTransitioning(false);
+            setTransitionFadeState("idle");
+            setPendingView(null);
+          }, 500);
+        }, 700);
+      }, 600);
+    } else {
+      // Instant transition without delay or overlay screen for subcategories, details, or other helper views
+      setCurrentView(viewId);
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
   };
+
 
   // Setup synchronous maps triggers or active filters
   const selectedDough = CURATED_DOUGHS.find(d => d.id === selectedDoughId) || CURATED_DOUGHS[0];
@@ -280,7 +386,7 @@ export default function App() {
   const globalDoughs = CURATED_DOUGHS.filter(d => d.category === "global");
   
   // Tasty pick can filter customized or highly requested catalog items! 
-  const tastyPickDoughs = CURATED_DOUGHS.filter(d => d.id === "m-001" || d.id === "m-002" || d.id === "g-001" || d.id === "h-001" || d.id === "s-001" || d.id === "p-001" || d.id === "h-002");
+  const tastyPickDoughs = CURATED_DOUGHS.filter(d => d.category === "tasty");
 
   // Dynamic products rendering depending on what tab is selected
   const getTabDoughs = () => {
@@ -703,7 +809,7 @@ export default function App() {
                 플랫폼 전용 비즈니스 영역 선택
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                 
                 {/* 1. 도우컨디셔너 / 오븐 */}
                 <div 
@@ -771,7 +877,29 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 4. 에브리베이크 커뮤니티 */}
+                {/* 4. 원부자재 */}
+                <div 
+                  onClick={() => handleNav("ingredients")}
+                  className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
+                  id="cat-card-ingredients"
+                >
+                  <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-605 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
+                    🌾
+                  </div>
+                  <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
+                    원부자재
+                  </h4>
+                  <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
+                    가루류, 액체류, 유지류,<br />당류, 이스트 등 다양화
+                  </p>
+                  <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
+                      자세히 보기 <ChevronRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </div>
+
+                {/* 5. 에브리베이크 커뮤니티 */}
                 <div 
                   onClick={() => handleNav("community")}
                   className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-8 aspect-square relative"
@@ -825,7 +953,7 @@ export default function App() {
                   <Award className="w-6 h-6 text-amber-500 mb-2 mx-auto md:mx-0" />
                   <h4 className="text-sm font-bold text-white">100% 프리미엄 자산 보장</h4>
                   <p className="text-xs text-stone-400 leading-relaxed">
-                    불합리한 월 이용료나 렌탈 임대 이자를 청구하지 않습니다. 전 부품 고급 스테인리스 하드웨어의 무손실 자산 인수를 지원합니다.
+                    불합리한 중간 유통 수수료나 과도한 추가 마진을 부과하지 않습니다. 전 부품 고급 스테인리스 하드웨어의 무손실 자산 인수를 확실하게 보장합니다.
                   </p>
                 </div>
                 <div className="space-y-1">
@@ -1521,6 +1649,68 @@ export default function App() {
                   )}
                 </div>
 
+                {/* 🌟 Category Quick Jump Navigation Cards/Pill links */}
+                {getTabDoughs().length > 0 && (
+                  <div className="bg-stone-50/60 rounded-2xl border border-stone-200/60 p-4 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
+                    <div className="space-y-1">
+                      <div className="text-xs font-black text-stone-800 flex items-center gap-1.5">
+                        <span className="inline-block w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                        카테고리 원터치 빠른 탐색
+                      </div>
+                      <p className="text-[11px] text-stone-500 font-medium leading-relaxed">
+                        원하시는 분류명을 선택하시면 스크롤 동작 없이 해당 리스트 영역으로 즉시 부드럽게 고속 이동합니다.
+                      </p>
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-2">
+                      {getTabDoughs().filter(d => d.subCategory === "hard").length > 0 && (
+                        <button
+                          onClick={() => {
+                            document.getElementById("dough-section-hard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-blue-200 bg-blue-50/80 hover:bg-blue-100 text-blue-800 text-xs font-bold transition-all hover:scale-[1.02] shadow-sm cursor-pointer"
+                        >
+                          <span className="text-xs">🥖</span>
+                          <span>하드 계열</span>
+                          <span className="bg-blue-600 text-white font-mono text-[9px] px-1.5 py-0.2 rounded-full font-black">
+                            {getTabDoughs().filter(d => d.subCategory === "hard").length}
+                          </span>
+                        </button>
+                      )}
+
+                      {getTabDoughs().filter(d => d.subCategory === "pastry").length > 0 && (
+                        <button
+                          onClick={() => {
+                            document.getElementById("dough-section-pastry")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-amber-200 bg-amber-50/80 hover:bg-amber-100/90 text-amber-800 text-xs font-bold transition-all hover:scale-[1.02] shadow-sm cursor-pointer"
+                        >
+                          <span className="text-xs">🥐</span>
+                          <span>페이스트리 계열</span>
+                          <span className="bg-amber-500 text-stone-950 font-mono text-[9px] px-1.5 py-0.2 rounded-full font-black">
+                            {getTabDoughs().filter(d => d.subCategory === "pastry").length}
+                          </span>
+                        </button>
+                      )}
+
+                      {getTabDoughs().filter(d => d.subCategory === "soft").length > 0 && (
+                        <button
+                          onClick={() => {
+                            document.getElementById("dough-section-soft")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-emerald-200 bg-emerald-50/80 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-all hover:scale-[1.02] shadow-sm cursor-pointer"
+                        >
+                          <span className="text-xs">🍞</span>
+                          <span>소프트 계열</span>
+                          <span className="bg-emerald-600 text-white font-mono text-[9px] px-1.5 py-0.2 rounded-full font-black">
+                            {getTabDoughs().filter(d => d.subCategory === "soft").length}
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {getTabDoughs().length === 0 ? (
                   <div className="bg-white p-12 text-center rounded-3xl border border-stone-200 flex flex-col items-center justify-center space-y-3">
                     <span className="text-4xl text-stone-300">🔍</span>
@@ -1529,122 +1719,215 @@ export default function App() {
                   </div>
                 ) : (
                   <div className="space-y-12">
-                    {/* 1. 하드 계열 (식사빵류) Section */}
-                    {getTabDoughs().filter(d => d.subCategory === "hard").length > 0 && (
-                      <div className="space-y-4">
-                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                            <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
-                              <span className="bg-blue-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">01</span>
-                              하드 계열 (식사빵류)
-                            </h3>
-                            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100/60 font-mono">
-                              오븐의 스팀 기능 & 발효 극대화 품격 💨
-                            </span>
-                          </div>
-                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
-                            유럽식 주식 빵으로, 담백한 맛이 특징이며 샌드위치 베이스로 많이 쓰입니다. 오븐의 스팀 기능과 발효가 매우 중요합니다. 대표 품목: 바게트, 치아바타, 깜빠뉴, 베이글, 프레첼 등
-                          </p>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          {getTabDoughs().filter(d => d.subCategory === "hard").map((dough) => (
-                            <div key={dough.id} className="relative group">
-                              <DoughCard
-                                item={dough}
-                                onAddToCart={handleAddToCart}
-                                onToggleNotification={handleToggleNotification}
-                                isNotificationApplied={notifications.includes(dough.id)}
-                                onScanShortcut={handleScanShortcut}
-                                activeInOven={ovenActiveDoughId === dough.id}
-                                onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
-                                onViewStory={(id) => {
-                                  setSelectedDoughId(id);
-                                  handleNav("dough-detail");
-                                }}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    {(() => {
+                      const allDoughs = getTabDoughs();
+                      const sortedAll = [...allDoughs].sort((a, b) => getDoughSales(b.id) - getDoughSales(a.id));
+                      const totalTop3 = sortedAll.slice(0, 3);
 
-                    {/* 2. 페이스트리 계열 (비에누아즈리) Section */}
-                    {getTabDoughs().filter(d => d.subCategory === "pastry").length > 0 && (
-                      <div className="space-y-4">
-                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                            <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
-                              <span className="bg-amber-500 text-stone-950 text-[10px] uppercase font-mono px-2 py-0.5 rounded">02</span>
-                              페이스트리 계열 (비에누아즈리)
-                            </h3>
-                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100/60 font-mono">
-                              도우컨디셔너 정밀 온도/습도 관리 필수 ❄️
-                            </span>
-                          </div>
-                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
-                            버터 함량이 높아 겹겹이 결이 살아있는 빵입니다. 버터가 녹지 않도록 도우컨디셔너의 정밀한 온도/습도 관리가 필수적인 품종입니다. 대표 품목: 크루아상, 뺑오쇼콜라, 데니쉬, 크로플 등
-                          </p>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          {getTabDoughs().filter(d => d.subCategory === "pastry").map((dough) => (
-                            <div key={dough.id} className="relative group">
-                              <DoughCard
-                                item={dough}
-                                onAddToCart={handleAddToCart}
-                                onToggleNotification={handleToggleNotification}
-                                isNotificationApplied={notifications.includes(dough.id)}
-                                onScanShortcut={handleScanShortcut}
-                                activeInOven={ovenActiveDoughId === dough.id}
-                                onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
-                                onViewStory={(id) => {
-                                  setSelectedDoughId(id);
-                                  handleNav("dough-detail");
-                                }}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                      return (
+                        <>
+                          {/* 🏆 실시간 프리미엄 통합 토탈 TOP 3 랭킹 Block */}
+                          {totalTop3.length > 0 && (
+                            <div className="space-y-4 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent p-5 sm:p-6 rounded-3xl border-2 border-amber-500/30 shadow-xs text-left animate-fade-in">
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/40">
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xl">🏆</span>
+                                    <h4 className="text-sm font-black text-amber-900 uppercase tracking-tight">
+                                      에브리베이크 실시간 통합 토탈 인기 TOP 3 생지
+                                    </h4>
+                                    <span className="text-[10px] font-black text-white bg-amber-500 px-2.5 py-0.5 rounded-full font-mono animate-pulse shrink-0">
+                                      INTEGRATED BEST
+                                    </span>
+                                  </div>
+                                  <p className="text-[11px] text-[#78350f] font-semibold leading-relaxed">
+                                    분류 구분 없이 금일 전국 프랜차이즈 가맹매장에서 가장 주문량이 높은 최상위 3가지 시그니처 원재료입니다.
+                                  </p>
+                                </div>
+                                <div className="text-[10px] font-bold text-amber-800 bg-amber-100/60 border border-amber-200/80 px-3 py-1.5 rounded-xl whitespace-nowrap self-start sm:self-center font-mono">
+                                  실시간 판매량 분석 기준 (Box 단위)
+                                </div>
+                              </div>
 
-                    {/* 3. 소프트 계열 (간식 및 조리빵류) Section */}
-                    {getTabDoughs().filter(d => d.subCategory === "soft").length > 0 && (
-                      <div className="space-y-4">
-                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                            <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
-                              <span className="bg-emerald-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">03</span>
-                              소프트 계열 (간식 및 조리빵류)
-                            </h3>
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100/60 font-mono">
-                              부드러운 식감 & 대중성 · 빠른 회전율 보증 🍞
-                            </span>
-                          </div>
-                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
-                            부드러운 식감으로 대중성이 높고 회전율이 빠른 기본 품종들입니다. 대표 품목: 우유/탕종식빵, 단팥빵, 소보로, 명란바게트, 소금빵(수요 증가에 따라 최적화) 등
-                          </p>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          {getTabDoughs().filter(d => d.subCategory === "soft").map((dough) => (
-                            <div key={dough.id} className="relative group">
-                              <DoughCard
-                                item={dough}
-                                onAddToCart={handleAddToCart}
-                                onToggleNotification={handleToggleNotification}
-                                isNotificationApplied={notifications.includes(dough.id)}
-                                onScanShortcut={handleScanShortcut}
-                                activeInOven={ovenActiveDoughId === dough.id}
-                                onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
-                                onViewStory={(id) => {
-                                  setSelectedDoughId(id);
-                                  handleNav("dough-detail");
-                                }}
-                              />
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                                {totalTop3.map((dough, idx) => {
+                                  const subCatLabel = 
+                                    dough.subCategory === "hard" ? "🥖 하드 계열" :
+                                    dough.subCategory === "pastry" ? "🥐 페이스트리" : 
+                                    "🍞 소프트 계열";
+
+                                  return (
+                                    <div key={`total-top3-${dough.id}`} className="relative group">
+                                      {/* Subcategory Label overlay tag for Integrated Top 3 */}
+                                      <div className="absolute top-2.5 right-2.5 bg-stone-900/85 backdrop-blur-xs text-white text-[9px] font-black px-2 py-0.5 rounded-md z-20 shadow-sm">
+                                        {subCatLabel}
+                                      </div>
+
+                                      <DoughCard
+                                        item={dough}
+                                        onAddToCart={handleAddToCart}
+                                        onToggleNotification={handleToggleNotification}
+                                        isNotificationApplied={notifications.includes(dough.id)}
+                                        onScanShortcut={handleScanShortcut}
+                                        activeInOven={ovenActiveDoughId === dough.id}
+                                        onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                        onViewStory={(id) => {
+                                          setSelectedDoughId(id);
+                                          handleNav("dough-detail");
+                                        }}
+                                        rank={idx + 1}
+                                        salesCount={getDoughSales(dough.id)}
+                                      />
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                          )}
+
+                          {/* 1. 하드 계열 (식사빵류) Section */}
+                          {allDoughs.filter(d => d.subCategory === "hard").length > 0 && (
+                            <div id="dough-section-hard" className="space-y-6 scroll-mt-24">
+                              <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                  <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
+                                    <span className="bg-blue-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">01</span>
+                                    하드 계열 (식사빵류)
+                                  </h3>
+                                  <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100/60 font-mono">
+                                    오븐의 스팀 기능 & 발효 극대화 품격 💨
+                                  </span>
+                                </div>
+                                <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                                  유럽식 주식 빵으로, 담백한 맛이 특징이며 샌드위치 베이스로 많이 쓰입니다. 오븐의 스팀 기능과 발효가 매우 중요합니다. 대표 품목: 바게트, 치아바타, 깜빠뉴, 베이글, 프레첼 등
+                                </p>
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {allDoughs
+                                  .filter(d => d.subCategory === "hard")
+                                  .map((dough) => {
+                                    const rankIdx = totalTop3.findIndex(t => t.id === dough.id);
+                                    return (
+                                      <div key={dough.id} className="relative group">
+                                        <DoughCard
+                                          item={dough}
+                                          onAddToCart={handleAddToCart}
+                                          onToggleNotification={handleToggleNotification}
+                                          isNotificationApplied={notifications.includes(dough.id)}
+                                          onScanShortcut={handleScanShortcut}
+                                          activeInOven={ovenActiveDoughId === dough.id}
+                                          onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                          onViewStory={(id) => {
+                                            setSelectedDoughId(id);
+                                            handleNav("dough-detail");
+                                          }}
+                                          rank={rankIdx !== -1 ? rankIdx + 1 : undefined}
+                                          salesCount={getDoughSales(dough.id)}
+                                        />
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 2. 페이스트리 계열 (비에누아즈리) Section */}
+                          {allDoughs.filter(d => d.subCategory === "pastry").length > 0 && (
+                            <div id="dough-section-pastry" className="space-y-6 scroll-mt-24">
+                              <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                  <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
+                                    <span className="bg-amber-500 text-stone-950 text-[10px] uppercase font-mono px-2 py-0.5 rounded">02</span>
+                                    페이스트리 계열 (비에누아즈리)
+                                  </h3>
+                                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100/60 font-mono">
+                                    도우컨디셔너 정밀 온도/습도 관리 필수 ❄️
+                                  </span>
+                                </div>
+                                <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                                  버터 함량이 높아 겹겹이 결이 살아있는 빵입니다. 버터가 녹지 않도록 도우컨디셔너의 정밀한 온도/습도 관리가 필수적인 품종입니다. 대표 품목: 크루아상, 뺑오쇼콜라, 데니쉬, 크로플 등
+                                </p>
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {allDoughs
+                                  .filter(d => d.subCategory === "pastry")
+                                  .map((dough) => {
+                                    const rankIdx = totalTop3.findIndex(t => t.id === dough.id);
+                                    return (
+                                      <div key={dough.id} className="relative group">
+                                        <DoughCard
+                                          item={dough}
+                                          onAddToCart={handleAddToCart}
+                                          onToggleNotification={handleToggleNotification}
+                                          isNotificationApplied={notifications.includes(dough.id)}
+                                          onScanShortcut={handleScanShortcut}
+                                          activeInOven={ovenActiveDoughId === dough.id}
+                                          onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                          onViewStory={(id) => {
+                                            setSelectedDoughId(id);
+                                            handleNav("dough-detail");
+                                          }}
+                                          rank={rankIdx !== -1 ? rankIdx + 1 : undefined}
+                                          salesCount={getDoughSales(dough.id)}
+                                        />
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 3. 소프트 계열 (간식 및 조리빵류) Section */}
+                          {allDoughs.filter(d => d.subCategory === "soft").length > 0 && (
+                            <div id="dough-section-soft" className="space-y-6 scroll-mt-24">
+                              <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                  <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
+                                    <span className="bg-emerald-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">03</span>
+                                    소프트 계열 (간식 및 조리빵류)
+                                  </h3>
+                                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100/60 font-mono">
+                                    부드러운 식감 & 대중성 · 빠른 회전율 보증 🍞
+                                  </span>
+                                </div>
+                                <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                                  부드러운 식감으로 대중성이 높고 회전율이 빠른 기본 품종들입니다. 대표 품목: 우유/탕종식빵, 단팥빵, 소보로, 명란바게트, 소금빵(수요 증가에 따라 최적화) 등
+                                </p>
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {allDoughs
+                                  .filter(d => d.subCategory === "soft")
+                                  .map((dough) => {
+                                    const rankIdx = totalTop3.findIndex(t => t.id === dough.id);
+                                    return (
+                                      <div key={dough.id} className="relative group">
+                                        <DoughCard
+                                          item={dough}
+                                          onAddToCart={handleAddToCart}
+                                          onToggleNotification={handleToggleNotification}
+                                          isNotificationApplied={notifications.includes(dough.id)}
+                                          onScanShortcut={handleScanShortcut}
+                                          activeInOven={ovenActiveDoughId === dough.id}
+                                          onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                          onViewStory={(id) => {
+                                            setSelectedDoughId(id);
+                                            handleNav("dough-detail");
+                                          }}
+                                          rank={rankIdx !== -1 ? rankIdx + 1 : undefined}
+                                          salesCount={getDoughSales(dough.id)}
+                                        />
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                   </div>
                 )}
               </div>
@@ -1874,147 +2157,359 @@ export default function App() {
               <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">Coffee & Devices</span>
               <h1 className="text-3xl font-black text-stone-900 tracking-tight">커피 머신 & 원두 스마트 라우팅</h1>
               <p className="text-stone-550 text-sm">
-                에브리베이크와 전략적 단가 공동 구매 계약을 체결한 B2B 특판 원두와 유명 기기 패키지 라인업입니다. 단 한번의 주문으로 에브리베이크가 직접 검증하고 일체형 배송 공급합니다.
+                에브리베이크와 전략적 단가 공동 구매 계약을 체결한 B2B 특판 원두, 커피 머신 패키지, 프리미엄 바리스타 용품 라인업입니다. 온·습도 완벽 통제 통합 배송으로 공급합니다.
               </p>
             </div>
 
-            {/* Coffee products grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-              
-              {/* Coffee Blend 1 */}
-              <div className="bg-white rounded-2xl p-5 border border-stone-200/80 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
-                <div>
-                  <div className="w-full h-40 bg-stone-50 rounded-xl mb-4 flex flex-col items-center justify-center p-4 border border-stone-100">
-                    <span className="text-4xl">☕</span>
-                    <span className="text-[9px] font-bold text-stone-400 mt-2 font-mono bg-white px-2 py-0.5 rounded-full uppercase">
-                      CJ 프레시웨이 공급원
-                    </span>
-                  </div>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-orange-50 text-[#f97316] text-[10px] font-bold mb-2">
-                    B2B 매장용 원두
-                  </span>
-                  <h3 className="text-sm font-bold text-stone-900">[CJ 프레시웨이] 마스터 로스팅 원두 1kg</h3>
-                  <p className="text-[11px] text-stone-500 leading-relaxed mt-1">고소한 헤이즐넛 풍미, 대중적인 초콜릿 터치와 산미를 최소화해 자영업 단체 커피 수율에 최적입니다.</p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between">
-                  <span className="text-sm font-black text-stone-950">₩ 24,000</span>
+            {/* Main categories (Big Tabs) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+              {[
+                { id: "machine", label: "🔌 머신 및 기기", desc: "에스프레소 머신, 그라인더, 브ру잉 기기" },
+                { id: "bean", label: "☕ 원두", desc: "블렌드, 싱글 오리진, 디카페인" },
+                { id: "barista", label: "🔨 바리스타 용품", desc: "필터, 탬퍼, 세정제 등" }
+              ].map((cat) => {
+                const isActive = selectedCoffeeMainCat === cat.id;
+                return (
                   <button
-                    onClick={() => handleAddCustomToCart("cf-blend-01", "[CJ] 마스터 로스팅 원두 1kg", 24000, "bg-stone-100 text-stone-700", "CJ 프레시웨이")}
-                    className="px-3.5 py-1.5 bg-[#f97316] hover:bg-orange-600 text-white text-[11px] font-bold rounded-lg transition-all"
+                    key={cat.id}
+                    onClick={() => {
+                      setSelectedCoffeeMainCat(cat.id as any);
+                      setSelectedCoffeeSubCat("all");
+                    }}
+                    className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      isActive
+                        ? "bg-stone-900 text-white border-stone-900 shadow-md transform scale-[1.01]"
+                        : "bg-white text-stone-800 border-stone-200 hover:border-stone-450 hover:shadow-2xs"
+                    }`}
                   >
-                    담기
-                  </button>
-                </div>
-              </div>
-
-              {/* Coffee Blend 2 */}
-              <div className="bg-white rounded-2xl p-5 border border-stone-200/80 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
-                <div>
-                  <div className="w-full h-40 bg-stone-50 rounded-xl mb-4 flex flex-col items-center justify-center p-4 border border-stone-100">
-                    <span className="text-4xl">☕</span>
-                    <span className="text-[9px] font-bold text-stone-400 mt-2 font-mono bg-white px-2 py-0.5 rounded-full uppercase">
-                      WBC 스페셜티 제휴
+                    <span className="text-sm font-extrabold tracking-tight">{cat.label}</span>
+                    <span className={`text-[10px] mt-1.5 block ${isActive ? "text-stone-300 font-semibold" : "text-stone-400 font-medium"}`}>
+                      {cat.desc}
                     </span>
-                  </div>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-orange-50 text-[#f97316] text-[10px] font-bold mb-2">
-                    시그니처 다크 블렌드
-                  </span>
-                  <h3 className="text-sm font-bold text-stone-900">[WBC] 이탈리안 에스프레소 원두 1kg</h3>
-                  <p className="text-[11px] text-stone-500 leading-relaxed mt-1">WBC 마스터 등급이 검증한 묵직한 카카오와 다크 초콜릿 바디감, 깊은 단맛이 매력적이며 라떼 베이스에 최상입니다.</p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between">
-                  <span className="text-sm font-black text-stone-950">₩ 32,000</span>
-                  <button
-                    onClick={() => handleAddCustomToCart("cf-blend-02", "[WBC] 이탈리안 에스프레소 원두 1kg", 32000, "bg-stone-100 text-stone-700", "WBC 시그니처")}
-                    className="px-3.5 py-1.5 bg-[#f97316] hover:bg-orange-600 text-white text-[11px] font-bold rounded-lg transition-all"
-                  >
-                    담기
                   </button>
-                </div>
-              </div>
-
-              {/* Coffee Machine */}
-              <div className="bg-white rounded-2xl p-5 border border-stone-200/80 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
-                <div>
-                  <div className="w-full h-40 bg-stone-50 rounded-xl mb-4 flex flex-col items-center justify-center p-4 border border-stone-100">
-                    <span className="text-4xl">🔌</span>
-                    <span className="text-[9px] font-bold text-stone-400 mt-2 font-mono bg-white px-2 py-0.5 rounded-full uppercase">
-                      공동 조달 설비
-                    </span>
-                  </div>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-orange-50 text-[#f97316] text-[10px] font-bold mb-2">
-                    업소용 커피머신 패키지
-                  </span>
-                  <h3 className="text-sm font-bold text-stone-900">[EveryBake 독점] 에스프레소 머신</h3>
-                  <p className="text-[11px] text-stone-500 leading-relaxed mt-1">1인 매장에 압도적 편의성을 제공하는 이중 보일러 구조로 연속 추출에도 압력이 일정하게 유지되는 명품 기기입니다.</p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between">
-                  <span className="text-sm font-black text-stone-950">₩ 3,800,000</span>
-                  <button
-                    onClick={() => handleAddCustomToCart("cf-machine-01", "[EveryBake] 에스프레소 머신 패키지", 3800000, "bg-stone-900 text-white", "EveryBake 독점")}
-                    className="px-3.5 py-1.5 bg-[#f97316] hover:bg-orange-600 text-white text-[11px] font-bold rounded-lg transition-all"
-                  >
-                    담기
-                  </button>
-                </div>
-              </div>
-
+                );
+              })}
             </div>
 
-            {/* Coffee Feed / suggestions section */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-md">
-              <h2 className="text-lg font-black text-stone-900 mb-2">☕ 커피 원두 및 기기 입점 건의 피드</h2>
-              <p className="text-stone-400 text-xs mb-6">카페인에 민감한 손님들을 위한 싱글오리진 디카페인 원두 및 대형 도매 납품 브랜드 건의 내역 및 상위 MD 답변입니다.</p>
+            {/* Subcategory sub-tabs inside the active main category */}
+            <div className="flex flex-wrap gap-2 mb-6 border-b border-stone-200 pb-4">
+              <button
+                onClick={() => setSelectedCoffeeSubCat("all")}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                  selectedCoffeeSubCat === "all"
+                    ? "bg-[#f97316] text-white shadow-xs"
+                    : "bg-white hover:bg-stone-100 text-stone-700 border border-stone-200"
+                }`}
+              >
+                전체 보기
+              </button>
 
-              <form onSubmit={handleAddCoffeeComment} className="space-y-3 bg-stone-50 p-4 rounded-xl border border-stone-200 mb-6">
-                <p className="text-[11px] font-bold text-stone-500 uppercase">신규 브랜드 물품 건의</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    required
-                    value={newCoffeeAuthor}
-                    onChange={(e) => setNewCoffeeAuthor(e.target.value)}
-                    placeholder="매장 점주명 (예: 카페 비앙코)"
-                    className="text-xs p-2.5 border border-stone-250 bg-white rounded-lg outline-hidden"
-                  />
-                  <div className="text-[11px] text-stone-400 flex items-center">실시간 피드 게시</div>
-                </div>
-                <textarea
-                  required
-                  rows={2}
-                  value={newCoffeeContent}
-                  onChange={(e) => setNewCoffeeContent(e.target.value)}
-                  placeholder="예: 서울 수제 우유팩 묶음 공급이나 저가 바닐라 시럽 등 입점 희망 항목을 제안해 주십시오."
-                  className="w-full text-xs p-2.5 border border-stone-250 bg-white rounded-lg outline-hidden resize-none"
-                />
+              {selectedCoffeeMainCat === "machine" && [
+                { id: "espresso", label: "에스프레소 머신" },
+                { id: "grinder", label: "그라인더" },
+                { id: "brewing", label: "브루잉 기기" }
+              ].map((sub) => (
                 <button
-                  type="submit"
-                  className="px-4 py-2 bg-stone-900 hover:bg-stone-950 text-white rounded-lg text-xs font-bold"
+                  key={sub.id}
+                  onClick={() => setSelectedCoffeeSubCat(sub.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                    selectedCoffeeSubCat === sub.id
+                      ? "bg-[#f97316] text-white shadow-xs"
+                      : "bg-white hover:bg-stone-100 text-stone-700 border border-stone-200"
+                  }`}
                 >
-                  제안 등록하기
+                  {sub.label}
                 </button>
-              </form>
+              ))}
 
-              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 divide-y divide-stone-100">
-                {coffeeFeed.map((item) => (
-                  <div key={item.id} className="pt-4 first:pt-0 space-y-2 text-xs">
-                    <div className="flex justify-between font-bold text-stone-800">
-                      <span>{item.author}</span>
-                      <span className="text-stone-400 font-normal">{item.date}</span>
-                    </div>
-                    <p className="text-stone-605 leading-relaxed font-medium">{item.content}</p>
-                    {item.replies && item.replies.map((reply, rid) => (
-                      <div key={rid} className="ml-4 p-3 bg-stone-50 rounded-xl border border-stone-200/60 font-sans">
-                        <div className="flex justify-between items-baseline mb-1">
-                          <span className="font-extrabold text-[#f97316]">{reply.author}</span>
-                          <span className="text-[9px] text-stone-400">{reply.date}</span>
-                        </div>
-                        <p className="text-stone-550">{reply.content}</p>
-                      </div>
-                    ))}
-                  </div>
-                ))}
+              {selectedCoffeeMainCat === "bean" && [
+                { id: "blend", label: "블렌드" },
+                { id: "single_origin", label: "싱글 오리진" },
+                { id: "decaf", label: "디카페인" }
+              ].map((sub) => (
+                <button
+                  key={sub.id}
+                  onClick={() => setSelectedCoffeeSubCat(sub.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                    selectedCoffeeSubCat === sub.id
+                      ? "bg-[#f97316] text-white shadow-xs"
+                      : "bg-white hover:bg-stone-100 text-stone-700 border border-stone-200"
+                  }`}
+                >
+                  {sub.label}
+                </button>
+              ))}
+
+              {selectedCoffeeMainCat === "barista" && [
+                { id: "supplies", label: "필터, 탬퍼, 세정제 등" }
+              ].map((sub) => (
+                <button
+                  key={sub.id}
+                  onClick={() => setSelectedCoffeeSubCat(sub.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                    selectedCoffeeSubCat === sub.id
+                      ? "bg-[#f97316] text-white shadow-xs"
+                      : "bg-white hover:bg-stone-100 text-stone-700 border border-stone-200"
+                  }`}
+                >
+                  {sub.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Helpful notice box for Coffee Category */}
+            <div className="bg-orange-50/75 border border-orange-100 rounded-2xl p-4 mb-8 flex items-center gap-3">
+              <span className="text-xl">💡</span>
+              <div>
+                <p className="text-xs font-extrabold text-[#f97316] uppercase tracking-wider mb-0.5">선택 분류 전문 정보</p>
+                <div className="text-xs font-bold text-stone-750">
+                  {selectedCoffeeMainCat === "machine" && "상업용 커피 머신/기기 | 고온 스팀 연속 추출에 최적형 성능 및 전국 긴급 A/S 상시 네트워크 제공"}
+                  {selectedCoffeeMainCat === "bean" && "스마트 단가 로스팅 원두 | 유명 생산지 및 WBC 로스팅 스페셜티 단가 압축으로 매장 마진 25% 이상 향상 제공"}
+                  {selectedCoffeeMainCat === "barista" && "바리스타 전문 용품 | 추출 채널링 완벽 예방 및 에스프레소 추출구 3역 청결 유지 가성비 묶음 패키지"}
+                </div>
               </div>
+            </div>
+
+            {/* Coffee Products Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              {COFFEE_DATA.filter(item => {
+                const matchesMain = item.mainCategory === selectedCoffeeMainCat;
+                const matchesSub = selectedCoffeeSubCat === "all" || item.subCategory === selectedCoffeeSubCat;
+                return matchesMain && matchesSub;
+              }).map((item) => {
+                let typeStyle = "bg-orange-50 text-orange-700 border-orange-105";
+                if (item.brandType === "프리미엄 수입") {
+                  typeStyle = "bg-amber-50 text-amber-700 border-amber-100";
+                } else if (item.brandType === "해외 전문") {
+                  typeStyle = "bg-violet-50 text-violet-700 border-violet-100";
+                } else if (item.brandType === "국산 명가") {
+                  typeStyle = "bg-rose-50 text-rose-750 border-rose-100";
+                } else if (item.brandType === "자체제작") {
+                  typeStyle = "bg-blue-50 text-blue-700 border-blue-100";
+                }
+
+                return (
+                  <div 
+                    key={item.id} 
+                    className="bg-white rounded-2xl p-5 border border-stone-200 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Top Visual slot */}
+                      <div className="w-full h-36 bg-stone-50 rounded-xl mb-4 flex flex-col items-center justify-center p-4 border border-stone-100 relative group overflow-hidden">
+                        <span className="text-5xl group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+                        <span className="absolute bottom-2.5 right-2.5 text-[8.5px] font-black text-stone-400 font-mono bg-white border border-stone-200 px-2 py-0.5 rounded-full">
+                          {item.spec}
+                        </span>
+                      </div>
+
+                      {/* Brand and category info */}
+                      <div className="flex items-center gap-1.5 mb-2.5">
+                        <span className={`px-2 py-0.5 text-[9px] font-extrabold border rounded ${typeStyle}`}>
+                          {item.brandType}
+                        </span>
+                        <span className="text-[10px] font-bold text-stone-400">
+                          {item.brand}
+                        </span>
+                      </div>
+
+                      <h3 className="text-sm font-extrabold text-stone-900 leading-tight mb-2">
+                        {item.name}
+                      </h3>
+                      <p className="text-[11px] text-stone-500 leading-relaxed font-semibold">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-5 pt-3 border-t border-stone-100 flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[9.5px] text-stone-400 font-semibold">B2B 공급가</span>
+                        <span className="text-sm font-black text-stone-900">
+                          ₩ {item.price.toLocaleString()}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleAddCustomToCart(
+                          item.id, 
+                          item.name, 
+                          item.price, 
+                          "bg-orange-50 text-[#f97316]", 
+                          item.brand
+                        )}
+                        className="px-3.5 py-1.5 bg-[#f97316] hover:bg-orange-600 text-white text-[11px] font-bold rounded-lg transition-all shadow-xs hover:shadow-sm"
+                      >
+                        B2B 담기
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Info banner at bottom */}
+            <div className="bg-stone-900 text-stone-100 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-center gap-6">
+              <div className="space-y-1 text-center sm:text-left">
+                <p className="text-xs uppercase tracking-widest text-[#f97316] font-bold">Coffee Station Support</p>
+                <h3 className="text-lg font-extrabold tracking-tight">커피 머신 및 기기 도입 설치 전국 동시 기술지원</h3>
+                <p className="text-xs text-stone-450 leading-relaxed font-semibold max-w-xl">
+                  에브리베이크는 전담 엔지니어 매칭 서비스를 가동 중입니다. 커피 머신 구매 및 스마트 패키지 맞춤 도입 컨설팅부터 수돗물 연수 필터 설치, 세정 케어까지 One-Stop으로 가이드해 드립니다.
+                </p>
+              </div>
+              <button
+                onClick={() => handleNav("inquiry")}
+                className="bg-white hover:bg-stone-100 text-stone-950 px-5 py-2.5 rounded-xl text-xs font-black shrink-0 transition-transform active:scale-95 shadow-sm"
+              >
+                B2B 스페셜티 기기 도입 문의 ➔
+              </button>
+            </div>
+
+          </div>
+        )}
+
+        {currentView === "ingredients" && (
+          <div className="max-w-5xl mx-auto px-6 py-8 animate-fade-in">
+            <button 
+              onClick={() => handleNav("home")}
+              className="mb-6 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" /> 뒤로가기
+            </button>
+
+            <div className="mb-8 space-y-2">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">PREMIUM RAW MATERIALS</span>
+              <h1 className="text-3xl font-black text-stone-900 tracking-tight">엄선 원부자재 B2B 직공급</h1>
+              <p className="text-stone-550 text-sm">
+                베이커리 오븐 팽창과 풍미의 기틀이 되는 검증된 고품질 원부자재 라인업입니다. 국내외 일류 브랜드 직항 공동 소싱을 통해 최저 단가 공급을 보증합니다.
+              </p>
+            </div>
+
+            {/* Sub-category Tabs */}
+            <div className="flex flex-wrap gap-2 mb-6 border-b border-stone-200 pb-4">
+              {[
+                { id: "powder", label: "가루류 (분말류)", role: "🍞 역할: 빵의 기본 골격과 구조 형성" },
+                { id: "liquid", label: "액체류 (수분류)", role: "💧 역할: 반죽의 농도 조절, 가루류의 수화" },
+                { id: "fat", label: "유지류", role: "🧈 역할: 빵의 질감을 부드럽게 하고 풍미 향상" },
+                { id: "sugar", label: "당류", role: "🍯 역할: 이스트의 발효를 돕고 단맛 부여" },
+                { id: "ferment", label: "발효/팽창제", role: "🧪 역할: 반죽을 팽창시키는 핵심 역할" },
+                { id: "additive", label: "부재료/첨가물", role: "🧂 역할: 맛의 밸런스(소금) 및 식감/향 추가" }
+              ].map((sub) => {
+                const isActive = selectedIngredientSubCat === sub.id;
+                return (
+                  <button
+                    key={sub.id}
+                    onClick={() => setSelectedIngredientSubCat(sub.id as any)}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                      isActive
+                        ? "bg-[#f97316] text-white shadow-xs"
+                        : "bg-white hover:bg-stone-105 hover:border-stone-400 text-stone-700 border border-stone-200"
+                    }`}
+                  >
+                    {sub.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Role highlight box */}
+            <div className="bg-orange-50/70 border border-orange-100 rounded-2xl p-4 mb-8 flex items-center gap-3">
+              <span className="text-xl">💡</span>
+              <div>
+                <p className="text-xs font-extrabold text-[#f97316] uppercase tracking-wider mb-0.5">선택 품목의 핵심 기능성</p>
+                <p className="text-xs font-bold text-stone-750">
+                  {selectedIngredientSubCat === "powder" && "가루류 (분말류) | 밀가루(강력/중력/박력), 빵가루, 호밀가루, 아몬드분말 - 빵의 기본 골격과 구조 형성"}
+                  {selectedIngredientSubCat === "liquid" && "액체류 (수분류) | 물, 우유, 생크림, 계란 - 반죽의 농도 조절 및 가루 밀가루 단백질 결합(수화) 보조"}
+                  {selectedIngredientSubCat === "fat" && "유지류 | 버터, 마가린, 쇼트닝, 올리브유 - 생지 결 조직 연화, 글루텐 윤활, 볼륨감 및 촉촉한 보존 풍미 강화"}
+                  {selectedIngredientSubCat === "sugar" && "당류 | 설탕, 꿀, 물엿, 올리고당 - 발효 균(이스트)의 직접 에너지원 제공, 메일라드 마감 및 완만하고 달달한 보수성 향상"}
+                  {selectedIngredientSubCat === "ferment" && "발효/팽창제 | 이스트, 베이킹파우더, 천연발효종 - 가스 배출 및 기포를 형성해 반죽을 폭신하게 팽창시키는 베이커리의 핵심 작용"}
+                  {selectedIngredientSubCat === "additive" && "부재료/첨가물 | 소금, 견과류, 건과일, 초콜릿 칩, 바닐라 향 - 소금의 글루텐 탄탄 보강 및 앙코르 풍미, 씹히는 식감/아로마 추가"}
+                </p>
+              </div>
+            </div>
+
+            {/* Ingredients Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              {INGREDIENTS_DATA.filter(item => item.subCategory === selectedIngredientSubCat).map((item) => {
+                // Determine colors based on brand types
+                let typeStyle = "bg-emerald-50 text-emerald-700 border-emerald-100";
+                if (item.brandType === "프리미엄 수입") {
+                  typeStyle = "bg-amber-50 text-amber-700 border-amber-100";
+                } else if (item.brandType === "해외 전문") {
+                  typeStyle = "bg-violet-50 text-violet-700 border-violet-100";
+                } else if (item.brandType === "국산 명가") {
+                  typeStyle = "bg-rose-50 text-rose-750 border-rose-100";
+                }
+
+                return (
+                  <div 
+                    key={item.id} 
+                    className="bg-white rounded-2xl p-5 border border-stone-200 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Top Visual slot */}
+                      <div className="w-full h-36 bg-stone-50 rounded-xl mb-4 flex flex-col items-center justify-center p-4 border border-stone-100 relative group overflow-hidden">
+                        <span className="text-5xl group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
+                        <span className="absolute bottom-2.5 right-2.5 text-[8.5px] font-black text-stone-400 font-mono bg-white border border-stone-200 px-2 py-0.5 rounded-full">
+                          {item.spec}
+                        </span>
+                      </div>
+
+                      {/* Brand and category */}
+                      <div className="flex items-center gap-1.5 mb-2.5">
+                        <span className={`px-2 py-0.5 text-[9px] font-extrabold border rounded ${typeStyle}`}>
+                          {item.brandType}
+                        </span>
+                        <span className="text-[10px] font-bold text-stone-400">
+                          {item.brand}
+                        </span>
+                      </div>
+
+                      <h3 className="text-sm font-extrabold text-stone-900 leading-tight mb-2">
+                        {item.name}
+                      </h3>
+                      <p className="text-[11px] text-stone-500 leading-relaxed font-semibold">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-5 pt-3 border-t border-stone-100 flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[9.5px] text-stone-400 font-semibold">B2B 점주 공동 도매가</span>
+                        <span className="text-sm font-black text-stone-950">
+                          ₩ {item.price.toLocaleString()}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleAddCustomToCart(
+                          item.id, 
+                          item.name, 
+                          item.price, 
+                          "bg-blue-50 text-blue-700", 
+                          item.brand
+                        )}
+                        className="px-3.5 py-1.5 bg-[#f97316] hover:bg-orange-600 text-white text-[11px] font-bold rounded-lg transition-all shadow-xs hover:shadow-sm"
+                      >
+                        B2B 담기
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Helpful Notice at the bottom of ingredients */}
+            <div className="bg-stone-900 text-stone-100 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-center gap-6">
+              <div className="space-y-1 text-center sm:text-left">
+                <p className="text-xs uppercase tracking-widest text-[#f97316] font-bold">Safe & Smart Shipping Delivery</p>
+                <h3 className="text-lg font-extrabold tracking-tight">원부자재 및 스마트 도우 통합 온·습도 조절 일체 배송</h3>
+                <p className="text-xs text-stone-450 leading-relaxed font-semibold max-w-xl">
+                  에브리베이크는 냉동 도우 생지의 냉각 상태뿐만 아니라 원부자재의 고유 품질(수분/산화 방지)까지 완벽 보존 장치된 냉장탑차로 스마트 원스톱 동시 일괄 출고 배송해 드립니다.
+                </p>
+              </div>
+              <button
+                onClick={() => handleNav("inquiry")}
+                className="bg-white hover:bg-stone-100 text-stone-950 px-5 py-2.5 rounded-xl text-xs font-black shrink-0 transition-transform active:scale-95 shadow-sm"
+              >
+                신규 원재료 입점 건의 ➔
+              </button>
             </div>
 
           </div>
@@ -2070,7 +2565,7 @@ export default function App() {
                     : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
                 }`}
               >
-                🌾 유기농 원무자재 공동구매
+                🌾 원부자재 제안
               </button>
             </div>
 
@@ -2406,6 +2901,128 @@ export default function App() {
           <p className="text-stone-300">중소 자영업자 1인 카페 상생 우수공로부문 대통령상 표창 출원 완료</p>
         </div>
       </footer>
+
+      {/* 🥐🍞 Cute Floating Bread Scroll-to-Top/Bottom Controller 🥯🥖 */}
+      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-center select-none">
+        
+        {/* Scroll Top Button (Toast Bread design) */}
+        <div className="relative group">
+          <div className="absolute right-16 top-1/2 -translate-y-1/2 bg-[#fffbeb] text-[#78350f] border-2 border-[#854d0e] text-[10px] px-2.5 py-1.5 rounded-xl font-black whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 -translate-x-3 group-hover:translate-x-0 transition-all duration-250 pointer-events-none flex items-center gap-1">
+            <span>🧈</span> 버터처럼 사르르 (맨 위로)
+          </div>
+          
+          <motion.button
+            whileHover={{ scale: 1.15, y: -4, rotate: -2 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="w-14 h-14 bg-[#fffbeb] hover:bg-[#fef3c7] border-[3.5px] border-[#854d0e] rounded-[18px_18px_12px_12px] shadow-lg hover:shadow-xl flex flex-col items-center justify-center cursor-pointer text-[#78350f] focus:outline-hidden transition-colors"
+            id="btn-scroll-top"
+          >
+            {/* Top bread ears shape highlights */}
+            <div className="absolute -top-1 left-2 w-4 h-2.5 bg-[#854d0e]/15 rounded-full" />
+            <div className="absolute -top-1 right-2 w-4 h-2.5 bg-[#854d0e]/15 rounded-full" />
+            
+            <ChevronUp className="w-5 h-5 text-[#854d0e] stroke-[2.5px] group-hover:animate-bounce mb-0.5" />
+            <span className="text-[14px]">🍞</span>
+            <span className="text-[9px] font-black text-[#b45309] -mt-0.5">TOP</span>
+          </motion.button>
+        </div>
+
+        {/* Scroll Bottom Button (Tasty Pastry design) */}
+        <div className="relative group">
+          <div className="absolute right-16 top-1/2 -translate-y-1/2 bg-[#fffbeb] text-[#78350f] border-2 border-[#854d0e] text-[10px] px-2.5 py-1.5 rounded-xl font-black whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 -translate-x-3 group-hover:translate-x-0 transition-all duration-250 pointer-events-none flex items-center gap-1">
+            <span>🍯</span> 시럽과 함께 쭉 (맨 아래로)
+          </div>
+          
+          <motion.button
+            whileHover={{ scale: 1.15, y: 4, rotate: 2 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })}
+            className="w-14 h-14 bg-[#fdf4e3] hover:bg-[#faebcd] border-[3.5px] border-[#854d0e] rounded-[14px_14px_18px_18px] shadow-lg hover:shadow-xl flex flex-col items-center justify-center cursor-pointer text-[#78350f] focus:outline-hidden transition-colors"
+            id="btn-scroll-bottom"
+          >
+            {/* Bottom crust visual details */}
+            <div className="absolute -bottom-1 left-3 w-8 h-2 bg-[#854d0e]/10 rounded-full" />
+            
+            <span className="text-[14px]">🥐</span>
+            <ChevronDown className="w-5 h-5 text-[#854d0e] stroke-[2.5px] group-hover:translate-y-0.5 transition-transform mt-0.5" />
+            <span className="text-[9px] font-black text-[#b45309] -mt-0.5">BTM</span>
+          </motion.button>
+        </div>
+
+      </div>
+
+      {/* 🥐 Satisfying Global Click Particle Animation Overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[100001] overflow-hidden">
+        {clickParticles.map((p) => (
+          <div
+            key={p.id}
+            className="absolute animate-bread-pop text-2xl select-none"
+            style={{
+              left: p.x,
+              top: p.y,
+            }}
+          >
+            {p.emoji}
+          </div>
+        ))}
+      </div>
+
+      {/* 🥖 Beautiful Page Transition Screen Overlay with Flying Breads */}
+      {isTransitioning && (
+        <div 
+          className={`fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-[#1c1917] transition-all duration-500 ease-out ${
+            transitionFadeState === "in" ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+          } overflow-hidden`}
+        >
+          {/* Background Cute Flying Breads with varying delays and top values */}
+          <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden select-none">
+            <div className="absolute animate-fly-ltr text-4xl" style={{ "--fly-duration": "3.2s", top: "12vh" } as any}>🍞</div>
+            <div className="absolute animate-fly-ltr text-4xl" style={{ "--fly-duration": "4.1s", top: "42vh" } as any}>🥖</div>
+            <div className="absolute animate-fly-ltr text-4xl" style={{ "--fly-duration": "3.5s", top: "72vh" } as any}>🥯</div>
+            <div className="absolute animate-fly-ltr text-4xl" style={{ "--fly-duration": "4.8s", top: "28vh" } as any}>🥞</div>
+            <div className="absolute animate-fly-ltr text-4xl" style={{ "--fly-duration": "3.9s", top: "58vh" } as any}>🧁</div>
+
+            <div className="absolute animate-fly-rtl text-4xl" style={{ "--fly-duration": "3.4s", top: "25vh" } as any}>🥐</div>
+            <div className="absolute animate-fly-rtl text-4xl" style={{ "--fly-duration": "4.5s", top: "8vh" } as any}>🥨</div>
+            <div className="absolute animate-fly-rtl text-4xl" style={{ "--fly-duration": "3.8s", top: "48vh" } as any}>🍩</div>
+            <div className="absolute animate-fly-rtl text-4xl" style={{ "--fly-duration": "4.2s", top: "82vh" } as any}>🍪</div>
+            <div className="absolute animate-fly-rtl text-4xl" style={{ "--fly-duration": "5.0s", top: "62vh" } as any}>🥯</div>
+          </div>
+
+          {/* Slogan Container and logo representation */}
+          <div className="relative z-20 text-center px-6 max-w-sm sm:max-w-md space-y-7">
+            <div className="w-24 h-24 bg-white/20 border border-white/35 rounded-[22px] mx-auto flex items-center justify-center mb-6 shadow-xl shadow-orange-500/5 overflow-hidden p-2.5 animate-bounce">
+              <img 
+                src={everyBakeLogo} 
+                alt="EveryBake Logo" 
+                className="w-full h-full object-contain filter brightness-110" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            
+            <div className="space-y-4">
+              <span className="text-[#f97316] text-[10px] sm:text-xs uppercase font-black tracking-[0.3em] font-mono block animate-pulse">
+                EVERYBAKE PREMIUM TRANSITION
+              </span>
+              <h2 className="text-white text-2xl sm:text-3xl font-black tracking-tight leading-normal">
+                당신의 식탁, 당신의 매 순간
+              </h2>
+              <div className="h-[2px] w-12 bg-[#f97316] mx-auto rounded-full" />
+              <h3 className="text-stone-300 text-lg sm:text-xl font-bold tracking-tight">
+                에브리베이크
+              </h3>
+            </div>
+          </div>
+
+          {/* Slogan footnote detail */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 text-[10px] text-stone-500 font-extrabold tracking-widest uppercase font-mono bg-stone-950/20 px-4 py-2 rounded-full border border-stone-800/40">
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
+            온·습도 동시 수송 시스템 가동 중
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

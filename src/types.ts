@@ -8,7 +8,7 @@ export interface DoughItem {
   stockStatus: "in" | "low" | "out";
   statusText: string;
   barcode: string;
-  category: "master" | "global";
+  category: "master" | "global" | "tasty";
   subCategory: "hard" | "pastry" | "soft";
   imageLabel: string;
   iconBg: string;

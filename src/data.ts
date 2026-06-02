@@ -755,6 +755,786 @@ export const CURATED_DOUGHS: DoughItem[] = [
       bakeTime: 14,
       steam: true,
     },
+  },
+  // ================= TASTY PICK (동네빵집/생지전문 맛 보장 컬렉션) =================
+  {
+    id: "t-001",
+    name: "골목베이커리 호두 무화과 깜빠뉴 (1box / 15ea)",
+    masterName: "🛒 [골목추천] 브레드팩토리",
+    region: "수도권",
+    price: 36000,
+    description: "새콤달콤한 건조 무화과와 바삭고소한 호두 분태를 아낌없이 담아 구울 때 구수한 풍미가 골목 가득히 번지는 베스트셀러 깜빠뉴 생지입니다.",
+    stockStatus: "in",
+    statusText: "당일 발송 가능",
+    barcode: "8809988110015",
+    category: "tasty",
+    subCategory: "hard",
+    imageLabel: "🥖 담백 구수 호두 깜빠뉴",
+    iconBg: "bg-stone-50 text-stone-800",
+    settings: {
+      defrostTemp: 23,
+      defrostTime: 30,
+      fermentTemp: 26,
+      fermentHumidity: 82,
+      fermentTime: 95,
+      bakeTemp: 215,
+      bakeTime: 23,
+      steam: true,
+    },
+  },
+  {
+    id: "t-002",
+    name: "우리밀 정통 바삭 사워도우 (1box / 12ea)",
+    masterName: "🛒 [생지전문] 푸드큐레이션",
+    region: "충청",
+    price: 38000,
+    description: "국산 우리밀과 정밀 유산균 배합으로 부드러운 산미를 구현하여, 누구나 거부감 없이 데일리 식사빵으로 즐기기 편안한 사워도우 생지입니다.",
+    stockStatus: "in",
+    statusText: "당일 발송 가능",
+    barcode: "8809988110022",
+    category: "tasty",
+    subCategory: "hard",
+    imageLabel: "🌾 겉바속촉 한끼 사워도우",
+    iconBg: "bg-amber-50 text-amber-900",
+    settings: {
+      defrostTemp: 24,
+      defrostTime: 35,
+      fermentTemp: 25,
+      fermentHumidity: 80,
+      fermentTime: 100,
+      bakeTemp: 220,
+      bakeTime: 26,
+      steam: true,
+    },
+  },
+  {
+    id: "t-003",
+    name: "동네맛집 결이 살아있는 통버터 크루아상 (1box / 15ea)",
+    masterName: "🛒 [동네인기] 헬로베이커리",
+    region: "영남",
+    price: 32000,
+    description: "통버터 롤링 기법을 적용해 얇은 페이스트리 결이 겉은 바사삭 부서지고 속은 마가린 시럽 조화로 촉촉구수하며 가성비가 매우 훌륭합니다.",
+    stockStatus: "in",
+    statusText: "당일 발송 가능",
+    barcode: "8809988110039",
+    category: "tasty",
+    subCategory: "pastry",
+    imageLabel: "🥐 황금빛 결 매직 크루아상",
+    iconBg: "bg-yellow-50 text-yellow-850",
+    settings: {
+      defrostTemp: 22,
+      defrostTime: 18,
+      fermentTemp: 28,
+      fermentHumidity: 85,
+      fermentTime: 50,
+      bakeTemp: 180,
+      bakeTime: 15,
+      steam: false,
+    },
+  },
+  {
+    id: "t-004",
+    name: "달콤 가득 시나몬 소보로 애플파이 (1box / 15ea)",
+    masterName: "🛒 [공동구매] 네이버셰프",
+    region: "호남",
+    price: 34000,
+    description: "달착지근한 사과 과육 졸임 시럽을 도우 내부에 풍성하게 넣고, 겉에는 소보로 비스킷을 흩뿌려 향긋하고 바삭함이 배가된 대중 스낵파이입니다.",
+    stockStatus: "low",
+    statusText: "잔여 수량 9 Box",
+    barcode: "8809988110046",
+    category: "tasty",
+    subCategory: "pastry",
+    imageLabel: "🥧 바삭 달콤 시나몬 애플파이",
+    iconBg: "bg-orange-50 text-orange-950",
+    settings: {
+      defrostTemp: 22,
+      defrostTime: 20,
+      fermentTemp: 27,
+      fermentHumidity: 78,
+      fermentTime: 55,
+      bakeTemp: 185,
+      bakeTime: 18,
+      steam: false,
+    },
+  },
+  {
+    id: "t-005",
+    name: "코코아 벨벳 더티초코 (1box / 16ea)",
+    masterName: "🛒 [주변빵집] 빵빵당",
+    region: "강원",
+    price: 35000,
+    description: "진한 카카오풍의 벨벳 파우더를 듬뿍 입히고 속에는 다크초콜릿 가공 칩을 배치하여 아이들과 젊은층 입맛을 강타한 달코롬한 생지입니다.",
+    stockStatus: "in",
+    statusText: "당일 발송 가능",
+    barcode: "8809988110053",
+    category: "tasty",
+    subCategory: "pastry",
+    imageLabel: "🍫 달콤 다크 초코 듬뿍",
+    iconBg: "bg-amber-100 text-amber-950",
+    settings: {
+      defrostTemp: 21,
+      defrostTime: 15,
+      fermentTemp: 29,
+      fermentHumidity: 80,
+      fermentTime: 45,
+      bakeTemp: 175,
+      bakeTime: 16,
+      steam: false,
+    },
+  },
+  {
+    id: "t-006",
+    name: "골목대장 촉촉 바닐라 메론빵 (1box / 40ea)",
+    masterName: "🛒 [소문난집] 메론당",
+    region: "제주",
+    price: 42000,
+    description: "소박한 옛날동네 빵집에서 구워내던 그 맛 그대로, 달착지근한 멜론 향 비스킷 토핑에 우유 크림이 조화를 이루는 동네 메론빵 생지입니다.",
+    stockStatus: "in",
+    statusText: "당일 발송 가능",
+    barcode: "8809988110060",
+    category: "tasty",
+    subCategory: "soft",
+    imageLabel: "🍈 시그니처 소보로 커스터드 메론빵",
+    iconBg: "bg-emerald-50 text-emerald-800",
+    settings: {
+      defrostTemp: 20,
+      defrostTime: 15,
+      fermentTemp: 30,
+      fermentHumidity: 70,
+      fermentTime: 50,
+      bakeTemp: 170,
+      bakeTime: 12,
+      steam: false,
+    },
+  },
+  {
+    id: "t-007",
+    name: "인생맛집 겉바속촉 짭조름 버터 소금빵 (1box / 40ea)",
+    masterName: "🛒 [맛집투어] 솔티가든",
+    region: "수도권",
+    price: 38000,
+    description: "속은 고소한 가공 버터 동굴로 뻥 뚫려 촉촉하고 바닥은 지글지글 구워져 바삭함이 특징인 동네 최고 가성비의 소금빵 생지입니다.",
+    stockStatus: "in",
+    statusText: "당일 발송 가능",
+    barcode: "8809988110077",
+    category: "tasty",
+    subCategory: "soft",
+    imageLabel: "🧈 인생 소금빵 황금 버터 동물",
+    iconBg: "bg-amber-50 text-amber-900",
+    settings: {
+      defrostTemp: 22,
+      defrostTime: 20,
+      fermentTemp: 29,
+      fermentHumidity: 82,
+      fermentTime: 60,
+      bakeTemp: 190,
+      bakeTime: 14,
+      steam: true,
+    },
+  }
+];
+
+export interface IngredientItem {
+  id: string;
+  name: string;
+  brand: string;
+  subCategory: "powder" | "liquid" | "fat" | "sugar" | "ferment" | "additive";
+  subCategoryLabel: string;
+  price: number;
+  description: string;
+  spec: string;
+  icon: string;
+  brandType: "국산 대기업" | "프리미엄 수입" | "해외 전문" | "국산 명가";
+}
+
+export const INGREDIENTS_DATA: IngredientItem[] = [
+  // 가루류 (분말류)
+  {
+    id: "ing-pow-01",
+    name: "[CJ제일제당] 맥선 백설 프리미엄 강력 밀가루 20kg",
+    brand: "CJ제일제당",
+    subCategory: "powder",
+    subCategoryLabel: "가루류 (분말류)",
+    price: 29000,
+    description: "글루텐 고함량으로 우수한 탄력성을 발휘해 고급 식빵과 부드러운 도우의 탄탄한 구조를 잡아주는 B2B 필수 전용 가루입니다.",
+    spec: "20kg 벌크",
+    icon: "🌾",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-pow-02",
+    name: "[오뚜기] 베이킹 전용 찰진 양과자형 중력 밀가루 10kg",
+    brand: "오뚜기",
+    subCategory: "powder",
+    subCategoryLabel: "가루류 (분말류)",
+    price: 16500,
+    description: "적정 점성을 가져 다목적 반죽이나 간식빵 제과 공정, 국수 등에 빈틈없는 가성비와 찰기를 연출하는 대용량 중력분입니다.",
+    spec: "10kg 포대",
+    icon: "🌾",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-pow-03",
+    name: "[대한제분] 곰표 최고급 크럼블 제과용 박력 밀가루 20kg",
+    brand: "대한제분",
+    subCategory: "powder",
+    subCategoryLabel: "가루류 (분말류)",
+    price: 27500,
+    description: "단백질 함량을 낮춰 소보로 토핑, 카스텔라, 타르트 쉘, 구움과자 크러스트에 포슬포슬한 최상의 바삭가루 터치감을 제공합니다.",
+    spec: "20kg 포대",
+    icon: "🌾",
+    brandType: "국산 명가"
+  },
+  {
+    id: "ing-pow-04",
+    name: "[해태제과] 소프트 바삭 B2B 야채 조리빵용 빵가루 10kg",
+    brand: "해태제과",
+    subCategory: "powder",
+    subCategoryLabel: "가루류 (분말류)",
+    price: 21000,
+    description: "구울 때 표면의 수분 증발을 완만하게 억제하고 바삭한 외형 고정을 도와주는 낙엽조리빵 및 고로케용 빵가루입니다.",
+    spec: "10kg",
+    icon: "🍞",
+    brandType: "국산 명가"
+  },
+  {
+    id: "ing-pow-05",
+    name: "[프랑스 버제] 호밀가루 야생 천연 효모 배합 T170 25kg",
+    brand: "프랑스 버제",
+    subCategory: "powder",
+    subCategoryLabel: "가루류 (분말류)",
+    price: 68000,
+    description: "유럽 장인 스타일의 거친 질감과 구수하고 알싸한 풍미가 깃든 유기농 프랑스 깜빠뉴, 사워도우 전용 호밀가루 수입 벌크입니다.",
+    spec: "25kg 수입포대",
+    icon: "🌾",
+    brandType: "프리미엄 수입"
+  },
+  {
+    id: "ing-pow-06",
+    name: "[미국 블루다이아몬드] 캘리포니아산 곱고 고소한 아몬드분말 11.34kg",
+    brand: "블루다이아몬드 (미국)",
+    subCategory: "powder",
+    subCategoryLabel: "가루류 (분말류)",
+    price: 145000,
+    description: "마카롱 꼬끄 프랑지판 타르트 크림 설계 시 극상의 리치 고소함을 전달하는 미세 벌크 아몬드가루 100%입니다.",
+    spec: "11.34kg",
+    icon: "🥜",
+    brandType: "해외 전문"
+  },
+
+  // 액체류 (수분류)
+  {
+    id: "ing-liq-01",
+    name: "[삼양웰푸드] 신선 보증 저온 살균 순백 유기농 우유 1L x 10ea",
+    brand: "삼양웰푸드",
+    subCategory: "liquid",
+    subCategoryLabel: "액체류 (수분류)",
+    price: 28000,
+    description: "국내산 무항생제 원유만을 채집 후 살균 유통하여, 빵 내부 수화 반응에 농후한 고소함과 고품격 구움색 메일라드를 부여합니다.",
+    spec: "1L x 10팩 벌크",
+    icon: "🥛",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-liq-02",
+    name: "[매일유업] 데일리 크림 마스터 고소한 동물성 휘핑 생크림 1L x 6ea",
+    brand: "매일유업",
+    subCategory: "liquid",
+    subCategoryLabel: "액체류 (수분류)",
+    price: 44050,
+    description: "유지방 38% 함량의 깨끗하고 신선한 액상 크림으로 크림식빵, 데니쉬 샌드 충전 시 완벽한 고정력과 촉촉한 동물성 풍미를 선사합니다.",
+    spec: "1L x 6팩",
+    icon: "🍦",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-liq-03",
+    name: "[프랑스 엘르앤비르] 엑스트라 휘핑 셰프 전용 유크림 1L x 6ea",
+    brand: "엘르앤비르 (프랑스)",
+    subCategory: "liquid",
+    subCategoryLabel: "액체류 (수분류)",
+    price: 58000,
+    description: "프랑스 미식 셰프들이 애정하는 동물성 우유 생크림으로 열 안정성이 우수하여 초콜릿 가나슈 및 구움 제과 배합에 최적입니다.",
+    spec: "1L x 6팩 수입",
+    icon: "🧴",
+    brandType: "프리미엄 수입"
+  },
+  {
+    id: "ing-liq-04",
+    name: "[오뚜기] 전란액 미생물 여과 살균 무항생제 달걀액 5kg",
+    brand: "오뚜기",
+    subCategory: "liquid",
+    subCategoryLabel: "액체류 (수분류)",
+    price: 23000,
+    description: "노른자 흰자의 황금 제빵 비율로 껍질 선별 수고 없이 오븐 윤기 및 반죽 고소함을 일체형으로 조율하게 해주는 살균 액란입니다.",
+    spec: "5kg 팩",
+    icon: "🥚",
+    brandType: "국산 대기업"
+  },
+
+  // 유지류
+  {
+    id: "ing-fat-01",
+    name: "[프랑스 레스큐어] AOP 고메 등급 명품 버터 블록 10kg",
+    brand: "레스큐어 (프랑스)",
+    subCategory: "fat",
+    subCategoryLabel: "유지류",
+    price: 198000,
+    description: "AOP 최상위 샤랑트 푸아투 발효 버터로 가열 시 특유의 견과 헤이즐넛 풍미가 번져 크루아상, 페이스트리의 최상위 가치를 창조합니다.",
+    spec: "10kg 벌크",
+    icon: "🧈",
+    brandType: "프리미엄 수입"
+  },
+  {
+    id: "ing-fat-02",
+    name: "[뉴질랜드 앵커] 방목형 목초 무염 가공 버터 20kg",
+    brand: "앵커 (뉴질랜드)",
+    subCategory: "fat",
+    subCategoryLabel: "유지류",
+    price: 215000,
+    description: "자연 방목 목초 유크림으로 가공해 깊은 골든 옐로우 빛깔을 띱니다. 소금빵 내벽 동굴 버터 및 기본 단팥빵 풍미로 판매율 1위를 보장하는 가성비 원재료입니다.",
+    spec: "20kg 박스",
+    icon: "🧈",
+    brandType: "해외 전문"
+  },
+  {
+    id: "ing-fat-03",
+    name: "[CJ제일제당] 쉐프초이스 고분산 부드러운 롤 가열 마가린 15kg",
+    brand: "CJ제일제당",
+    subCategory: "fat",
+    subCategoryLabel: "유지류",
+    price: 49000,
+    description: "유연성과 가공성이 뛰어나 빵의 부풀림을 돕고 부드러운 질감을 지속적으로 완만하게 정밀 유지하는 대용량 마가린입니다.",
+    spec: "15kg 벌크",
+    icon: "🧈",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-fat-04",
+    name: "[오뚜기] 베이킹 오븐 소마 찰진 쇼트닝 골드 15kg",
+    brand: "오뚜기",
+    subCategory: "fat",
+    subCategoryLabel: "유지류",
+    price: 42000,
+    description: "비스킷 토핑, 바삭 튀김 소보로의 최상의 파삭성(Shortness)과 고른 표면 가공 크러스트를 보존하는 오뚜기 대표 쇼트닝입니다.",
+    spec: "15kg",
+    icon: "🧈",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-fat-05",
+    name: "[이탈리아 데체코] 유기농 압착 엑스트라 버진 올리브유 5L",
+    brand: "데체코 (이탈리아)",
+    subCategory: "fat",
+    subCategoryLabel: "유지류",
+    price: 89000,
+    description: "지중해 햇살을 가득 머금은 프리미엄 올리브 오일로 치아바타, 포카치아 전유 도우에 향기롭게 수렴되어 미식을 가꿔줍니다.",
+    spec: "5L 캔수입",
+    icon: "🫒",
+    brandType: "해외 전문"
+  },
+
+  // 당류
+  {
+    id: "ing-sug-01",
+    name: "[CJ제일제당] 백설 요리용 고품질 극미립 하얀 정제 설탕 15kg",
+    brand: "CJ제일제당",
+    subCategory: "sugar",
+    subCategoryLabel: "당류",
+    price: 22000,
+    description: "이스트 영양분 공급의 핵심 에너지이자 빵 내부의 수분증발을 막아 촉촉한 숙성을 유지하게 돕는 백설 명가 설탕입니다.",
+    spec: "15kg 포대",
+    icon: "🍬",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-sug-02",
+    name: "[동서식품] 아카시아 향 가득 리얼 사양 벌꿀 10kg",
+    brand: "동서식품",
+    subCategory: "sugar",
+    subCategoryLabel: "당류",
+    price: 54000,
+    description: "애플파이나 밤식빵 필링 토핑, 광택 코팅에 은근히 번지는 달갑고 진득한 밀원 풍미를 더해주는 업소용 천연 벌꿀입니다.",
+    spec: "10kg 말통",
+    icon: "🍯",
+    brandType: "국산 명가"
+  },
+  {
+    id: "ing-sug-03",
+    name: "[대상 청정원] 수분 홀딩 광택 투명 물엿 벌크 15kg",
+    brand: "대상 청정원",
+    subCategory: "sugar",
+    subCategoryLabel: "당류",
+    price: 26000,
+    description: "빵 표면 윤기와 촉촉함 보존에 우수한 제과 도용 물엿으로 무첨가 살균 가공을 거쳐 깔끔한 단맛을 확보합니다.",
+    spec: "15kg",
+    icon: "🍯",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-sug-04",
+    name: "[오뚜기] 장 수분 고농축 프락토 올리고당 대용량 15kg",
+    brand: "오뚜기",
+    subCategory: "sugar",
+    subCategoryLabel: "당류",
+    price: 29000,
+    description: "칼로리 조절 및 유익균 배양에 어울려 최근 인기가 급상승 중인 고보습 기능성 웰빙 도우용 프리미엄 올리고당입니다.",
+    spec: "15kg 벌크",
+    icon: "🍯",
+    brandType: "국산 대기업"
+  },
+
+  // 발효/팽창제
+  {
+    id: "ing-fer-01",
+    name: "[프랑스 사프 Saf] 레귤러 인스턴트 드라이 이스트 Red 500g x 20ea",
+    brand: "사프 (프랑스)",
+    subCategory: "ferment",
+    subCategoryLabel: "발효/팽창제",
+    price: 112000,
+    description: "저당도(당 10% 이하) 반죽 맞춤 이스트로 식빵, 바게트 발효 시 우수한 향과 일정한 가스 팽창력을 약속합니다.",
+    spec: "500g x 20개 세트",
+    icon: "🧪",
+    brandType: "프리미엄 수입"
+  },
+  {
+    id: "ing-fer-02",
+    name: "[프랑스 사프 Saf] 저항성 고당용 골드 인스턴트 드라이 이스트 500g x 20ea",
+    brand: "사프 (프랑스)",
+    subCategory: "ferment",
+    subCategoryLabel: "발효/팽창제",
+    price: 125000,
+    description: "고당도(당 10% 이상) 소보로, 데니쉬, 밤식빵 반죽에 무리없이 강력하게 사워 작용하는 글로벌 1위 효모입니다.",
+    spec: "500g x 20개 세트",
+    icon: "🧪",
+    brandType: "프리미엄 수입"
+  },
+  {
+    id: "ing-fer-03",
+    name: "[미국 럼포드] 인산칼슘계 무알루미늄 안심 베이킹파우더 3.8kg",
+    brand: "럼포드 (미국)",
+    subCategory: "ferment",
+    subCategoryLabel: "발효/팽창제",
+    price: 42000,
+    description: "알루미늄 특유의 쓴 맛 부작용 없이 머랭이나 파이, 화과자를 신선하고 포들하게 팽창시키는 고급 베이킹파우더입니다.",
+    spec: "3.8kg",
+    icon: "🧪",
+    brandType: "해외 전문"
+  },
+  {
+    id: "ing-fer-04",
+    name: "[독일 르망] 라바 리퀴드 고산미 호밀 천연발효액종 10kg",
+    brand: "독 독일 르망",
+    brandType: "해외 전문",
+    subCategory: "ferment",
+    subCategoryLabel: "발효/팽창제",
+    price: 148000,
+    description: "자연 이스트 균과 젖산 풍미를 배합하여 시골식 깜빠뉴 고유의 알싸한 풍흥 향기와 신선한 소화 흡수도를 돕습니다.",
+    spec: "10kg 벌크",
+    icon: "🧪"
+  },
+
+  // 부재료/첨가물
+  {
+    id: "ing-add-01",
+    name: "[오뚜기] 신안 산지직송 최고급 미세 결정 백세 천일염 20kg",
+    brand: "오뚜기",
+    subCategory: "additive",
+    subCategoryLabel: "부재료/첨가물",
+    price: 34000,
+    description: "간수 비율을 극소화하여 쓴맛이 없고 밀가루 단백질막을 강력히 수축하여 소금빵 염도를 예쁘게 잡아주는 천일염입니다.",
+    spec: "20kg 대용량",
+    icon: "🧂",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "ing-add-02",
+    name: "[미국 파라마운트] 버터 로스팅 캘리포니아산 고소한 분태 호두 10kg",
+    brand: "파라마운트 (미국)",
+    subCategory: "additive",
+    subCategoryLabel: "부재료/첨가물",
+    price: 92000,
+    description: "오븐 가열에 고형이 쉽게 상하지 않고 씹을 때마다 견과류 오일 기름진 고소함을 한입가득 제공하는 웰빙 호두 조각입니다.",
+    spec: "10kg",
+    icon: "🥜",
+    brandType: "해외 전문"
+  },
+  {
+    id: "ing-add-03",
+    name: "[미국 오션스프레이] 보석 크랜베리 당절임 웰빙 과일분태 11.33kg",
+    brand: "오션스프레이 (미국)",
+    subCategory: "additive",
+    subCategoryLabel: "부재료/첨가물",
+    price: 118000,
+    description: "보석 같은 주홍 빛깔 크랜베리 당절임으로 담백식사빵 사이에 감칠 새콤함을 장식하는 상위 1% 구움 제과용 건조 과일입니다.",
+    spec: "11.33kg box",
+    icon: "🍒",
+    brandType: "해외 전문"
+  },
+  {
+    id: "ing-add-04",
+    name: "[벨기에 깔리바우트] 다크 초콜릿 마블용 리얼 초코칩 50.8% 10kg",
+    brand: "깔리바우트 (벨기에)",
+    subCategory: "additive",
+    subCategoryLabel: "부재료/첨가물",
+    price: 168000,
+    description: "고급 카카오버터 성분으로 오븐 사워 열기 속에서도 형체가 무너지지 않으며 황홀하고 진한 벨기에식 코코아맛을 보증합니다.",
+    spec: "10kg 백",
+    icon: "🍫",
+    brandType: "해외 전문"
+  },
+  {
+    id: "ing-add-05",
+    name: "[프랑스 맥코믹] 마다가스카르산 마일드 바닐라 빈 익스트랙 1L",
+    brand: "맥코믹 (프랑스)",
+    subCategory: "additive",
+    subCategoryLabel: "부재료/첨가물",
+    price: 154000,
+    description: "마다가스카르 바닐라 추출 오일액으로 달걀이나 유지의 미세 잡내를 말끔하게 소멸시켜 단팥빵 및 버터크림의 완숙을 돕습니다.",
+    spec: "1L 수입병",
+    icon: "🧴",
+    brandType: "해외 전문"
+  }
+];
+
+export interface CoffeeItem {
+  id: string;
+  name: string;
+  brand: string;
+  mainCategory: "machine" | "bean" | "barista";
+  mainCategoryLabel: string;
+  subCategory: "espresso" | "grinder" | "brewing" | "blend" | "single_origin" | "decaf" | "supplies";
+  subCategoryLabel: string;
+  price: number;
+  description: string;
+  spec: string;
+  icon: string;
+  brandType: "국산 대기업" | "프리미엄 수입" | "해외 전문" | "국산 명가" | "자체제작";
+}
+
+export const COFFEE_DATA: CoffeeItem[] = [
+  // 중분류 1: 머신 및 기기 - 에스프레소 머신
+  {
+    id: "cof-mc-01",
+    name: "[달라코르테] 에보2 B2B 고성능 2그룹 에스프레소 머신",
+    brand: "Dalla Corte (이탈리아)",
+    mainCategory: "machine",
+    mainCategoryLabel: "머신 (또는 기기)",
+    subCategory: "espresso",
+    subCategoryLabel: "에스프레소 머신",
+    price: 12500000,
+    description: "독립 보일러 시스템으로 정확하고 연속적인 온도를 유지해주어 러쉬 타임에도 보장된 에스프레소 수율을 보증합니다.",
+    spec: "2그룹 독립 보일러",
+    icon: "🔌",
+    brandType: "프리미엄 수입"
+  },
+  {
+    id: "cof-mc-02",
+    name: "[페마] E98 UP 스탠다드 상업용 에스프레소 머신 2그룹",
+    brand: "FAEMA (이탈리아)",
+    mainCategory: "machine",
+    mainCategoryLabel: "머신 (또는 기기)",
+    subCategory: "espresso",
+    subCategoryLabel: "에스프레소 머신",
+    price: 5800000,
+    description: "전국 개인 카페 시장 점유율 1위의 가성비 베스트셀러 모델로 내구성과 정비 편의성이 극상인 정품 2그룹 기기입니다.",
+    spec: "2그룹 열교환식",
+    icon: "🔌",
+    brandType: "해외 전문"
+  },
+
+  // 중분류 1: 머신 및 기기 - 그라인더
+  {
+    id: "cof-gr-01",
+    name: "[안핌] 슈퍼 카이마노 온디맨드 자동 원두 그라인더",
+    brand: "Anfim (이탈리아)",
+    mainCategory: "machine",
+    mainCategoryLabel: "머신 (또는 기기)",
+    subCategory: "grinder",
+    subCategoryLabel: "그라인더",
+    price: 1850000,
+    description: "75mm 플랫 버를 채용해 마찰 열 발생을 방지하며 빠르고 정밀하게 원두 입자를 갈아냅니다.",
+    spec: "75mm 플랫 버 / 자동형",
+    icon: "⚙️",
+    brandType: "해외 전문"
+  },
+  {
+    id: "cof-gr-02",
+    name: "[말코닉] EK43S 숏 대형 프리미엄 상업용 리테일 그라인더",
+    brand: "Mahlkönig (독일)",
+    mainCategory: "machine",
+    mainCategoryLabel: "머신 (또는 기기)",
+    subCategory: "grinder",
+    subCategoryLabel: "그라인더",
+    price: 4300000,
+    description: "전 세계 바리스타들이 최고로 꼽는 분쇄 편차 0% 신화의 프리미엄 싱글오리진 전용 그라인더의 하프 버전입니다.",
+    spec: "98mm 특수강 버 / 하이엔드",
+    icon: "⚙️",
+    brandType: "프리미엄 수입"
+  },
+
+  // 중분류 1: 머신 및 기기 - 브루잉 기기
+  {
+    id: "cof-br-01",
+    name: "[마르코] 에코보일러 T10 상업용 드립 & 온수 워터 디스펜서",
+    brand: "Marco (아일랜드)",
+    mainCategory: "machine",
+    mainCategoryLabel: "머신 (또는 기기)",
+    subCategory: "brewing",
+    subCategoryLabel: "브루잉 기기",
+    price: 1450000,
+    description: "공간 절약 설계와 실시간 즉지 온수 추출 지연 차단 기술로 일정한 온도의 대량 드립 브루잉 물 보급을 실현합니다.",
+    spec: "10L 고진공 보일러",
+    icon: "💧",
+    brandType: "해외 전문"
+  },
+  {
+    id: "cof-br-02",
+    name: "[모카마스터] 오르가 부르 B2B 배치브루어 자동 드립 기기",
+    brand: "Moccamaster (네덜란드)",
+    mainCategory: "machine",
+    mainCategoryLabel: "머신 (또는 기기)",
+    subCategory: "brewing",
+    subCategoryLabel: "브루잉 기기",
+    price: 680000,
+    description: "92-96도 구리 가열 관을 유지하며 일정한 빗방울 드립으로 향미 손실 없는 대형 드립 서빙을 가능케 만듭니다.",
+    spec: "1.25L 드립 메이커",
+    icon: "☕",
+    brandType: "프리미엄 수입"
+  },
+
+  // 중분류 2: 원두 - 블렌드
+  {
+    id: "cof-be-01",
+    name: "[CJ 프레시웨이] 마스터 웰빙 다크 브라운 에스프레소 원두 1kg",
+    brand: "CJ 프레시웨이",
+    mainCategory: "bean",
+    mainCategoryLabel: "원두",
+    subCategory: "blend",
+    subCategoryLabel: "블렌드",
+    price: 24000,
+    description: "브라질과 베트남 고산지 최우수 아라비카/로부스타 비율 배합으로 고소한 누룽지와 초콜릿 단맛 바디감을 구축합니다.",
+    spec: "1kg 밀봉팩",
+    icon: "🫘",
+    brandType: "국산 대기업"
+  },
+  {
+    id: "cof-be-02",
+    name: "[WBC 스페셜티] 메탈릭 다크 프리미엄 시그니처 블렌드 1kg",
+    brand: "WBC 시그니처",
+    mainCategory: "bean",
+    mainCategoryLabel: "원두",
+    subCategory: "blend",
+    subCategoryLabel: "블렌드",
+    price: 32000,
+    description: "에티오피아 최고 등급 내추럴 생두와 콜롬비아 워시드를 최적 멜팅 포인트로 볶아 과일의 산미와 카카오 바디가 조화롭습니다.",
+    spec: "1kg 지퍼팩",
+    icon: "🫘",
+    brandType: "프리미엄 수입"
+  },
+
+  // 중분류 2: 원두 - 싱글 오리진
+  {
+    id: "cof-be-03",
+    name: "[테라로사] 에티오피아 예가체프 시다모 싱글오리진 스페셜티 1kg",
+    brand: "테라로사",
+    mainCategory: "bean",
+    mainCategoryLabel: "원두",
+    subCategory: "single_origin",
+    subCategoryLabel: "싱글 오리진",
+    price: 45000,
+    description: "자스민의 새하얀 꽃 향과 복숭아, 살구 계열의 깨끗하고 산뜻한 과실 바디감을 전달하는 명품 드립용 싱글오리진 원두입니다.",
+    spec: "1kg 아로마밸브팩",
+    icon: "🫘",
+    brandType: "국산 명가"
+  },
+  {
+    id: "cof-be-04",
+    name: "[블루보틀] 캘리포니아 셀렉션 콜롬비아 수프리모 라 카바나 1kg",
+    brand: "Blue Bottle (미국)",
+    mainCategory: "bean",
+    mainCategoryLabel: "원두",
+    subCategory: "single_origin",
+    subCategoryLabel: "싱글 오리진",
+    price: 52000,
+    description: "카라멜의 진한 닷맛과 구운 견과류의 중후하고 은은한 여운이 조화롭게 남는 깔끔한 맛 스페셜티입니다.",
+    spec: "1kg 수입팩",
+    icon: "🫘",
+    brandType: "프리미엄 수입"
+  },
+
+  // 중분류 2: 원두 - 디카페인
+  {
+    id: "cof-be-05",
+    name: "[듁스커피] CO2 공법 디카페인 에티오피아 단 맛 오리진 1kg",
+    brand: "듁스커피 (호주)",
+    mainCategory: "bean",
+    mainCategoryLabel: "원두",
+    subCategory: "decaf",
+    subCategoryLabel: "디카페인",
+    price: 48000,
+    description: "이산화탄소 친환경 공법으로 생두 고유의 섬세한 꽃 향은 완벽 보존하고 카페인 성분만 99.9% 쏙 제거했습니다.",
+    spec: "1kg 질소충전팩",
+    icon: "🫘",
+    brandType: "프리미엄 수입"
+  },
+  {
+    id: "cof-be-06",
+    name: "[폴바셋] 브라질 스위스 워터 가공 마일드 디카페인 블렌드 1kg",
+    brand: "폴바셋",
+    mainCategory: "bean",
+    mainCategoryLabel: "원두",
+    subCategory: "decaf",
+    subCategoryLabel: "디카페인",
+    price: 38000,
+    description: "화학 용재 없이 순수 깨끗한 해양 해수 필터 요법으로 부드러운 다크 넛트 및 우수한 유크림 풍미를 선사합니다.",
+    spec: "1kg 지퍼백",
+    icon: "🫘",
+    brandType: "국산 명가"
+  },
+
+  // 중분류 3: 바리스타 용품 - 필터, 탬퍼, 세정제 등
+  {
+    id: "cof-su-01",
+    name: "[하리오] 정품 V60 무표백 황갈색 페이퍼 헤비 필터 (02형 100매) x 10ea",
+    brand: "Hario (일본)",
+    mainCategory: "barista",
+    mainCategoryLabel: "바리스타 용품",
+    subCategory: "supplies",
+    subCategoryLabel: "필터, 탬퍼, 세정제 등",
+    price: 36000,
+    description: "원추형 드립에 최적화되어 추출 편차를 막아주는 전세계 공용 펄프 무표백 친환경 고급 여과지 벌크 세트입니다.",
+    spec: "100매입 x 10팩 벌크",
+    icon: "📄",
+    brandType: "해외 전문"
+  },
+  {
+    id: "cof-su-02",
+    name: "[풀리까프] 이탈리아 명품 에스프레소 머신 백플러싱 세정제 900g",
+    brand: "Puly Caff (이탈리아)",
+    mainCategory: "barista",
+    mainCategoryLabel: "바리스타 용품",
+    subCategory: "supplies",
+    subCategoryLabel: "필터, 탬퍼, 세정제 등",
+    price: 24000,
+    description: "3역 단백질 전분 유분 급속 분해 기법으로 그룹헤드 내부 커피기름 잔여물과 석회를 말끔 소독하는 정품 파우더입니다.",
+    spec: "900g 통세트",
+    icon: "🧴",
+    brandType: "해외 전문"
+  },
+  {
+    id: "cof-su-03",
+    name: "[메탈그라운드] 바리스타 무중력 고른 안착 58.5mm 정밀 디스트리뷰터 탬퍼",
+    brand: "메탈그라운드",
+    mainCategory: "barista",
+    mainCategoryLabel: "바리스타 용품",
+    subCategory: "supplies",
+    subCategoryLabel: "필터, 탬퍼, 세정제 등",
+    price: 68000,
+    description: "더블 사이드 웨이트 중력 구조로 수평 편차 없는 고른 체널링 레벨링 압력을 자동으로 안착시켜 추출 채널링을 예방합니다.",
+    spec: "58.5mm 스틸 사양",
+    icon: "🔨",
+    brandType: "자체제작"
   }
 ];
 

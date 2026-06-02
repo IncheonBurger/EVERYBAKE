@@ -11,6 +11,8 @@ interface DoughCardProps {
   activeInOven: boolean;
   onHoverCard: (region: string | null) => void;
   onViewStory?: (id: string) => void;
+  rank?: number;
+  salesCount?: number;
 }
 
 export const DoughCard: React.FC<DoughCardProps> = ({
@@ -22,6 +24,8 @@ export const DoughCard: React.FC<DoughCardProps> = ({
   activeInOven,
   onHoverCard,
   onViewStory,
+  rank,
+  salesCount,
 }) => {
   
   // Format price into elegant KRW
@@ -41,14 +45,31 @@ export const DoughCard: React.FC<DoughCardProps> = ({
     }
   };
 
+  const getRankClasses = (rk?: number) => {
+    if (!rk) return "";
+    switch (rk) {
+      case 1:
+        return "border-amber-400 bg-amber-50/15 ring-2 ring-amber-300/30 shadow-md hover:border-amber-500 hover:shadow-lg scale-[1.01]";
+      case 2:
+        return "border-stone-300 shadow-sm bg-stone-50/10 hover:border-stone-400 hover:shadow-md";
+      case 3:
+        return "border-orange-200/80 shadow-sm bg-orange-50/10 hover:border-orange-300 hover:shadow-md";
+      default:
+        return "";
+    }
+  };
+
   const stockStyle = getStockClasses(item.stockStatus);
+  const rankStyleClass = getRankClasses(rank);
 
   return (
     <div 
       className={`group bg-white rounded-3xl p-5 border transition-all duration-300 flex flex-col justify-between ${
-        activeInOven 
-          ? "border-amber-400 shadow-md ring-1 ring-amber-400" 
-          : "border-stone-200/60 hover:border-stone-400 hover:shadow-md"
+        rank 
+          ? rankStyleClass 
+          : activeInOven 
+            ? "border-amber-400 shadow-md ring-1 ring-amber-400" 
+            : "border-stone-200/60 hover:border-stone-400 hover:shadow-md"
       }`}
       onMouseEnter={() => onHoverCard(item.region)}
       onMouseLeave={() => onHoverCard(null)}
@@ -58,6 +79,16 @@ export const DoughCard: React.FC<DoughCardProps> = ({
         <div className="w-full h-44 bg-stone-100 rounded-2xl mb-4 relative overflow-hidden flex flex-col items-center justify-center p-4 border border-stone-200/50">
           <div className="absolute inset-0 opacity-[0.03] select-none pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:10px_10px]" />
           
+          {rank && (
+            <div className={`absolute top-2.5 left-2.5 flex items-center gap-1.5 text-[10px] font-black tracking-wider px-2.5 py-1 rounded-full shadow-xs z-10 ${
+              rank === 1 ? "bg-amber-400 text-amber-950 border border-amber-500/30 font-sans" :
+              rank === 2 ? "bg-stone-200 text-stone-800 border border-stone-300/30 font-sans" :
+              "bg-orange-100 text-orange-950 border border-orange-200/40 font-sans"
+            }`}>
+              <span>{rank === 1 ? "👑 금실시간 1위" : rank === 2 ? "🥈 2위" : "🥉 3위"}</span>
+            </div>
+          )}
+
           <span className="text-3xl filter drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
             {Array.from(item.imageLabel)[0] || "🍞"}
           </span>
@@ -74,10 +105,20 @@ export const DoughCard: React.FC<DoughCardProps> = ({
           )}
         </div>
 
-        {/* Stock Status Badge */}
-        <div className={`w-fit flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border mb-3 ${stockStyle.text}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${stockStyle.dot}`} />
-          <span>{item.statusText}</span>
+        {/* Badges container */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          {/* Stock Status Badge */}
+          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${stockStyle.text}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${stockStyle.dot}`} />
+            <span>{item.statusText}</span>
+          </div>
+
+          {/* Sales Count Badge */}
+          {salesCount && (
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-red-50 text-red-700 border border-red-100 font-mono animate-pulse shrink-0">
+              <span>🔥 금일 누적: {salesCount.toLocaleString()} Box</span>
+            </div>
+          )}
         </div>
 
         {/* Content Details */}

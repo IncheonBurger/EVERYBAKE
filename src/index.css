@@ -24,3 +24,67 @@
     transform: rotate(360deg);
   }
 }
+
+/* 🥖 Satisfying Bread Click Action Animations */
+@keyframes breadPopFloat {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.35) rotate(15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -130px) scale(0.5) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+.animate-bread-pop {
+  animation: breadPopFloat 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* 🍞 Playful Transition Screens falling/flying Bread Animations */
+@keyframes flyingBreadLtR {
+  0% {
+    transform: translateY(105vh) translateX(-50px) rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.85;
+  }
+  90% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-5vh) translateX(calc(100vw + 50px)) rotate(450deg) scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes flyingBreadRtL {
+  0% {
+    transform: translateY(105vh) translateX(calc(100vw + 50px)) rotate(360deg) scale(1.3);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.85;
+  }
+  90% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-5vh) translateX(-50px) rotate(-90deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.animate-fly-ltr {
+  animation: flyingBreadLtR var(--fly-duration, 5s) linear infinite;
+}
+
+.animate-fly-rtl {
+  animation: flyingBreadRtL var(--fly-duration, 6s) linear infinite;
+}
+

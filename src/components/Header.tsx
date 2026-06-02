@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ShoppingBag, ChevronRight, Award, HelpCircle, Menu, X, ArrowRight, LogIn, LogOut, User } from "lucide-react";
+import everyBakeLogo from "../assets/images/everybake_logo_1780361685384.png";
 
 interface HeaderProps {
   cartCount: number;
@@ -24,6 +25,7 @@ export default function Header({
     { id: "equip-list", name: "도우컨디셔너 / 오븐" },
     { id: "dough-main", name: "프리미엄 생지 라이브러리" },
     { id: "coffee", name: "커피 원두 / 머신" },
+    { id: "ingredients", name: "원부자재" },
     { id: "community", name: "에브리베이크 커뮤니티" },
   ];
 
@@ -46,8 +48,13 @@ export default function Header({
           onClick={() => handleMobileNav("home")}
           id="partners-logo-nav"
         >
-          <div className="w-8.5 h-8.5 rounded-xl bg-gradient-to-tr from-[#f97316] to-[#ea580c] flex items-center justify-center text-white font-black text-sm tracking-widest transition-transform group-hover:scale-105 shadow-sm shrink-0">
-            E
+          <div className="w-9 h-9 rounded-xl overflow-hidden bg-stone-50 border border-stone-250 flex items-center justify-center transition-transform group-hover:scale-105 shadow-2xs shrink-0 p-0.5">
+            <img 
+              src={everyBakeLogo} 
+              alt="EveryBake" 
+              className="w-full h-full object-contain" 
+              referrerPolicy="no-referrer" 
+            />
           </div>
           <div className="flex items-center sm:block">
             <span className="font-black text-[15px] sm:text-[17px] text-stone-900 tracking-tight">EveryBake</span>
