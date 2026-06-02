@@ -34,7 +34,8 @@ import {
   ShoppingBag,
   Bell,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Search
 } from "lucide-react";
 import { motion } from "motion/react";
 import Header from "./components/Header";
@@ -134,6 +135,7 @@ export default function App() {
   // Navigation View Tracking
   // Current view can be: "home" | "equip-list" | "equip-detail" | "dough-main" | "dough-detail" | "coffee" | "community" | "inquiry" | "login" | "partner-portal"
   const [currentView, setCurrentView] = useState<string>("home");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   
   // B2B Partner Portal login states
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -722,6 +724,88 @@ export default function App() {
     }, 1800);
   };
 
+  // Unified B2B search system
+  const getSearchableProducts = () => {
+    const list: any[] = [];
+    
+    // 1. Dough products
+    CURATED_DOUGHS.forEach((item) => {
+      list.push({
+        ...item,
+        originType: "dough",
+        categoryLabel: "프리미엄 생지 라이브러리",
+        badge: item.category === "master" ? "명장 명품" : item.category === "global" ? "글로벌" : "테이스트 픽",
+        subCategoryLabel: item.subCategory === "hard" ? "식사빵 (하드계열)" : item.subCategory === "soft" ? "디저트빵 (소프트계열)" : "크로와상/페이스트리"
+      });
+    });
+
+    // 2. Coffee items
+    COFFEE_DATA.forEach((item) => {
+      list.push({
+        ...item,
+        originType: "coffee",
+        categoryLabel: "커피 원두 / 머신",
+        badge: item.brandType || "B2B 기기",
+        subCategoryLabel: item.subCategoryLabel || item.subCategory
+      });
+    });
+
+    // 3. Ingredient items
+    INGREDIENTS_DATA.forEach((item) => {
+      list.push({
+        ...item,
+        originType: "ingredient",
+        categoryLabel: "원부자재",
+        badge: item.brandType || "B2B 자재",
+        subCategoryLabel: item.subCategoryLabel || item.subCategory
+      });
+    });
+
+    // 4. Smart Equipment (Static)
+    list.push({
+      id: "eq-pro-01",
+      name: "KCT 수직형 AI 도우컨디셔너+오븐 일체형 [Smart Pro] (170cm)",
+      brand: "KCT Systems",
+      masterName: "KCT Systems (대한민국)",
+      categoryLabel: "도우컨디셔너 / 오븐",
+      price: 6500000,
+      description: "하부 도우컨디셔너(해동·발효)와 상부 오븐 모듈이 전용 통신 칩으로 바코드 데이터와 즉시 조정되는 명장 인증 하드웨어입니다.",
+      originType: "equipment",
+      badge: "KCT 독점판매",
+      subCategoryLabel: "AI 올인원 오븐"
+    });
+    
+    list.push({
+      id: "eq-mini-01",
+      name: "KCT 스마트 무선 스팀 프레스기 (미니 쇼케이스)",
+      brand: "KCT Systems",
+      masterName: "KCT Systems (개념 모델)",
+      categoryLabel: "도우컨디셔너 / 오븐",
+      price: null, // "출시 예정"
+      description: "카페 카운터 미니 쇼케이스 장형 배치에 맞춘 콤팩트 데스크톱 디바이스로, 소량 냉동 크로플 및 타르트 자동 소킹을 담당합니다.",
+      originType: "equipment",
+      badge: "R&D 준비중",
+      subCategoryLabel: "무선 스팀 기기"
+    });
+
+    return list;
+  };
+
+  const filteredSearchProducts = searchQuery.trim() === "" 
+    ? [] 
+    : getSearchableProducts().filter((item) => {
+        const query = searchQuery.toLowerCase();
+        return (
+          item.name.toLowerCase().includes(query) ||
+          (item.description && item.description.toLowerCase().includes(query)) ||
+          (item.brand && item.brand.toLowerCase().includes(query)) ||
+          (item.masterName && item.masterName.toLowerCase().includes(query)) ||
+          (item.region && item.region.toLowerCase().includes(query)) ||
+          (item.categoryLabel && item.categoryLabel.toLowerCase().includes(query)) ||
+          (item.subCategoryLabel && item.subCategoryLabel.toLowerCase().includes(query))
+        );
+      });
+
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 pb-16 antialiased selection:bg-[#f97316] selection:text-white">
       
@@ -733,6 +817,8 @@ export default function App() {
         onNav={handleNav}
         isLoggedIn={isLoggedIn}
         onLogout={handleLogout}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
       {/* Cart Sidebar panel */}
@@ -757,10 +843,146 @@ export default function App() {
       {/* Main Container padding matching header offset */}
       <main className="pt-20">
         
-        {/* ==================================================== */}
-        {/* 1. HOME VIEW                                        */}
-        {/* ==================================================== */}
-        {currentView === "home" && (
+        {searchQuery.trim() !== "" ? (
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
+            {/* 뒤로가기 버튼 */}
+            <button 
+              onClick={() => setSearchQuery("")}
+              className="mb-6 flex items-center gap-1 text-xs font-black text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" /> 전체 카테고리 보기
+            </button>
+
+            {/* 헤더 */}
+            <div className="mb-8 space-y-2">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">EVERYBAKERS SEARCHING SYSTEM</span>
+              <h1 className="text-3xl font-black text-stone-900 tracking-tight leading-tight">
+                '<span className="text-[#f97316]">{searchQuery}</span>' <span className="font-medium text-stone-650 text-2.5xl">B2B 통합 검색 결과</span>
+              </h1>
+              <p className="text-stone-500 text-sm">
+                스마트 기기 오븐라인업부터 명장 수제 생지, 스페셜 로스팅 원두 및 커피기기, 에브리베이크 필수 B2B 원부재료를 한눈에 발견해 드립니다.
+              </p>
+              <div className="text-xs font-bold text-[#f97316] bg-orange-50 border border-orange-100 px-3.5 py-1.5 rounded-xl inline-block mt-1">
+                🧁 실시간 검색 매칭된 상품 수: {filteredSearchProducts.length}건
+              </div>
+            </div>
+
+            {/* 제품 리스트 그리드 */}
+            {filteredSearchProducts.length === 0 ? (
+              <div className="bg-white rounded-3xl p-16 border border-stone-200 border-dashed text-center space-y-3 shadow-2xs">
+                <div className="text-4xl animate-bounce">🥐🌾☕</div>
+                <h3 className="text-base font-black text-stone-850 font-sans tracking-tight">일치하는 검색 제품이 존재하지 않습니다</h3>
+                <p className="text-xs text-stone-500 max-w-sm mx-auto leading-relaxed">
+                  검색어 오타가 없는지 확인해 보세요. 생지, 소금빵, 깜빠뉴, 크루아상, 에스프레소, 오븐, 밀가루, 버터 등의 보편적 카테고리와 품목 키워드로 입력하면 더 확실한 결과를 찾을 수 있습니다.
+                </p>
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="mt-4 px-5 py-2.5 bg-stone-950 hover:bg-black text-white text-xs font-extrabold rounded-xl transition-all cursor-pointer shadow-sm hover:shadow"
+                >
+                  검색어 초기화 및 돌아가기
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredSearchProducts.map((item) => {
+                  const hasValidPrice = item.price !== null && item.price !== undefined;
+                  return (
+                    <div 
+                      key={item.id}
+                      className="bg-white rounded-3xl p-6 border border-stone-200/90 hover:border-[#f97316] hover:shadow-xl transition-all flex flex-col justify-between group h-full relative"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-4">
+                          <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg ${
+                            item.originType === 'dough' ? 'bg-orange-50 text-[#f97316] border border-orange-100/50' :
+                            item.originType === 'coffee' ? 'bg-amber-50 text-amber-800 border border-amber-100/50' :
+                            item.originType === 'ingredient' ? 'bg-stone-100 text-stone-750 border border-stone-200/50' :
+                            'bg-blue-50 text-[#2563eb] border border-blue-100/50'
+                          }`}>
+                            {item.categoryLabel}
+                          </span>
+                          <span className="text-[9.5px] uppercase font-mono font-extrabold text-stone-400 bg-stone-50 px-2 py-0.5 rounded-md border border-stone-150">
+                            {item.badge}
+                          </span>
+                        </div>
+
+                        <h3 className="text-[15px] font-black text-stone-900 group-hover:text-[#f97316] transition-colors leading-snug mb-1 text-left">
+                          {item.name}
+                        </h3>
+                        {item.subCategoryLabel && (
+                          <div className="text-[10px] font-extrabold text-stone-400 mb-3 text-left">
+                            분류태그: <span className="text-[#f97316]/80">{item.subCategoryLabel}</span>
+                          </div>
+                        )}
+                        <p className="text-xs text-stone-550 leading-relaxed font-semibold line-clamp-3 mb-6 text-left">
+                          {item.description}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-stone-100 flex items-center justify-between mt-auto">
+                        <div className="flex flex-col text-left">
+                          <span className="text-[9px] text-stone-400 font-bold uppercase tracking-tight">파트너 특가</span>
+                          <span className="text-[15px] font-black text-stone-900 font-mono">
+                            {!hasValidPrice ? (
+                              "출시 예정"
+                        ) : (
+                          `₩ ${item.price.toLocaleString()}`
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      {item.originType === 'dough' && (
+                        <button
+                          onClick={() => {
+                            setSelectedDoughId(item.id);
+                            setSearchQuery("");
+                            handleNav("dough-detail");
+                          }}
+                          className="px-2.5 py-1.75 border border-stone-200 hover:border-stone-900 text-stone-700 hover:text-stone-900 text-xs font-bold rounded-xl transition-all cursor-pointer bg-white"
+                        >
+                          상세보기
+                        </button>
+                      )}
+                      
+                      <button
+                        onClick={() => {
+                          if (item.originType === 'dough') {
+                            handleAddToCart(item);
+                          } else if (item.originType === 'coffee') {
+                            handleAddCustomToCart(item.id, item.name, item.price ?? 0, "bg-orange-50 text-[#f97316]", item.brand || 'Coffee');
+                          } else if (item.originType === 'ingredient') {
+                            handleAddCustomToCart(item.id, item.name, item.price ?? 0, "bg-stone-50 text-[#f97316]", item.brand || 'Ingredient');
+                          } else if (item.originType === 'equipment') {
+                            if (!hasValidPrice) {
+                              alert("⚠️ 본 스마트 장치는 상용화 준비 중인 모델입니다. 파트너 제안서 작성이나 대표 포털 문의를 통해서 샘플 배치 요구를 상담할 수 있습니다.");
+                            } else {
+                              handleAddCustomToCart("eq-pro-01", "KCT Smart Pro (All-in-one)", 6500000, "bg-blue-50 text-[#2563eb]", "KCT Systems");
+                            }
+                          }
+                        }}
+                        className={`px-3 py-1.75 text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-2xs hover:shadow-xs shrink-0 ${
+                          (!hasValidPrice && item.originType === 'equipment') 
+                            ? 'bg-stone-300 hover:bg-stone-400 text-stone-600 cursor-pointer border border-stone-200' 
+                            : 'bg-[#f97316] hover:bg-orange-600'
+                        }`}
+                      >
+                        {(!hasValidPrice && item.originType === 'equipment') ? "기획서접수" : "B2B 담기"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* ==================================================== */}
+            {/* 1. HOME VIEW                                        */}
+            {/* ==================================================== */}
+            {currentView === "home" && (
           <div className="animate-fade-in">
             {/* Elegant Hero Welcome Banner Section */}
             <div className="relative min-h-[50vh] xl:min-h-[55vh] flex flex-col justify-center items-center bg-gradient-to-b from-[#fff7ed] via-[#ffedd5] to-stone-50 py-16 px-6 text-center overflow-hidden">
@@ -2885,6 +3107,8 @@ export default function App() {
           </div>
         )}
 
+          </>
+        )}
       </main>
 
       {/* Modern, elegant corporate footer aligned with requested style */}
