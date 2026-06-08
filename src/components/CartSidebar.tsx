@@ -20,6 +20,7 @@ interface CartSidebarProps {
   isLoggedIn?: boolean;
   onRedirectLogin?: () => void;
   userStoreName?: string;
+  onGoToCheckout?: () => void;
 }
 
 export default function CartSidebar({
@@ -35,6 +36,7 @@ export default function CartSidebar({
   isLoggedIn = false,
   onRedirectLogin = () => {},
   userStoreName = "",
+  onGoToCheckout = () => {},
 }: CartSidebarProps) {
   const [shopName, setShopName] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
@@ -229,75 +231,38 @@ export default function CartSidebar({
                   </div>
 
                   {!isLoggedIn ? (
-                    <div className="bg-amber-50/80 border border-amber-200/60 p-5 rounded-2xl text-center space-y-3 mt-4">
-                      <p className="text-xs font-semibold text-stone-750 leading-relaxed">
-                        🚨 <span className="text-amber-700 font-extrabold">로그인 상태가 아닙니다!</span> <br/>
-                        명인의 생지 발제 주문 및 발주 신청은 <br/>
-                        <span className="font-extrabold text-stone-900 font-sans">B2B 점주 로그인</span> 후에 진행하실 수 있습니다.
+                    <div className="bg-amber-50/80 border border-amber-200/50 p-4 rounded-xl text-center space-y-3 mt-4">
+                      <p className="text-[11px] font-semibold text-stone-750 leading-relaxed">
+                        🚨 <span className="text-amber-800 font-extrabold">로그인 상태가 아닙니다!</span> <br/>
+                        가맹점 계약 관리 및 물량 수급을 위해 <br/>
+                        점주 인증 후 주문 및 결제 단계로 진입할 수 있습니다.
                       </p>
                       <button
                         type="button"
                         onClick={onRedirectLogin}
-                        className="w-full py-2.5 bg-[#f97316] hover:bg-[#ea580c] text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs"
+                        className="w-full py-3 bg-stone-900 hover:bg-black text-[#f97316] hover:text-white rounded-xl text-xs font-extrabold transition-all cursor-pointer shadow-sm border border-[#f97316]/20"
                       >
-                        B2B 점주 로그인 하러가기 →
+                        에베인 로그인 →
                       </button>
                     </div>
                   ) : (
-                    <form onSubmit={handleCheckout} className="space-y-3 pt-2">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">매장명</label>
-                          <input
-                            type="text"
-                            required
-                            value={shopName}
-                            onChange={(e) => setShopName(e.target.value)}
-                            placeholder="더블론드 카페"
-                            className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">연락처</label>
-                          <input
-                            type="tel"
-                            required
-                            value={contact}
-                            onChange={(e) => setContact(e.target.value)}
-                            placeholder="010-1234-5678"
-                            className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
-                          />
-                        </div>
+                    <div className="space-y-3 pt-2">
+                      <div className="bg-stone-100/60 border border-stone-200/50 rounded-xl p-3 text-left">
+                        <p className="text-[9px] uppercase font-bold text-stone-400">인증 가맹 매장</p>
+                        <p className="text-xs font-black text-stone-800 flex items-center gap-1 mt-0.5">
+                          🏪 {userStoreName || "인증 가맹점"} <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded-md">B2B 인증완료</span>
+                        </p>
                       </div>
-                      <div>
-                        <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">희망 납품일</label>
-                        <input
-                          type="date"
-                          required
-                          value={deliveryDate}
-                          onChange={(e) => setDeliveryDate(e.target.value)}
-                          className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 focus:ring-1 focus:ring-stone-950 focus:border-stone-950 outline-hidden"
-                        />
-                      </div>
-
+                      
                       <button
-                        type="submit"
-                        disabled={isOrdering}
-                        className="w-full mt-2 py-3 bg-stone-950 hover:bg-stone-900 disabled:bg-stone-400 text-white rounded-xl text-sm font-bold cursor-pointer transition-all flex items-center justify-center gap-2 shadow"
+                        type="button"
+                        onClick={onGoToCheckout}
+                        className="w-full py-3 bg-[#f97316] hover:bg-orange-600 text-white rounded-xl text-xs font-bold cursor-pointer transition-all flex items-center justify-center gap-1.5 shadow-md hover:scale-101"
                       >
-                        {isOrdering ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            바코드 원장 검증 중...
-                          </>
-                        ) : (
-                          <>
-                            <CreditCard className="w-4 h-4" />
-                            발주 승인 신청하기
-                          </>
-                        )}
+                        <CreditCard className="w-4 h-4" />
+                        주문서 작성 및 결제진행하기 ({cartItems.length}개)
                       </button>
-                    </form>
+                    </div>
                   )}
                 </div>
               )}

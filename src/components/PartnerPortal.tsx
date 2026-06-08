@@ -20,6 +20,7 @@ interface PartnerPortalProps {
   onLogout: () => void;
   onAddToCart: (item: any) => void;
   currentDoughs: DoughItem[];
+  orderHistory?: any[];
 }
 
 export default function PartnerPortal({
@@ -27,7 +28,8 @@ export default function PartnerPortal({
   onLoginSuccess,
   onLogout,
   onAddToCart,
-  currentDoughs
+  currentDoughs,
+  orderHistory = []
 }: PartnerPortalProps) {
   // Login Form states
   const [partnerId, setPartnerId] = useState("");
@@ -268,7 +270,7 @@ export default function PartnerPortal({
                 onClick={() => { setIsRegisterMode(false); setErrorMessage(""); }}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${!isRegisterMode ? "bg-white text-stone-950 shadow-sm" : "text-stone-500 hover:text-stone-900"}`}
               >
-                해피 패밀리 로그인
+                에베인 로그인
               </button>
               <button
                 onClick={() => { setIsRegisterMode(true); setErrorMessage(""); }}
@@ -313,7 +315,7 @@ export default function PartnerPortal({
                     type="submit"
                     className="w-full py-3.5 bg-stone-900 hover:bg-black text-white text-xs font-extrabold rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer hover:shadow-lg"
                   >
-                    <span>점포 스마트 플랫폼 로그인 ↗</span>
+                    <span>에베인 로그인 ↗</span>
                     <LogIn className="w-4 h-4" />
                   </button>
                 </div>
@@ -390,7 +392,7 @@ export default function PartnerPortal({
                   <span className="px-2 py-0.5 bg-green-50 text-green-700 text-[10px] font-extrabold border border-green-200 rounded">● 패밀리 프리미엄 회원</span>
                 </div>
                 <h2 className="text-xl font-black text-stone-900 tracking-tight mt-1">
-                  소금빵 명가 푸드 팩토리 해피 패밀리 나의공간
+                  소금빵 명가 푸드 팩토리 에베인 나의공간
                 </h2>
                 <p className="text-stone-500 text-xs font-semibold mt-0.5">
                   도우컨디셔너와 스마트 오븐을 원격 관측하고 명인의 신선 생지를 자동화 공급받고 있습니다.
@@ -672,38 +674,122 @@ export default function PartnerPortal({
               {subView === "orders" && (
                 <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-6 animate-fade-in" id="portal-subview-orders">
                   <div>
-                    <h3 className="text-stone-900 font-black text-base tracking-tight flex items-center gap-2">
+                    <h3 className="text-stone-900 font-black text-base tracking-tight flex items-center gap-2 font-sans">
                       <ShoppingCart className="w-5 h-5 text-[#f97316]" />
                       B2B 실시간 발주 및 새벽 배송 추적
                     </h3>
                     <p className="text-stone-500 text-xs mt-1">대량 식자재 및 명인 크루아상 생지의 결제/정기배송 정밀 경로입니다.</p>
                   </div>
 
-                  {/* Shipment Tracking Timeline */}
-                  <div className="p-5 bg-stone-50 rounded-2xl border border-stone-150">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-xs font-black text-stone-800">배송 송장 번호: <span className="font-mono text-[#f97316]">KCT-TRK-77192-KR</span></span>
-                      <span className="px-2.5 py-1 bg-blue-50 text-blue-600 text-[10px] font-extrabold rounded-md border border-blue-150 flex items-center gap-1 tracking-wider uppercase">
-                        <TruckIcon className="w-3.5 h-3.5 animate-bounce" /> 특수 탑차 배송 중
-                      </span>
-                    </div>
+                  {/* Dynamic user completed orders from checkout */}
+                  {orderHistory.length > 0 && (
+                    <div className="space-y-4">
+                      <h4 className="text-stone-900 font-extrabold text-xs uppercase tracking-wider text-amber-600 flex items-center gap-1.5 font-mono">
+                        <span>⚡</span> 실시간 가맹점 라이브 발주 내역 ({orderHistory.length}건)
+                      </h4>
+                      {orderHistory.map((order, idx) => (
+                        <div key={order.orderId || idx} className="p-5 bg-stone-900 text-stone-100 rounded-2xl border border-stone-800 shadow-lg space-y-4">
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-stone-800">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black text-white select-all">발주번호: <span className="font-mono text-[#f97316]">{order.orderId}</span></span>
+                                <span className="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-bold font-sans">실시간 승인됨</span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-1">결제일시: {order.date} | 수납수단: {order.paymentMethod}</p>
+                            </div>
+                            <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-extrabold rounded-md border border-emerald-500/20 flex items-center gap-1 tracking-wider uppercase">
+                              <Check className="w-3.5 h-3.5" /> 콜드체인 수급 대기 중
+                            </span>
+                          </div>
 
-                    {/* Timeline elements */}
-                    <div className="relative pl-6 space-y-6 border-l border-stone-200">
-                      <div className="relative">
-                        <div className="absolute -left-8.5 top-0 w-5 h-5 rounded-full bg-blue-500 border-4 border-white shadow-sm flex items-center justify-center text-white" />
-                        <div>
-                          <div className="text-xs font-extrabold text-stone-900">현위치: [배송 중] 경기 이천 남부 허브 순환 통과</div>
-                          <p className="text-[10px] text-stone-500 mt-0.5">명장 원재료 품질 유지 냉동 밀봉 컨테이너 영하 -19.2°C 정상 실시간 관측됨</p>
-                          <span className="text-[9px] text-stone-400 font-mono block mt-1">2026-06-01 02:30 (현재 상태)</span>
+                          {/* Ordered products details inside */}
+                          <div className="space-y-2">
+                            <p className="text-[10px] text-stone-400 font-bold uppercase tracking-wider font-mono">수급 발주 원재료 목록</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {order.items && order.items.map((it: any) => (
+                                <div key={it.id} className="p-3 bg-stone-950 rounded-xl border border-stone-850 flex items-center justify-between gap-2">
+                                  <div className="min-w-0">
+                                    <p className="text-xs font-bold text-white truncate">{it.name}</p>
+                                    <p className="text-[9px] text-stone-500 mt-0.5">₩{it.price.toLocaleString()} · 수량 {it.quantity}개</p>
+                                  </div>
+                                  <span className="text-[10px] font-black text-[#f97316] bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-full shrink-0 font-mono">
+                                    {it.quantity}개
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            {/* Estimated Schedule */}
+                            <div className="space-y-1">
+                              <span className="text-[9px] text-stone-450 uppercase font-bold tracking-widest font-mono">지정 희망 수급일</span>
+                              <p className="text-sm font-black text-amber-400">{order.deliveryDate}</p>
+                              <p className="text-[10px] text-stone-500">배기가스 저감 1등급 냉동 특수 물류기사 지정 완료</p>
+                            </div>
+                            {/* Contact Info */}
+                            <div className="space-y-1">
+                              <span className="text-[9px] text-stone-450 uppercase font-bold tracking-widest font-mono">긴급 배송 연락처</span>
+                              <p className="text-xs font-bold text-stone-300">{order.contact}</p>
+                              <p className="text-[10px] text-stone-500">도착 직전 및 도어락 진입 전 자동 통보 예정</p>
+                            </div>
+                          </div>
+
+                          {/* Interactive order timeline */}
+                          <div className="mt-4 p-4 bg-stone-950 rounded-xl border border-stone-850">
+                            <p className="text-[10px] text-[#f97316] font-bold uppercase tracking-wider mb-3 font-mono">EveryBake 콜드체인 실시간 프로세스</p>
+                            <div className="flex items-center justify-between text-[11px] font-bold">
+                              <div className="flex flex-col items-center gap-1.5 text-emerald-400 flex-1">
+                                <span className="w-5 h-5 rounded-full bg-emerald-500 text-stone-950 text-[10px] flex items-center justify-center font-black">✓</span>
+                                <span className="text-[10px]">원장접수</span>
+                              </div>
+                              <div className="h-[2px] bg-emerald-500 flex-1 self-center mx-1.5 mb-4" />
+                              <div className="flex flex-col items-center gap-1.5 text-stone-200 flex-1">
+                                <span className="w-5 h-5 rounded-full bg-[#f97316] text-black text-[10px] flex items-center justify-center font-black">2</span>
+                                <span className="text-[10px]">밀봉포장</span>
+                              </div>
+                              <div className="h-[2px] bg-stone-800 flex-1 self-center mx-1.5 mb-4" />
+                              <div className="flex flex-col items-center gap-1.5 text-stone-500 flex-1">
+                                <span className="w-5 h-5 rounded-full bg-stone-800 text-stone-500 text-[10px] flex items-center justify-center">3</span>
+                                <span className="text-[10px]">탑차배송</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Standard Shipment Tracking Timeline */}
+                  <div className="space-y-3">
+                    <h4 className="text-stone-900 font-extrabold text-xs uppercase tracking-wider text-stone-500 font-mono">
+                      🗓️ 가맹 정기 계약 공급 배송 건
+                    </h4>
+                    <div className="p-5 bg-stone-50 rounded-2xl border border-stone-150">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="text-xs font-black text-stone-800">배송 송장 번호: <span className="font-mono text-[#f97316]">KCT-TRK-77192-KR</span></span>
+                        <span className="px-2.5 py-1 bg-blue-50 text-blue-600 text-[10px] font-extrabold rounded-md border border-blue-150 flex items-center gap-1 tracking-wider uppercase">
+                          <TruckIcon className="w-3.5 h-3.5 animate-bounce" /> 특수 탑차 배송 중
+                        </span>
                       </div>
 
-                      <div className="relative">
-                        <div className="absolute -left-8.5 top-0 w-5 h-5 rounded-full bg-stone-400 border-4 border-white shadow-sm flex items-center justify-center text-white" />
-                        <div>
-                          <div className="text-xs font-extrabold text-stone-700">익일 새벽 도착 예정역: [매점 도어락 진입 배송]</div>
-                          <p className="text-[10px] text-stone-400 mt-0.5">내일 오전 05:00 전 지점 도어락 자동 동기화 키로 보안 출입하여 냉실에 직접 포가 봉입</p>
+                      {/* Timeline elements */}
+                      <div className="relative pl-6 space-y-6 border-l border-stone-200">
+                        <div className="relative">
+                          <div className="absolute -left-8.5 top-0 w-5 h-5 rounded-full bg-blue-500 border-4 border-white shadow-sm flex items-center justify-center text-white" />
+                          <div>
+                            <div className="text-xs font-extrabold text-stone-900">현위치: [배송 중] 경기 이천 남부 허브 순환 통과</div>
+                            <p className="text-[10px] text-stone-500 mt-0.5">명장 원재료 품질 유지 냉동 밀봉 컨테이너 영하 -19.2°C 정상 실시간 관측됨</p>
+                            <span className="text-[9px] text-stone-400 font-mono block mt-1">2026-06-01 02:30 (현재 상태)</span>
+                          </div>
+                        </div>
+
+                        <div className="relative">
+                          <div className="absolute -left-8.5 top-0 w-5 h-5 rounded-full bg-stone-400 border-4 border-white shadow-sm flex items-center justify-center text-white" />
+                          <div>
+                            <div className="text-xs font-extrabold text-stone-700">익일 새벽 도착 예정역: [매점 도어락 진입 배송]</div>
+                            <p className="text-[10px] text-stone-400 mt-0.5">내일 오전 05:00 전 지점 도어락 자동 동기화 키로 보안 출입하여 냉실에 직접 포가 봉입</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -711,7 +797,7 @@ export default function PartnerPortal({
 
                   {/* Regular auto replenishment subscriptions */}
                   <div>
-                    <h4 className="text-stone-900 font-black text-sm mb-3 flex items-center gap-1.5">
+                    <h4 className="text-stone-900 font-black text-sm mb-3 flex items-center gap-1.5 font-sans">
                       <Calendar className="w-4 h-4 text-orange-500" /> regular_dispatch_schedule 정기 발주/구독 관리
                     </h4>
                     <p className="text-stone-500 text-xs mb-4">매번 수작업 주문 없이, 가구별 정시 소비량에 맞춘 요일별 자동 발효 생지 공급 계약 목록입니다.</p>
@@ -741,7 +827,7 @@ export default function PartnerPortal({
 
                   {/* Wholesale Unit price fluctuation log */}
                   <div>
-                    <h4 className="text-stone-900 font-black text-sm mb-3 flex items-center gap-1.5">
+                    <h4 className="text-stone-900 font-black text-sm mb-3 flex items-center gap-1.5 font-sans">
                       <BarChart3 className="w-4 h-4 text-amber-500" /> 생지 시장 도매 단가 변동 상황판
                     </h4>
                     <p className="text-stone-500 text-xs mb-3">러시아 대선 및 밀가루 국제 거래 메트릭스 변동에 대응하는 B2B 원자재 시세입니다.</p>
