@@ -45,77 +45,84 @@ export default function Header({
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-stone-200 z-40 transition-all duration-300">
-      <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
-        {/* Brand Logo - Maximized Left Position, Larger Icon and Bold typography */}
-        <div 
-          className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none mr-3 sm:mr-4 shrink-0"
-          onClick={() => handleMobileNav("home")}
-          id="partners-logo-nav"
-        >
-          <div className="w-13 h-13 sm:w-17 sm:h-17 transition-all group-hover:scale-105 shrink-0 flex items-center justify-center">
-            <img 
-              src={everyBakeLogo} 
-              alt="EveryBake" 
-              className="w-full h-full object-contain" 
-              referrerPolicy="no-referrer" 
-            />
-          </div>
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <span className="font-extrabold text-[17px] sm:text-[22px] text-stone-950 tracking-tighter leading-none group-hover:text-[#f97316] transition-colors">EveryBake</span>
-            <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-widest text-[#f97316] bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded-lg shrink-0">
-              프렌즈
-            </span>
+        {/* [왼쪽] 브랜드 로고 및 타이틀 */}
+        <div className="flex items-center shrink-0">
+          <div 
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none mr-4"
+            onClick={() => handleMobileNav("home")}
+            id="partners-logo-nav"
+          >
+            <div className="w-13 h-13 sm:w-15 sm:h-15 transition-all group-hover:scale-105 shrink-0 flex items-center justify-center">
+              <img 
+                src={everyBakeLogo} 
+                alt="EveryBake" 
+                className="w-full h-full object-contain" 
+                referrerPolicy="no-referrer" 
+              />
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-extrabold text-[17px] sm:text-[21px] text-stone-950 tracking-tighter leading-none group-hover:text-[#f97316] transition-colors">EveryBake</span>
+              <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-widest text-[#f97316] bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded-lg shrink-0">
+                프렌즈
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Navigation Links (Desktop) */}
-        <div className="hidden md:flex items-center md:gap-1.5 lg:gap-2.5 xl:gap-4 shrink-0">
-          {links.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => onNav(link.id)}
-              className={`md:text-[10px] lg:text-[11px] xl:text-xs font-black tracking-tight transition-colors relative py-1.5 cursor-pointer whitespace-nowrap ${
-                currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail")
-                  ? "text-[#f97316] font-black"
-                  : "text-stone-600 hover:text-[#f97316]"
-              }`}
-            >
-              {link.name}
-              {(currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail")) && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.75 bg-[#f97316] rounded-full" />
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Search Bar (Desktop) - positioned between categories and shopping bag/actions */}
-        <div className="hidden lg:flex items-center flex-1 max-w-[100px] xl:max-w-[160px] mx-1.5 xl:mx-3">
-          <div className="relative w-full">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="제품명, 크루아상, 오븐..."
-              className="w-full text-[11px] font-bold bg-stone-100 hover:bg-stone-50 border border-stone-200 focus:border-[#f97316] focus:bg-white outline-none pl-8 pr-7 py-1.75 rounded-xl transition-all text-stone-850 placeholder-stone-400"
-            />
-            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-            {searchQuery && (
-              <button 
-                onClick={() => onSearchChange("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-stone-200 text-stone-400 hover:text-stone-700 transition-colors"
+        {/* [중앙] 메인 메뉴 (도우컨디셔너, 생지, 커피, 원부자재, 이벤트, 커뮤니티) */}
+        <div className="hidden md:flex items-center justify-center gap-1.5 lg:gap-2.5 xl:gap-4.5 mx-auto">
+          {baseLinks.map((link) => {
+            const isActive = currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail");
+            return (
+              <button
+                key={link.id}
+                onClick={() => onNav(link.id)}
+                className={`md:text-[10px] lg:text-[11px] xl:text-xs font-black tracking-tight transition-all relative py-2 px-1 cursor-pointer whitespace-nowrap ${
+                  isActive
+                    ? "text-[#f97316]"
+                    : "text-stone-600 hover:text-[#f97316]"
+                }`}
               >
-                <X className="w-2.5 h-2.5" />
+                {link.name}
+                {isActive && (
+                  <span className="absolute bottom-[-6px] left-0 right-0 h-0.75 bg-[#f97316] rounded-full animate-fade-in" />
+                )}
               </button>
-            )}
-          </div>
+            );
+          })}
         </div>
 
-        {/* Cart & Actions & Mobile Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-3">
+        {/* [우측] 검색, 장바구니, 나의공간(마이페이지), 로그인/로그아웃, 제휴신청 */}
+        <div className="flex items-center justify-end gap-1.5 sm:gap-3 shrink-0">
+          
+          {/* 검색 영역 */}
+          <div className="hidden lg:flex items-center max-w-[110px] xl:max-w-[150px]">
+            <div className="relative w-full">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                placeholder="제품 검색..."
+                className="w-full text-[10.5px] font-bold bg-stone-100 hover:bg-stone-50 border border-stone-200 focus:border-[#f97316] focus:bg-white outline-none pl-7.5 pr-6 py-1.75 rounded-xl transition-all text-stone-850 placeholder-stone-400"
+              />
+              <Search className="w-3 h-3 text-stone-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              {searchQuery && (
+                <button 
+                  onClick={() => onSearchChange("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-stone-200 text-stone-400 hover:text-stone-700 transition-colors"
+                >
+                  <X className="w-2 h-2" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* 장바구니 버튼 (우측 상단 상징) */}
           <button
             onClick={onCartToggle}
-            className="relative p-1.5 sm:p-2 rounded-xl border border-stone-200 hover:border-stone-900 hover:bg-stone-50 transition-all flex items-center justify-center cursor-pointer group shrink-0"
+            className="relative p-1.5 sm:p-2.5 rounded-xl border border-stone-200 hover:border-stone-900 hover:bg-stone-50 transition-all flex items-center justify-center cursor-pointer group shrink-0"
             id="cart-toggle-btn"
           >
             <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-700 group-hover:text-stone-950" />
@@ -125,22 +132,29 @@ export default function Header({
               </span>
             )}
           </button>
-          
-          <button 
-            type="button"
-            onClick={() => handleMobileNav("inquiry")}
-            className="hidden sm:flex px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-[#f97316] hover:bg-orange-650 text-white transition-all cursor-pointer shadow-[0_2px_8px_rgba(249,115,22,0.15)] hover:shadow-md items-center gap-0.5 shrink-0"
-            id="partners-inquiry-btn"
-          >
-            <span>입점 및 제휴 문의</span>
-            <ChevronRight className="w-3 h-3" />
-          </button>
 
+          {/* 로그인 시 "나의 공간" 마이페이지 바로가기 단추 노출 (우측 우대) */}
+          {isLoggedIn && (
+            <button
+              type="button"
+              onClick={() => onNav("partner-portal")}
+              className={`hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                currentView === "partner-portal"
+                  ? "bg-amber-50 text-amber-800 border-amber-250 font-black shadow-none"
+                  : "bg-white hover:bg-stone-50 text-stone-700 border-stone-200 hover:text-stone-900"
+              }`}
+            >
+              <User className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+              <span>나의공간</span>
+            </button>
+          )}
+
+          {/* 로그인 / 로그아웃 단추 */}
           {isLoggedIn ? (
             <button
               type="button"
               onClick={onLogout}
-              className="hidden sm:flex px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all cursor-pointer border border-stone-200 items-center gap-0.5 shrink-0"
+              className="hidden sm:flex px-3.5 py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all cursor-pointer border border-stone-200 items-center gap-1 shrink-0"
               id="partners-logout-btn"
             >
               <LogOut className="w-3 h-3 text-stone-500" strokeWidth={2.5} />
@@ -150,7 +164,7 @@ export default function Header({
             <button
               type="button"
               onClick={() => handleMobileNav("login")}
-              className="hidden sm:flex px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-900 hover:bg-black text-white transition-all cursor-pointer items-center gap-0.5 shrink-0"
+              className="hidden sm:flex px-3.5 py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-stone-900 hover:bg-black text-white transition-all cursor-pointer items-center gap-1 shrink-0"
               id="partners-login-btn"
             >
               <LogIn className="w-3 h-3 text-stone-200" strokeWidth={2.5} />
@@ -158,15 +172,27 @@ export default function Header({
             </button>
           )}
 
-          {/* Hamburger Menu Toggle (Mobile only) */}
+          {/* 입점 제휴 문의 단추 (눈에 띄는 실용성) */}
+          <button 
+            type="button"
+            onClick={() => handleMobileNav("inquiry")}
+            className="hidden sm:flex px-3.5 py-2 rounded-xl text-[10px] sm:text-xs font-bold tracking-tight bg-[#f97316] hover:bg-orange-650 text-white transition-all cursor-pointer shadow-none hover:shadow-xs items-center gap-0.5 shrink-0"
+            id="partners-inquiry-btn"
+          >
+            <span>제휴문의</span>
+            <ChevronRight className="w-3 h-3" />
+          </button>
+
+          {/* 햄버거 토글 (모바일 전용) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 sm:p-2 md:hidden rounded-xl border border-stone-200 hover:border-stone-900 hover:bg-stone-50 transition-all flex items-center justify-center cursor-pointer text-stone-700 hover:text-stone-950 ml-0.5 shrink-0"
+            className="p-1.5 sm:p-2.5 md:hidden rounded-xl border border-stone-200 hover:border-stone-900 hover:bg-stone-50 transition-all flex items-center justify-center cursor-pointer text-stone-700 hover:text-stone-950 ml-0.5 shrink-0"
             aria-label="Toggle Menu"
             id="mobile-menu-toggle-btn"
           >
             {mobileMenuOpen ? <X className="w-3.5 h-3.5" /> : <Menu className="w-3.5 h-3.5" />}
           </button>
+
         </div>
 
       </div>

@@ -165,6 +165,7 @@ export default function App() {
   // Current view can be: "home" | "equip-list" | "equip-detail" | "dough-main" | "dough-detail" | "coffee" | "community" | "inquiry" | "login" | "partner-portal"
   const [currentView, setCurrentView] = useState<string>("home");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [hoveredPanel, setHoveredPanel] = useState<'left' | 'right' | null>(null);
   
   // B2B Partner Portal login states
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -1934,42 +1935,125 @@ export default function App() {
                 {/* ==================================================== */}
             {currentView === "home" && (
           <div className="animate-fade-in">
-            {/* Elegant Hero Welcome Banner Section */}
-            <div className="relative min-h-[50vh] xl:min-h-[55vh] flex flex-col justify-center items-center bg-gradient-to-b from-[#fff7ed] via-[#ffedd5] to-stone-50 py-16 px-6 text-center overflow-hidden">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[300px] bg-white/50 rounded-full blur-[120px] pointer-events-none select-none" />
-              <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[450px] h-[450px] bg-orange-500/5 rounded-full blur-[100px] pointer-events-none select-none" />
+            {/* Split Screen Hero Section */}
+            <div className="w-full h-[calc(100vh-80px)] overflow-hidden flex relative select-none bg-stone-950 font-sans">
+              
+              {/* Left Panel: AI 도우컨디셔너 */}
+              <div
+                onMouseEnter={() => setHoveredPanel('left')}
+                onMouseLeave={() => setHoveredPanel(null)}
+                onClick={() => handleNav("equip-list")}
+                style={{ width: hoveredPanel === 'left' ? '70%' : hoveredPanel === 'right' ? '30%' : '50%' }}
+                className="h-full relative overflow-hidden transition-all duration-700 ease-out cursor-pointer group border-r border-stone-850 bg-gradient-to-tr from-[#121110] via-[#1c1a19] to-[#0c0c0b]"
+              >
+                {/* Subtle low-opacity background image representing heated coils context */}
+                <img 
+                  src={modernSmartOvenImage} 
+                  alt="상우 오븐 가열" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-[0.22] transition-transform duration-1000 ease-out scale-100"
+                  referrerPolicy="no-referrer"
+                />
 
-              <div className="max-w-4xl mx-auto space-y-5 z-10">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white text-[#f97316] text-[11px] font-extrabold tracking-wider border border-orange-100 shadow-xs uppercase font-mono">
-                  <Sparkles className="w-3.5 h-3.5 text-orange-550" />
-                  EveryBake B2B Partners Platform
-                </span>
+                {/* Back light glow to illuminate the actual product */}
+                <div className={`absolute w-[36rem] h-[36rem] bg-orange-500/15 rounded-full blur-[110px] left-1/2 top-1/2 -tune-translate-x-1/2 -tune-translate-y-1/2 transition-all duration-1000 ${
+                  hoveredPanel === 'left' ? 'opacity-100 scale-110' : 'opacity-70 scale-100'
+                }`} style={{ transform: 'translate(-50%, -50%)' }} />
 
-                <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight leading-[1.15]">
-                  당신의 식탁, 당신의 매 순간<br />
-                  <span className="text-[#f97316] bg-gradient-to-r from-orange-600 via-orange-500 to-orange-700 bg-clip-text text-transparent">에브리베이크</span>에서 만나보세요.
-                </h1>
+                {/* Actual Product Image: KCT Smart Pro Oven we sell */}
+                <div className="absolute inset-x-0 bottom-4 top-28 flex items-center justify-center p-6 z-5">
+                  <img 
+                    src={ovenImage} 
+                    alt="KCT Smart Pro" 
+                    className={`h-[75%] max-h-[55vh] sm:max-h-[62vh] w-auto object-contain filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.85)] transition-all duration-1000 ease-out ${
+                      hoveredPanel === 'left' ? 'scale-[1.06] -rotate-1 translate-y-[-8px]' : 'scale-100 rotate-0'
+                    }`}
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                
+                {/* Overlay Gradient for contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/45 group-hover:from-black/95 transition-all duration-700 w-full h-full" />
 
-                <p className="text-sm sm:text-base text-stone-505 max-w-2xl mx-auto leading-relaxed font-semibold">
-                  스마트한 하드웨어부터 투표로 선정된 프리미엄 생지까지,<br />
-                  누구나 완벽한 베이킹을 경험할 수 있습니다.
-                </p>
+                {/* Content Container */}
+                <div className="absolute inset-0 p-8 sm:p-12 lg:p-16 flex flex-col justify-between z-10">
+                  {/* Top: Button Link */}
+                  <div className="text-left mt-4">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNav("equip-list");
+                      }}
+                      className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-black/50 hover:bg-[#f97316] text-white text-xs sm:text-sm font-extrabold tracking-tight border border-white/20 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
+                    >
+                      <span>AI도우컨디셔너 자세히 보기 &gt;</span>
+                    </button>
+                  </div>
 
-                <div className="flex gap-4 justify-center items-center pt-2">
-                  <button
-                    onClick={() => handleNav("equip-list")}
-                    className="px-6 py-3 bg-[#f97316] hover:bg-orange-600 text-white rounded-xl text-xs font-bold tracking-tight transition-all shadow-[0_4px_12px_rgba(249,115,22,0.2)]"
-                  >
-                    스마트 기기 도입하기
-                  </button>
-                  <button
-                    onClick={() => handleNav("dough-main")}
-                    className="px-6 py-3 bg-white hover:bg-stone-50 text-stone-850 rounded-xl text-xs font-bold tracking-tight border border-stone-200 shadow-xs transition-all"
-                  >
-                    프리미엄 생지 카탈로그
-                  </button>
+                  {/* Bottom: Branded Copy (As shown in image 1) */}
+                  <div className={`text-left space-y-2.5 transition-all duration-700 transform ${
+                    hoveredPanel === 'right' ? 'opacity-40 scale-95' : 'opacity-100 scale-100'
+                  }`}>
+                    <p className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md">
+                      당신의 식탁,<br />
+                      당신의 매 순간
+                    </p>
+                    <p className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#f97316] tracking-tighter drop-shadow-md">
+                      에브리베이크
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              {/* Right Panel: 프리미엄 생지 */}
+              <div
+                onMouseEnter={() => setHoveredPanel('right')}
+                onMouseLeave={() => setHoveredPanel(null)}
+                onClick={() => handleNav("dough-main")}
+                style={{ width: hoveredPanel === 'right' ? '70%' : hoveredPanel === 'left' ? '30%' : '50%' }}
+                className="h-full relative overflow-hidden transition-all duration-700 ease-out cursor-pointer group bg-stone-900"
+              >
+                {/* Background Image: Flour Dust Cloud (artisan_baker_detail) with high vibrance and no heavy dark mask */}
+                <img 
+                  src={artisanBakerDetailImage} 
+                  alt="프리미엄 생지" 
+                  className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-out ${
+                    hoveredPanel === 'right' ? 'scale-[1.06] brightness-110 saturate-105' : 'scale-100 brightness-100 saturate-100'
+                  }`}
+                  referrerPolicy="no-referrer"
+                />
+
+                {/* Subtly tuned overlay gradient that protects text readability but leaves flour dust extremely bright and prominent */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30 group-hover:from-black/85 transition-all duration-700 w-full h-full" />
+
+                {/* Content Container */}
+                <div className="absolute inset-0 p-8 sm:p-12 lg:p-16 flex flex-col justify-between z-10">
+                  {/* Top: Button Link */}
+                  <div className="text-left md:text-right mt-4">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNav("dough-main");
+                      }}
+                      className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-black/50 hover:bg-[#f97316] text-white text-xs sm:text-sm font-extrabold tracking-tight border border-white/20 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
+                    >
+                      <span>프리미엄 생지 자세히보기 &gt;</span>
+                    </button>
+                  </div>
+
+                  {/* Bottom: Subtle secondary copy to balance the split layout */}
+                  <div className={`text-left md:text-right transition-all duration-700 transform ${
+                    hoveredPanel === 'left' ? 'opacity-40 scale-95' : 'opacity-100 scale-100'
+                  }`}>
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-white/90 tracking-tight">
+                      최고의 재료와 명장의 숨결이 깃든
+                    </p>
+                    <p className="text-lg sm:text-2xl lg:text-3xl font-black text-amber-400 mt-1">
+                      프리미엄 마스터 생지 라이브러리
+                    </p>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
             {/* ==================================================== */}
