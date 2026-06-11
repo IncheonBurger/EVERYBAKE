@@ -64,9 +64,6 @@ export default function Header({
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="font-extrabold text-[17px] sm:text-[21px] text-stone-950 tracking-tighter leading-none group-hover:text-[#f97316] transition-colors">EveryBake</span>
-              <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-widest text-[#f97316] bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded-lg shrink-0">
-                프렌즈
-              </span>
             </div>
           </div>
         </div>

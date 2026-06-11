@@ -268,7 +268,7 @@ export default function EventsView({
               <div className="flex flex-col justify-between space-y-4 md:space-y-0 text-left">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="bg-amber-600 text-white text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-md">B2B 경연배틀</span>
+                    <span className="bg-amber-600 text-white text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-md">에베인 경연배틀</span>
                     <span className="text-[10.5px] font-black text-amber-900">총 상금 50만 원 신세계상품권 등</span>
                   </div>
                   <h2 className="text-xl sm:text-2.5xl font-black text-stone-900 leading-tight">
@@ -369,7 +369,7 @@ export default function EventsView({
               <div className="flex items-center justify-end gap-4 mr-0 md:mr-10">
                 <div className="bg-amber-100/40 p-4 rounded-2xl border border-amber-200/50 flex flex-col items-center justify-center text-center">
                   <span className="text-2xl">📦🔥</span>
-                  <span className="text-[9px] font-extrabold text-stone-500 uppercase tracking-tighter mt-1">B2B 타임 특가</span>
+                  <span className="text-[9px] font-extrabold text-stone-500 uppercase tracking-tighter mt-1">에베인 타임 특가</span>
                 </div>
               </div>
 
@@ -407,16 +407,16 @@ export default function EventsView({
                   </span>
                   <h1 className="text-2.5xl sm:text-4xl font-black text-neutral-900 tracking-tight leading-none">
                     "오늘의 제빵왕은 바로 나!"<br />
-                    전국 동시 B2B 온라인 발효 베이킹 콘테스트 🏆
+                    전국 동시 에베인 온라인 발효 베이킹 콘테스트 🏆
                   </h1>
                   <p className="text-stone-650 text-xs sm:text-sm font-semibold leading-relaxed">
-                    에브리베이크 프리미엄 생지 라이브러리(크루아상, 소금빵, 바게트 등)를 점주님 매장에서 직접 예쁘고 맛있게 구워 구수하고 영롱하게 부풀어오른 자태를 자랑해 주세요! 멋진 기술과 맛팁을 공유해 주신 전국의 블랑제 41분을 추첨하여 역대급 혜택을 쏩니다.
+                    에브리베이크 프리미엄 생지 라이브러리(크루아상, 소금빵, 바게트 등)를 홈베이킹이나 매장에서 직접 예쁘고 맛있게 구워 구수하고 영롱하게 부풀어오른 자태를 자랑해 주세요! 멋진 기술과 맛팁을 공유해 주신 전국의 블랑제 41분을 추첨하여 역대급 혜택을 쏩니다.
                   </p>
                   
                   <div className="flex flex-wrap items-center gap-3 text-xs font-black text-amber-900 bg-amber-100/50 p-3 rounded-2xl w-fit">
                     <span className="flex items-center gap-1">📅 참여 기간: 6월 5일 ~ 6월 10일 자정까지</span>
                     <span className="hidden sm:inline">|</span>
-                    <span className="flex items-center gap-1">📣 당첨 발표: 6월 15일 점주포털 개별 통지</span>
+                    <span className="flex items-center gap-1">📣 당첨 발표: 6월 15일 에베인포털 개별 통지</span>
                   </div>
                 </div>
                 
@@ -661,7 +661,7 @@ export default function EventsView({
                     매주 월요일은 에브리 <span className="text-[#f97316]">제빵데이!</span>
                   </h1>
                   <p className="text-stone-550 text-xs sm:text-sm font-semibold max-w-xl">
-                    바쁜 주말을 흘려보낸 가맹점 및 개인 소상공인 점주님들의 원재료비 부담을 조금이나마 덜어드립니다! 매주 월요일, 에브리베이크 인기 생지 라인업에 즉시 적용되는 추가 <span className="font-extrabold text-neutral-900">10% 모바일 쿠폰</span>을 다운받아 알뜰하게 쟁여두세요!
+                    바쁜 일주일을 채워가시는 홈베이커 및 개인 고객분들의 원재료비 부담을 조금이나마 에베인 특가로 덜어드립니다! 매주 월요일, 에브리베이크 인기 생지 라인업에 즉시 적용되는 추가 <span className="font-extrabold text-neutral-900">10% 모바일 쿠폰</span>을 다운받아 알뜰하게 쟁여두세요!
                   </p>
                 </div>
 
@@ -672,7 +672,7 @@ export default function EventsView({
                       <div>
                         <div className="font-black text-xs sm:text-sm">쿠폰 다운로드 완료 [월요10%]</div>
                         <p className="text-[10px] text-emerald-600 font-semibold max-w-[190px]">
-                          B2B 장바구니에 담으신 베스트 제빵 생지 총금액에 10% 추가 혜택이 실시간 상시 누적됩니다!
+                          에베인 장바구니에 담으신 베스트 제빵 생지 총금액에 10% 추가 혜택이 실시간 상시 누적됩니다!
                         </p>
                       </div>
                     </div>
@@ -680,13 +680,13 @@ export default function EventsView({
                     <button
                       onClick={() => {
                         setMondayCouponDownloaded(true);
-                        alert("🎉 [월요 제빵데이 10% 추가 스마트 할인 쿠폰]이 성공적으로 발급되었습니다! 장바구니 담기 시 추가 파트너 감면이 적용됩니다.");
+                        alert("🎉 [월요 제빵데이 10% 추가 스마트 할인 쿠폰]이 성공적으로 발급되었습니다! 장바구니 담기 시 추가 에베인 특가 감면이 적용됩니다.");
                       }}
                       className="bg-violet-600 hover:bg-violet-700 text-white rounded-2xl p-5 sm:p-6 text-center shadow-md cursor-pointer transition-all hover:scale-103 shrink-0 block w-full"
                     >
-                      <div className="text-[10px] font-black tracking-widest text-violet-200 uppercase mb-1">MANDATORY BENEFIT</div>
+                      <div className="text-[10px] font-black tracking-widest text-violet-200 uppercase mb-1">EVEIN MEMBER BENEFIT</div>
                       <div className="font-black text-lg sm:text-xl">월요생지 10% 추가쿠폰 받기</div>
-                      <p className="text-[9.5px] text-violet-100 font-semibold mt-1">클릭 한 번으로 파트너 등록 즉시 할인</p>
+                      <p className="text-[9.5px] text-violet-100 font-semibold mt-1">클릭 한 번으로 에베인 회원 즉시 할인</p>
                     </button>
                   )}
                 </div>
@@ -731,7 +731,7 @@ export default function EventsView({
                                 ₩ {discountedPrice.toLocaleString()}
                               </div>
                             </div>
-                            <span className="text-[10px] font-black text-red-500 uppercase">파트너 10% OFF</span>
+                            <span className="text-[10px] font-black text-[#f97316] uppercase">에베인 10% OFF</span>
                           </div>
 
                           <button
@@ -748,7 +748,7 @@ export default function EventsView({
                             className="w-full bg-[#f97316] hover:bg-orange-650 text-white font-extrabold text-[11px] py-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 shadow-2xs group-hover:shadow-xs"
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
-                            <span>B2B 월요특가 담기</span>
+                            <span>에베인 월요특가 담기</span>
                           </button>
                         </div>
                       </div>
@@ -858,7 +858,7 @@ export default function EventsView({
                             className="w-full bg-[#24503e] hover:bg-[#1a3d2e] text-white font-extrabold text-xs py-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 shadow-2xs"
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
-                            <span>친환경 B2B 특별담기</span>
+                            <span>친환경 에베인 특별담기</span>
                           </button>
                         </div>
                       </div>

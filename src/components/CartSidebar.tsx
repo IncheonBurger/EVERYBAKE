@@ -234,8 +234,8 @@ export default function CartSidebar({
                     <div className="bg-amber-50/80 border border-amber-200/50 p-4 rounded-xl text-center space-y-3 mt-4">
                       <p className="text-[11px] font-semibold text-stone-750 leading-relaxed">
                         🚨 <span className="text-amber-800 font-extrabold">로그인 상태가 아닙니다!</span> <br/>
-                        가맹점 계약 관리 및 물량 수급을 위해 <br/>
-                        점주 인증 후 주문 및 결제 단계로 진입할 수 있습니다.
+                        에베인 특별 회원 혜택과 특가 적용을 위해 <br/>
+                        에베인 로그인 후 주문 및 결제 단계로 진입할 수 있습니다.
                       </p>
                       <button
                         type="button"
@@ -248,9 +248,9 @@ export default function CartSidebar({
                   ) : (
                     <div className="space-y-3 pt-2">
                       <div className="bg-stone-100/60 border border-stone-200/50 rounded-xl p-3 text-left">
-                        <p className="text-[9px] uppercase font-bold text-stone-400">인증 가맹 매장</p>
+                        <p className="text-[9px] uppercase font-bold text-stone-400">인증 회원 계정</p>
                         <p className="text-xs font-black text-stone-800 flex items-center gap-1 mt-0.5">
-                          🏪 {userStoreName || "인증 가맹점"} <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded-md">B2B 인증완료</span>
+                          👤 {userStoreName || "에베인 멤버"} <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded-md">에베인 인증완료</span>
                         </p>
                       </div>
                       

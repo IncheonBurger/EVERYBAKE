@@ -956,7 +956,7 @@ export const INGREDIENTS_DATA: IngredientItem[] = [
     subCategory: "powder",
     subCategoryLabel: "가루류 (분말류)",
     price: 29000,
-    description: "글루텐 고함량으로 우수한 탄력성을 발휘해 고급 식빵과 부드러운 도우의 탄탄한 구조를 잡아주는 B2B 필수 전용 가루입니다.",
+    description: "글루텐 고함량으로 우수한 탄력성을 발휘해 고급 식빵과 부드러운 도우의 탄탄한 구조를 잡아주는 에베인 필수 전용 가루입니다.",
     spec: "20kg 벌크",
     icon: "🌾",
     brandType: "국산 대기업"
@@ -987,7 +987,7 @@ export const INGREDIENTS_DATA: IngredientItem[] = [
   },
   {
     id: "ing-pow-04",
-    name: "[해태제과] 소프트 바삭 B2B 야채 조리빵용 빵가루 10kg",
+    name: "[해태제과] 소프트 바삭 에베인 야채 조리빵용 빵가루 10kg",
     brand: "해태제과",
     subCategory: "powder",
     subCategoryLabel: "가루류 (분말류)",
@@ -1316,7 +1316,7 @@ export const COFFEE_DATA: CoffeeItem[] = [
   // 중분류 1: 머신 및 기기 - 에스프레소 머신
   {
     id: "cof-mc-01",
-    name: "[달라코르테] 에보2 B2B 고성능 2그룹 에스프레소 머신",
+    name: "[달라코르테] 에보2 에베인 고성능 2그룹 에스프레소 머신",
     brand: "Dalla Corte (이탈리아)",
     mainCategory: "machine",
     mainCategoryLabel: "머신 (또는 기기)",
@@ -1390,7 +1390,7 @@ export const COFFEE_DATA: CoffeeItem[] = [
   },
   {
     id: "cof-br-02",
-    name: "[모카마스터] 오르가 부르 B2B 배치브루어 자동 드립 기기",
+    name: "[모카마스터] 오르가 부르 에베인 배치브루어 자동 드립 기기",
     brand: "Moccamaster (네덜란드)",
     mainCategory: "machine",
     mainCategoryLabel: "머신 (또는 기기)",

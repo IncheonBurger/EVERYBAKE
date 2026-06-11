@@ -106,10 +106,10 @@ export default function PartnerPortal({
   ]);
   const [csQuestion, setCsQuestion] = useState("");
 
-  // Quick reorder item B2B map
+  // Quick reorder item Evein map
   const favoriteItems = [
     { id: "m-001", name: "명인 시그니처 크루아상 생지 (60g)", price: 1800, category: "master" },
-    { id: "m-002", name: "박준현 명인 소금빵 생지 (B2B 벌크)", price: 1650, category: "master" },
+    { id: "m-002", name: "박준현 명인 소금빵 생지 (에베인 벌크)", price: 1650, category: "master" },
     { id: "coffee-1", name: "프리미엄 하우스 에스프레소 원두 (10kg)", price: 195000, category: "coffee" }
   ];
 
@@ -186,7 +186,7 @@ export default function PartnerPortal({
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
     setIotLog(prev => [
-      `[${timeStr}] 관제 허브: 즐겨찾는 B2B 상품 (${favItem.name}) 신속 발주 승인`,
+      `[${timeStr}] 관제 허브: 즐겨찾는 에베인 상품 (${favItem.name}) 신속 주문 승인`,
       ...prev
     ]);
   };
@@ -201,7 +201,7 @@ export default function PartnerPortal({
       problem: asProblem,
       date: todayStr,
       status: "reception" as const,
-      tech: "B2B 기사 신속 배정 중"
+      tech: "전담 엔지니어 신속 배정 중"
     };
     setAsHistory(prev => [newAs, ...prev]);
     setAsProblem("");
@@ -216,7 +216,7 @@ export default function PartnerPortal({
       id: `cs-${Date.now()}`,
       question: csQuestion,
       date: todayStr,
-      answer: "↳ 수렴 중: 전담 카테고리 MD가 회원님의 1:1 세미-도매 문의를 검증하고 있습니다. 10분 내에 답변 상세가 갱신됩니다."
+      answer: "↳ 수렴 중: 전담 카테고리 MD가 회원님의 1:1 문의를 검증하고 있습니다. 10분 내에 답변 상세가 갱신됩니다."
     };
     setOneToOneList(prev => [newCs, ...prev]);
     setCsQuestion("");
@@ -253,14 +253,14 @@ export default function PartnerPortal({
         <div className="max-w-md mx-auto my-12 bg-white rounded-3xl border border-stone-200 shadow-2xl overflow-hidden animate-fade-in" id="portal-login-screen">
           <div className="bg-gradient-to-br from-stone-900 to-stone-950 p-8 text-white relative">
             <div className="absolute top-4 right-4 text-[9px] font-mono tracking-widest text-[#f97316] border border-orange-500/30 px-2 py-0.5 rounded uppercase">
-              EveryBake Friends
+              EveryBake Partner
             </div>
             <div className="w-10 h-10 rounded-xl bg-[#f97316] flex items-center justify-center font-black text-lg shadow-md mb-3">
               🥐
             </div>
             <h2 className="text-xl font-black font-sans tracking-tight">EveryBake 나의공간</h2>
             <p className="text-stone-400 text-xs mt-1 leading-relaxed">
-              점주님들의 스마트 장비 제어와 원재료 대량 발주부터, 홈베이킹 마니아 고객들도 함께 누리는 특별한 멤버십 혜택 공간입니다.
+              회원님들의 스마트 장비 제어와 원재료 대량 주문부터, 홈베이킹 마니아 고객들도 함께 누리는 특별한 에베인 멤버십 혜택 공간입니다.
             </p>
           </div>
           
@@ -375,7 +375,7 @@ export default function PartnerPortal({
       ) : (
         
         // ---------------------------------------------------------------------- 
-        // LOGGED IN VIEW: B2B PARTNER HOME PORTAL (6 DEFINED SECTIONS)
+        // LOGGED IN VIEW: EVEIN MEMBER HOME PORTAL (6 DEFINED SECTIONS)
         // ---------------------------------------------------------------------- 
         <div className="space-y-6 animate-fade-in" id="portal-dashboard-main">
           
@@ -414,7 +414,7 @@ export default function PartnerPortal({
             </div>
           </div>
 
-          {/* Core Master-Detail Navigation Sidebar / Sub-tabs for B2B portal */}
+          {/* Core Master-Detail Navigation Sidebar / Sub-tabs for Evein portal */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* Sidebar menu mapping the 6 exact requested sections */}
@@ -445,7 +445,7 @@ export default function PartnerPortal({
                 }`}
               >
                 <ShoppingCart className="w-4 h-4" />
-                <span className="flex-1">2. 발주 및 배송 관리</span>
+                <span className="flex-1">2. 주문 및 배송 관리</span>
                 <ChevronRight className="w-3.5 h-3.5 opacity-60" />
               </button>
 
@@ -562,7 +562,7 @@ export default function PartnerPortal({
                         <div className="flex justify-between items-center mb-4">
                           <h3 className="text-stone-900 font-black text-sm tracking-tight flex items-center gap-1.5">
                             <Cpu className="w-4.5 h-4.5 text-[#f97316]" />
-                            B2B 매장 스마트 장비 연동 정보
+                            에베인 매장 스마트 장비 연동 정보
                           </h3>
                           <button 
                             onClick={() => setSubView("iot")} 
@@ -623,7 +623,7 @@ export default function PartnerPortal({
                         <div className="flex justify-between items-center mb-4">
                           <h3 className="text-stone-900 font-black text-sm tracking-tight flex items-center gap-1.5">
                             <Sparkles className="w-4.5 h-4.5 text-amber-500" />
-                            단골 발주 품목 원클릭 재주문
+                            단골 품목 원클릭 재주문
                           </h3>
                           <span className="text-[9px] bg-stone-100 text-stone-500 px-2 py-0.5 rounded font-black uppercase">
                             Fast Dispatch
@@ -642,7 +642,7 @@ export default function PartnerPortal({
                                 onClick={() => handleOneClickOrder(fav)}
                                 className="px-3 py-1.5 bg-[#f97316] hover:bg-orange-650 text-white text-[10px] font-extrabold rounded-lg flex items-center gap-1 transition-all shadow-sm cursor-pointer group-hover:scale-105 active:scale-95"
                               >
-                                <span>원클릭 정시 재발주 ⚡</span>
+                                <span>원클릭 정시 재주문 ⚡</span>
                               </button>
                             </div>
                           ))}
@@ -652,7 +652,7 @@ export default function PartnerPortal({
                       {reordersCount > 0 && (
                         <div className="bg-orange-50 border border-orange-200 p-2.5 rounded-xl mt-3 flex items-center justify-between">
                           <span className="text-[10px] text-[#f97316] font-extrabold flex items-center gap-1">
-                            <Check className="w-4.5 h-4.5" /> 총 {reordersCount}종의 B2B 상품이 장바구니에 동적 추가되었습니다!
+                            <Check className="w-4.5 h-4.5" /> 총 {reordersCount}종의 에베인 특가 상품이 장바구니에 동적 추가되었습니다!
                           </span>
                           <button 
                             onClick={() => { setReordersCount(0); }}
@@ -676,7 +676,7 @@ export default function PartnerPortal({
                   <div>
                     <h3 className="text-stone-900 font-black text-base tracking-tight flex items-center gap-2 font-sans">
                       <ShoppingCart className="w-5 h-5 text-[#f97316]" />
-                      B2B 실시간 발주 및 새벽 배송 추적
+                      에베인 실시간 주문 및 새벽 배송 추적
                     </h3>
                     <p className="text-stone-500 text-xs mt-1">대량 식자재 및 명인 크루아상 생지의 결제/정기배송 정밀 경로입니다.</p>
                   </div>
@@ -685,14 +685,14 @@ export default function PartnerPortal({
                   {orderHistory.length > 0 && (
                     <div className="space-y-4">
                       <h4 className="text-stone-900 font-extrabold text-xs uppercase tracking-wider text-amber-600 flex items-center gap-1.5 font-mono">
-                        <span>⚡</span> 실시간 가맹점 라이브 발주 내역 ({orderHistory.length}건)
+                        <span>⚡</span> 실시간 라이브 주문 내역 ({orderHistory.length}건)
                       </h4>
                       {orderHistory.map((order, idx) => (
                         <div key={order.orderId || idx} className="p-5 bg-stone-900 text-stone-100 rounded-2xl border border-stone-800 shadow-lg space-y-4">
                           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-stone-800">
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="text-xs font-black text-white select-all">발주번호: <span className="font-mono text-[#f97316]">{order.orderId}</span></span>
+                                <span className="text-xs font-black text-white select-all">주문번호: <span className="font-mono text-[#f97316]">{order.orderId}</span></span>
                                 <span className="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-bold font-sans">실시간 승인됨</span>
                               </div>
                               <p className="text-[10px] text-stone-400 mt-1">결제일시: {order.date} | 수납수단: {order.paymentMethod}</p>
@@ -704,7 +704,7 @@ export default function PartnerPortal({
 
                           {/* Ordered products details inside */}
                           <div className="space-y-2">
-                            <p className="text-[10px] text-stone-400 font-bold uppercase tracking-wider font-mono">수급 발주 원재료 목록</p>
+                            <p className="text-[10px] text-stone-400 font-bold uppercase tracking-wider font-mono">주문 원재료 목록</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                               {order.items && order.items.map((it: any) => (
                                 <div key={it.id} className="p-3 bg-stone-950 rounded-xl border border-stone-850 flex items-center justify-between gap-2">
@@ -798,9 +798,9 @@ export default function PartnerPortal({
                   {/* Regular auto replenishment subscriptions */}
                   <div>
                     <h4 className="text-stone-900 font-black text-sm mb-3 flex items-center gap-1.5 font-sans">
-                      <Calendar className="w-4 h-4 text-orange-500" /> regular_dispatch_schedule 정기 발주/구독 관리
+                      <Calendar className="w-4 h-4 text-orange-500" /> regular_dispatch_schedule 정기 주문/구독 관리
                     </h4>
-                    <p className="text-stone-500 text-xs mb-4">매번 수작업 주문 없이, 가구별 정시 소비량에 맞춘 요일별 자동 발효 생지 공급 계약 목록입니다.</p>
+                    <p className="text-stone-500 text-xs mb-4">매번 수작업 주문 없이, 가구별 정시 소비량에 맞춘 요일별 자동 생지 배송 목록입니다.</p>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {subscriptions.map(sub => (
@@ -828,9 +828,9 @@ export default function PartnerPortal({
                   {/* Wholesale Unit price fluctuation log */}
                   <div>
                     <h4 className="text-stone-900 font-black text-sm mb-3 flex items-center gap-1.5 font-sans">
-                      <BarChart3 className="w-4 h-4 text-amber-500" /> 생지 시장 도매 단가 변동 상황판
+                      <BarChart3 className="w-4 h-4 text-amber-500" /> 생지 시장 회원가 변동 상황판
                     </h4>
-                    <p className="text-stone-500 text-xs mb-3">러시아 대선 및 밀가루 국제 거래 메트릭스 변동에 대응하는 B2B 원자재 시세입니다.</p>
+                    <p className="text-stone-500 text-xs mb-3">러시아 대선 및 밀가루 국제 거래 메트릭스 변동에 대응하는 에베인 회원 전용 원자재 시세입니다.</p>
                     <div className="overflow-x-auto rounded-xl border border-stone-200">
                       <table className="w-full text-left border-collapse">
                         <thead>
@@ -849,7 +849,7 @@ export default function PartnerPortal({
                             <td className="p-3 text-[10px] text-stone-500">생지 공급망 최적화로 낮아짐</td>
                           </tr>
                           <tr className="hover:bg-stone-50">
-                            <td className="p-3 font-bold text-stone-800">소금빵 프랑스 T55 생지 B2B</td>
+                            <td className="p-3 font-bold text-stone-800">소금빵 프랑스 T55 생지 에베인특가</td>
                             <td className="p-3 text-stone-900">₩1,650 / 개</td>
                             <td className="p-3 text-red-600">▲ +120원 (인상)</td>
                             <td className="p-3 text-[10px] text-stone-500">EU 수입 관세 버터 요동의 영향</td>
@@ -979,7 +979,7 @@ export default function PartnerPortal({
                       <div className="flex justify-between items-center pb-3 border-b border-stone-150">
                         <div>
                           <span className="text-[9px] uppercase tracking-widest text-amber-600 font-bold">IoT DEVICE B</span>
-                          <h4 className="text-stone-900 font-black text-sm">B2B 로터리 터치 오븐 (OVN-SMART)</h4>
+                          <h4 className="text-stone-900 font-black text-sm">에베인 로터리 터치 오븐 (OVN-SMART)</h4>
                         </div>
                         <button
                           onClick={() => setOvenPower(!ovenPower)}
@@ -1116,7 +1116,7 @@ export default function PartnerPortal({
                       <Layers className="w-5 h-5 text-orange-500" />
                       스마트 점포 재고 추적 및 명장 가이드북
                     </h3>
-                    <p className="text-stone-500 text-xs mt-1">발주된 원재료 물량을 기반으로 매장 잔존 생지의 예상 수량을 자동 추산합니다.</p>
+                    <p className="text-stone-500 text-xs mt-1">주문한 원재료 물량을 기반으로 매장 잔존 생지의 예상 수량을 자동 추산합니다.</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1126,7 +1126,7 @@ export default function PartnerPortal({
                         <h4 className="text-stone-900 font-black text-xs uppercase tracking-wider mb-2.5">
                           가상 기반 매장 예상 재고 자동 추산치
                         </h4>
-                        <p className="text-stone-400 text-[10px] mb-4 leading-relaxed">익일 발주 확정 수량 및 평균 굽기 스케줄 매칭으로 잔여량이 대조 계산됩니다.</p>
+                        <p className="text-stone-400 text-[10px] mb-4 leading-relaxed">익일 주문 확정 수량 및 평균 굽기 스케줄 매칭으로 잔여량이 대조 계산됩니다.</p>
                         
                         <div className="space-y-2">
                           {inventoryList.map(inv => {
@@ -1143,7 +1143,7 @@ export default function PartnerPortal({
                                   </span>
                                   {isAlert && (
                                     <span className="text-[9px] text-[#f97316] bg-orange-50 border border-orange-100 px-1 py-0.5 rounded font-black">
-                                      재고 부족 - 큐발주 필요!
+                                      재고 부족 - 추가 주문 필요!
                                     </span>
                                   )}
                                 </div>
@@ -1231,7 +1231,7 @@ export default function PartnerPortal({
                   <div>
                     <h3 className="text-stone-900 font-black text-base tracking-tight flex items-center gap-2">
                       <FileText className="w-5 h-5 text-[#f97316]" />
-                      B2B 정산 및 전자 세금계산서 관리
+                      에베인 정산 및 전자 결제 확인서 관리
                     </h3>
                     <p className="text-stone-500 text-xs mt-1">월별 법인 원재료 공급 세무 내역을 확인하고 일괄 명세 출력을 조율할 수 있습니다.</p>
                   </div>
@@ -1283,7 +1283,7 @@ export default function PartnerPortal({
                         <p className="text-stone-400 text-[10px] mb-4 leading-relaxed">매월 정기 새벽배송 자동 결제에 사용할 주 결제 수단입니다.</p>
                         
                         <div className="p-3.5 bg-gradient-to-br from-stone-800 to-stone-900 text-white rounded-xl shadow relative">
-                          <span className="text-[9px] tracking-wider uppercase text-stone-400 block font-mono">B2B Corp Premium (자동이체)</span>
+                          <span className="text-[9px] tracking-wider uppercase text-stone-400 block font-mono">Evein Premium (자동이체)</span>
                           <span className="text-sm font-black tracking-widest block mt-1">KB국민 법인카드 **** **** **** 4920</span>
                           <span className="text-[10px] text-orange-400 font-bold block mt-3">기본 사용 결제수단 등록됨</span>
                         </div>
@@ -1353,7 +1353,7 @@ export default function PartnerPortal({
                             >
                               <option value="도우컨디셔너 #1">도우컨디셔너 #1 (D-CON-PRO)</option>
                               <option value="B2B 로터리 터치 오븐">크루아상 로터리 오븐 (OVN-SMART)</option>
-                              <option value="커피 에스프레소 머신">B2B 멀티보일러 커피 머신</option>
+                              <option value="커피 에스프레소 머신">에베인 멀티보일러 커피 머신</option>
                             </select>
                           </div>
                           <div>
@@ -1401,7 +1401,7 @@ export default function PartnerPortal({
                             rows={3}
                             value={csQuestion}
                             onChange={(e) => setCsQuestion(e.target.value)}
-                            placeholder="원재료 가공, 부적합 상품 반품 및 특별 납품 단가 파트너 도매 문의를 남겨주시면 전담 베이커리 MD가 직접 검증 후 즉시 피드백 드립니다."
+                            placeholder="원재료 가공, 부적합 상품 반품 및 특별 납품 단가 에베인 회원 맞춤 문의를 남겨주시면 전담 베이커리 MD가 직접 검증 후 즉시 피드백 드립니다."
                             className="w-full px-3 py-2 bg-white border border-stone-200 text-xs rounded-lg font-semibold focus:outline-none focus:border-[#f97316] placeholder:text-stone-400"
                           />
                           <button
@@ -1434,7 +1434,7 @@ export default function PartnerPortal({
                     </h4>
                     <ul className="text-[10px] text-stone-600 font-semibold space-y-1.5 leading-relaxed">
                       <li>• [IoT 펌웨어] 도우컨디셔너 전 제품 대상 제온 항온 가습 안정성 강화 패치 v2.4 릴리스 배포 완료</li>
-                      <li>• [전략 공지] 가을 수확철 프랑스 밀가루 유기농 수입 대량 확보로 다음 달부터 크루아상 생지 B2B 대량 발주 단가 변동 인하 예정</li>
+                      <li>• [전략 공지] 가을 수확철 프랑스 밀가루 유기농 수입 대량 확보로 다음 달부터 크루아상 생지 에베인 대량 주문 단가 변동 인하 예정</li>
                       <li>• [CS 협조] 장비 A/S 현장 기사는 긴급 배정의 경우 서울 전역 1시간 30분 내 응대 대기 체제 전환되었습니다.</li>
                     </ul>
                   </div>
