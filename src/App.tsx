@@ -93,7 +93,7 @@ export const getDoughSales = (id: string): number => {
 import warmBakingFamilyImage from "./assets/images/warm_baking_family_1780289855930.png";
 import artisanBakerDetailImage from "./assets/images/artisan_baker_detail_1780289872811.png";
 import modernSmartOvenImage from "./assets/images/modern_smart_oven_close_1780289886400.png";
-import kctActualOvenStoryImage from "./assets/images/stainless_steel_combo_oven_1780301837442.png";
+import kctActualOvenStoryImage from "./assets/images/kct_actual_oven_story_1780296704183.png";
 
 interface CartItem {
   item: DoughItem;
@@ -2804,7 +2804,7 @@ export default function App() {
                 {currentView === "home" && (
                   <div className="animate-fade-in font-sans">
                     {/* Split Screen Hero Section */}
-                    <div className="w-full h-[calc(100vh-80px)] overflow-hidden flex flex-col md:flex-row relative select-none bg-stone-950 font-sans">
+                    <div className="w-full h-[calc(100vh-80px)] overflow-hidden flex flex-col md:flex-row relative select-none bg-[#0c0b0a] font-sans">
                       {/* Left Panel: AI 도우컨디셔너 */}
                       <div
                         onMouseEnter={() => setHoveredPanel("left")}
@@ -2816,88 +2816,100 @@ export default function App() {
                                 width: "100%",
                                 height:
                                   hoveredPanel === "left"
-                                    ? "65%"
+                                    ? "68%"
                                     : hoveredPanel === "right"
-                                      ? "35%"
+                                      ? "32%"
                                       : "50%",
                               }
                             : {
                                 width:
                                   hoveredPanel === "left"
-                                    ? "70%"
+                                    ? "72%"
                                     : hoveredPanel === "right"
-                                      ? "30%"
+                                      ? "28%"
                                       : "50%",
                               }
                         }
-                        className="w-full md:h-full relative overflow-hidden transition-all duration-700 ease-out cursor-pointer group border-b md:border-b-0 md:border-r border-stone-850 bg-gradient-to-tr from-[#121110] via-[#1c1a19] to-[#0c0c0b]"
+                        className={`w-full md:h-full relative overflow-hidden cursor-pointer group border-b md:border-b-0 md:border-r border-stone-800 bg-[#0e0d0c] transition-all duration-700 ease-out ${
+                          hoveredPanel === "left"
+                            ? "shadow-[25px_0_65px_rgba(0,0,0,0.95)] z-20 scale-[1.01] translate-x-[2px]"
+                            : hoveredPanel === "right"
+                              ? "opacity-80 z-10 scale-[0.99]"
+                              : "z-10"
+                        }`}
                       >
-                        {/* Subtle low-opacity background image representing heated coils context */}
-                        <img
-                          src={modernSmartOvenImage}
-                          alt="상우 오븐 가열"
-                          className="absolute inset-0 w-full h-full object-cover opacity-[0.22] transition-transform duration-1000 ease-out scale-100"
-                          referrerPolicy="no-referrer"
-                        />
-
-                        {/* Back light glow to illuminate the actual product */}
-                        <div
-                          className={`absolute w-[24rem] md:w-[36rem] h-[24rem] md:h-[36rem] bg-orange-500/15 rounded-full blur-[90px] md:blur-[110px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 ${
-                            hoveredPanel === "left"
-                              ? "opacity-100 scale-110"
-                              : "opacity-70 scale-100"
-                          }`}
-                          style={{ transform: "translate(-50%, -50%)" }}
-                        />
-
-                        {/* Actual Product Image: KCT Smart Pro Oven we sell */}
-                        <div className="absolute inset-x-0 bottom-4 top-16 md:top-28 flex items-center justify-center p-4 md:p-6 z-5">
+                        {/* Complete luxury environment background featuring the high-end dark marble kitchen scenario with full stunning fidelity */}
+                        <div className="absolute inset-0 bg-[#0c0b0a] z-0 overflow-hidden">
+                          {/* Emphasizes rich dark charcoal marble, copper accessories, and luxury wood cabinetry exactly as designed */}
                           <img
-                            src={ovenImage}
-                            alt="KCT Smart Pro"
-                            className={`h-[70%] md:h-[75%] max-h-[30vh] md:max-h-[55vh] lg:max-h-[62vh] w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.85)] md:drop-shadow-[0_20px_45px_rgba(0,0,0,0.85)] transition-all duration-1000 ease-out ${
+                            src={kctActualOvenStoryImage}
+                            alt="Luxury kitchen with KCT oven and proofer"
+                            className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-[1000ms] ease-out ${
                               hoveredPanel === "left"
-                                ? "scale-[1.06] -rotate-1 translate-y-[-8px]"
-                                : "scale-100 rotate-0"
+                                ? "scale-105 brightness-105 contrast-105"
+                                : "scale-100 brightness-[0.88] contrast-100"
                             }`}
                             referrerPolicy="no-referrer"
                           />
+                          {/* Elegantly placed glow emphasizing the internal warm baking light inside the oven doors */}
+                          <div
+                            className={`absolute w-[20rem] md:w-[32rem] h-[20rem] md:h-[32rem] bg-orange-500/10 rounded-full blur-[70px] md:blur-[95px] left-[55%] top-[55%] -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 pointer-events-none mix-blend-screen ${
+                              hoveredPanel === "left" ? "opacity-100 scale-110" : "opacity-60 scale-100"
+                            }`}
+                            style={{ transform: "translate(-50%, -50%)" }}
+                          />
                         </div>
 
-                        {/* Overlay Gradient for contrast */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/45 group-hover:from-black/95 transition-all duration-700 w-full h-full" />
+                        {/* Sophisticated gradient wash and professional vignette to protect clean white typography readability */}
+                        <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/95 via-black/40 to-transparent z-6 transition-opacity duration-500 pointer-events-none" />
+                        <div className="absolute inset-y-0 left-0 w-[40%] bg-gradient-to-r from-black/70 via-black/25 to-transparent z-6 pointer-events-none" />
 
                         {/* Content Container */}
                         <div className="absolute inset-0 p-6 md:p-12 lg:p-16 flex flex-col justify-between z-10">
-                          {/* Top: Button Link */}
+                          {/* Top: Premium Brand Detail Tag or navigation */}
                           <div className="text-left mt-2 md:mt-4">
                             <button
                               onClick={(e) => {
                                   e.stopPropagation();
                                   handleNav("equip-list");
                               }}
-                              className="inline-flex items-center gap-1.5 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-black/50 hover:bg-[#f97316] text-white text-[10px] sm:text-xs md:text-sm font-extrabold tracking-tight border border-white/20 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/60 hover:bg-[#f97316] text-white text-[10px] sm:text-xs md:text-sm font-extrabold tracking-tight border border-white/10 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
                             >
                               <span>AI도우컨디셔너 자세히 보기 &gt;</span>
                             </button>
                           </div>
 
-                          {/* Bottom: Branded Copy (As shown in image 1) */}
-                          <div
-                            className={`text-left space-y-1.5 md:space-y-2.5 transition-all duration-700 transform ${
-                              hoveredPanel === "right"
-                                ? "opacity-40 scale-95"
-                                : "opacity-100 scale-100"
-                            }`}
-                          >
-                            <p className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md">
-                              당신의 식탁,
-                              <br />
-                              당신의 매 순간
-                            </p>
-                            <p className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#f97316] tracking-tighter drop-shadow-md">
-                              에브리베이크
-                            </p>
+                          {/* Bottom Content Area */}
+                          <div className="text-left space-y-3.5">
+                            {/* Sliding/Fading description of Left Panel Expansion (focused on appliance & message) */}
+                            <div className={`overflow-hidden transition-all duration-700 max-w-lg ${
+                              hoveredPanel === "left" ? "max-h-24 opacity-100 translate-y-0" : "max-h-0 opacity-0 translate-y-4"
+                            }`}>
+                              <p className="text-[10px] md:text-xs uppercase font-extrabold tracking-wider text-[#f97316]">
+                                The Art of Precision Engineering
+                              </p>
+                              <p className="text-[11px] md:text-sm text-white/70 leading-relaxed font-medium mt-1">
+                                EveryBake AI Dough Conditioner coordinates perfect temperature & humidity, preserving the pristine texture of raw gluten for an unmatched rise.
+                              </p>
+                            </div>
+
+                            {/* Branded Copy */}
+                            <div
+                              className={`transition-all duration-700 transform ${
+                                hoveredPanel === "right"
+                                  ? "opacity-30 scale-95"
+                                  : "opacity-100 scale-100"
+                              }`}
+                            >
+                              <p className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md">
+                                당신의 식탁,
+                                <br />
+                                당신의 매 순간
+                              </p>
+                              <p className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#f97316] tracking-tighter drop-shadow-md">
+                                에브리베이크
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2913,36 +2925,49 @@ export default function App() {
                                 width: "100%",
                                 height:
                                   hoveredPanel === "right"
-                                    ? "65%"
+                                    ? "68%"
                                     : hoveredPanel === "left"
-                                      ? "35%"
+                                      ? "32%"
                                       : "50%",
                               }
                             : {
                                 width:
                                   hoveredPanel === "right"
-                                    ? "70%"
+                                    ? "72%"
                                     : hoveredPanel === "left"
-                                      ? "30%"
+                                      ? "28%"
                                       : "50%",
                               }
                         }
-                        className="w-full md:h-full relative overflow-hidden transition-all duration-700 ease-out cursor-pointer group bg-stone-900"
+                        className={`w-full md:h-full relative overflow-hidden cursor-pointer group bg-[#0d0d0f] transition-all duration-700 ease-out ${
+                          hoveredPanel === "right"
+                            ? "shadow-[-25px_0_65px_rgba(0,0,0,0.92)] z-20 scale-[1.005] -translate-x-[2px]"
+                            : hoveredPanel === "left"
+                              ? "opacity-50 z-10"
+                              : "z-10"
+                        }`}
                       >
-                        {/* Background Image: Flour Dust Cloud (artisan_baker_detail) with high vibrance and no heavy dark mask */}
-                        <img
-                          src={artisanBakerDetailImage}
-                          alt="프리미엄 생지"
-                          className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-out ${
-                            hoveredPanel === "right"
-                              ? "scale-[1.06] brightness-110 saturate-105"
-                              : "scale-100 brightness-100 saturate-100"
-                          }`}
-                          referrerPolicy="no-referrer"
-                        />
+                        {/* Background Image: Flour Dust Cloud & Master Baker (artisan_baker_detail) over a dark-toned sophisticated natural stone backdrop */}
+                        <div className="absolute inset-0 bg-[#0f0e0d] z-0 overflow-hidden">
+                          <img
+                            src={artisanBakerDetailImage}
+                            alt="프리미엄 생지 마스터 베이커"
+                            className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-out mix-blend-lighten opacity-85 ${
+                              hoveredPanel === "right"
+                                ? "scale-[1.07] brightness-110 saturate-[1.05]"
+                                : "scale-100 brightness-95 saturate-[0.85]"
+                            }`}
+                            referrerPolicy="no-referrer"
+                          />
+                          {/* Warm glowing oven light representing baking environment peeking in from the side */}
+                          <div className="absolute w-[24rem] h-[24rem] md:w-[32rem] md:h-[32rem] bg-orange-500/20 rounded-full blur-[90px] md:blur-[110px] right-[-10%] bottom-[-5%] pointer-events-none mix-blend-screen" />
+                        </div>
+
+                        {/* Shadow wash / vignette representing high-end natural stone feel */}
+                        <div className="absolute inset-0 bg-radial-gradient from-transparent to-black/80 z-1" />
 
                         {/* Subtly tuned overlay gradient that protects text readability but leaves flour dust extremely bright and prominent */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30 group-hover:from-black/85 transition-all duration-700 w-full h-full" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/40 group-hover:from-black/95 transition-all duration-700 w-full h-full z-2" />
 
                         {/* Content Container */}
                         <div className="absolute inset-0 p-6 md:p-12 lg:p-16 flex flex-col justify-between z-10">
@@ -2953,26 +2978,41 @@ export default function App() {
                                 e.stopPropagation();
                                 handleNav("dough-main");
                               }}
-                              className="inline-flex items-center gap-1.5 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-black/50 hover:bg-[#f97316] text-white text-[10px] sm:text-xs md:text-sm font-extrabold tracking-tight border border-white/20 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/60 hover:bg-[#f97316] text-white text-[10px] sm:text-xs md:text-sm font-extrabold tracking-tight border border-white/10 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
                             >
                               <span>프리미엄 생지 자세히보기 &gt;</span>
                             </button>
                           </div>
 
-                          {/* Bottom: Subtle secondary copy to balance the split layout */}
-                          <div
-                            className={`text-left md:text-right transition-all duration-700 transform ${
-                              hoveredPanel === "left"
-                                ? "opacity-40 scale-95"
-                                : "opacity-100 scale-100"
-                            }`}
-                          >
-                            <p className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-white/90 tracking-tight">
-                              최고의 재료와 명장의 숨결이 깃든
-                            </p>
-                            <p className="text-sm sm:text-lg md:text-2xl lg:text-3xl font-black text-amber-400 mt-1">
-                              프리미엄 마스터 생지 라이브러리
-                            </p>
+                          {/* Bottom Content Area */}
+                          <div className="text-left md:text-right space-y-3.5">
+                            {/* Sliding/Fading description of Right Panel Expansion (focused on human element & artisanal process) */}
+                            <div className={`overflow-hidden transition-all duration-700 max-w-lg md:ml-auto ${
+                              hoveredPanel === "right" ? "max-h-24 opacity-100 translate-y-0" : "max-h-0 opacity-0 translate-y-4"
+                            }`}>
+                              <p className="text-[10px] md:text-xs uppercase font-extrabold tracking-wider text-[#f97316]">
+                                The Heritage of Craftsmanship
+                              </p>
+                              <p className="text-[11px] md:text-sm text-white/70 leading-relaxed font-medium mt-1">
+                                Skilled artisanal hands shape premium raw dough, fusing age-old fermentation mastery with precise, state-of-the-art core thermal synchronization.
+                              </p>
+                            </div>
+
+                            {/* Secondary copy copy to balance the split layout */}
+                            <div
+                              className={`transition-all duration-700 transform ${
+                                hoveredPanel === "left"
+                                  ? "opacity-30 scale-95"
+                                  : "opacity-100 scale-100"
+                              }`}
+                            >
+                              <p className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-white/90 tracking-tight">
+                                최고의 재료와 명장의 숨결이 깃든
+                              </p>
+                              <p className="text-sm sm:text-lg md:text-2xl lg:text-3xl font-black text-amber-400 mt-1">
+                                프리미엄 마스터 생지 라이브러리
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
