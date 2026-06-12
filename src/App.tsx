@@ -7966,18 +7966,18 @@ export default function App() {
               : "opacity-0 scale-105 pointer-events-none"
           } overflow-hidden`}
         >
-          {/* Main Illustration Background Image */}
-          <div className="absolute inset-0 w-full h-full select-none pointer-events-none bg-[#faf6eb] flex items-center justify-center">
-            <img
-              src={everyBakeLogo}
-              alt="EveryBake Transition Background"
-              className="w-full h-full object-cover opacity-90 brightness-[1.02]"
-              referrerPolicy="no-referrer"
-            />
-            {/* Soft cream color gradient vignettes to make transitions ultra smooth and protect text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#faf6eb]/30 via-transparent to-[#faf6eb]/50" />
-            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#faf6eb] via-[#faf6eb]/80 to-transparent" />
-            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#faf6eb] to-transparent pointer-events-none" />
+          {/* Main Illustration Background Image - Sized and positioned elegantly to occupy half of the screen without any overlapping */}
+          <div className="absolute inset-x-0 top-[8%] bottom-[25%] select-none pointer-events-none bg-[#faf6eb] flex flex-col items-center justify-center p-4">
+            <div className="relative w-full h-full max-w-xl sm:max-w-3xl flex items-center justify-center scale-135 sm:scale-140 transition-transform duration-300">
+              <img
+                src={everyBakeLogo}
+                alt="EveryBake Transition Logo Mark"
+                className="w-auto h-full max-h-[56vh] sm:max-h-[60vh] object-contain opacity-95 brightness-[1.02] filter drop-shadow-[0_12px_28px_rgba(230,215,185,0.45)]"
+                referrerPolicy="no-referrer"
+              />
+              {/* Soft vignette fade at the edges of the logo block */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#faf6eb]/5 via-transparent to-[#faf6eb]/10 pointer-events-none" />
+            </div>
           </div>
 
           {/* Background Cute Flying Breads - made subtle with higher transparency and small size so it doesn't clutter the artwork */}
@@ -8046,28 +8046,28 @@ export default function App() {
           </div>
 
           {/* 1. UPPER SPACE: Spaced elegant mini label above pastry arch */}
-          <div className="absolute top-12 z-20 text-center space-y-1">
-            <span className="text-[#8c6d53] text-[10px] sm:text-xs uppercase font-black tracking-[0.3em] font-mono block animate-pulse">
+          <div className="absolute top-10 z-20 text-center space-y-1">
+            <span className="text-[#8c6d53] text-[9px] sm:text-xs uppercase font-black tracking-[0.25em] font-mono block animate-pulse">
               EVERYBAKE PREMIUM TRANSITION
             </span>
-            <div className="h-[1px] w-10 bg-[#8c6d53]/30 mx-auto rounded-full" />
+            <div className="h-[1px] w-8 bg-[#8c6d53]/30 mx-auto rounded-full" />
           </div>
 
           {/* 2. BOTTOM SPACE: Beautifully integrated glass capsule between cherubs */}
-          <div className="absolute bottom-28 z-20 text-center px-6 max-w-sm sm:max-w-md">
-            <div className="backdrop-blur-md bg-white/70 border border-white/50 px-8 py-4.5 rounded-2xl shadow-[0_12px_40px_rgba(140,109,83,0.08)] space-y-2">
-              <h2 className="text-[#4a3525] text-xl sm:text-2xl font-black tracking-tight leading-normal font-sans">
+          <div className="absolute bottom-24 z-20 text-center px-4 max-w-[90vw] sm:max-w-md w-full">
+            <div className="backdrop-blur-md bg-white/70 border border-white/50 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl shadow-[0_10px_35px_rgba(140,109,83,0.06)] space-y-1.5 sm:space-y-2">
+              <h2 className="text-[#4a3525] text-lg sm:text-xl font-black tracking-tight leading-normal font-sans">
                 당신의 식탁, 당신의 매 순간
               </h2>
-              <div className="h-[1.5px] w-6 bg-[#f97316]/60 mx-auto rounded-full" />
-              <h3 className="text-[#8c6d53] text-sm sm:text-base font-bold tracking-tight">
+              <div className="h-[1.5px] w-5 bg-[#f97316]/60 mx-auto rounded-full" />
+              <h3 className="text-[#8c6d53] text-xs sm:text-sm font-bold tracking-tight">
                 에브리베이크
               </h3>
             </div>
           </div>
 
           {/* 3. SOOTHING FOOTER: Subtle status bar below the cherubs */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 text-[10px] text-[#8c6d53] font-extrabold tracking-widest uppercase font-mono bg-[#8c6d53]/8 px-4 py-2 rounded-full border border-[#8c6d53]/15">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 text-[9px] text-[#8c6d53] font-black tracking-wider uppercase font-mono bg-[#8c6d53]/5 px-3.5 py-1.5 rounded-full border border-[#8c6d53]/10">
             <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
             온·습도 동시 수송 시스템 가동 중
           </div>
