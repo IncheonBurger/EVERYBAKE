@@ -139,6 +139,7 @@ interface CommunityPost {
   status: string;
   votedByMe?: boolean;
   comments?: { id: string; author: string; content: string; date: string }[];
+  replies?: { id: string; author: string; content: string; date: string }[];
 }
 
 interface PlazaComment {
@@ -639,6 +640,15 @@ export default function App() {
   const [activeCommTab, setActiveCommTab] = useState<
     "dough" | "coffee" | "raw" | "trouble"
   >("dough");
+  const [isWritingPost, setIsWritingPost] = useState<boolean>(false);
+  const [unifiedSubCat, setUnifiedSubCat] = useState<string>("dough");
+  const [unifiedTitle, setUnifiedTitle] = useState("");
+  const [unifiedContent, setUnifiedContent] = useState("");
+  const [unifiedAuthor, setUnifiedAuthor] = useState("");
+  const [unifiedLocation, setUnifiedLocation] = useState("");
+  const [unifiedPriceInfo, setUnifiedPriceInfo] = useState("");
+  const [unifiedTargetAmount, setUnifiedTargetAmount] = useState("");
+  const [unifiedUrgentsInfo, setUnifiedUrgentsInfo] = useState("");
   const [newCommTitle, setNewCommTitle] = useState("");
   const [newCommContent, setNewCommContent] = useState("");
   const [newCommAuthor, setNewCommAuthor] = useState("");
@@ -650,6 +660,88 @@ export default function App() {
   >(null);
   const [newCommCommentAuthor, setNewCommCommentAuthor] = useState("");
   const [newCommCommentText, setNewCommCommentText] = useState("");
+
+  const handleCreateUnifiedPost = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      alert("글을 작성하려면 로그인이 필요합니다.");
+      setCurrentView("login");
+      return;
+    }
+    if (!unifiedTitle.trim() || !unifiedContent.trim()) {
+      alert("제목과 내용을 입력해 주세요.");
+      return;
+    }
+
+    const category = unifiedSubCat;
+    const authorName = unifiedAuthor.trim() || userStoreName || "에베인 정회원 매장";
+
+    if (["dough", "coffee", "raw", "trouble"].includes(category)) {
+      // This goes into communityPosts
+      const newPost: CommunityPost = {
+        id: `cp-${Date.now()}`,
+        category: category as any,
+        title: unifiedTitle.trim(),
+        content: unifiedContent.trim(),
+        author: authorName,
+        date: new Date().toISOString().split("T")[0],
+        votes: 1,
+        status: category === "trouble" ? "답변 완료 대기" : "추천 대기",
+        votedByMe: true,
+        comments: [],
+        replies: category === "trouble" ? [] : undefined,
+      };
+      setCommunityPosts([newPost, ...communityPosts]);
+      
+      // Select the category so they can see their post
+      setActiveMainTab(category === "trouble" ? "trouble" : "why-not-sell");
+      setActiveCommTab(category as any);
+    } else {
+      // This goes into plazaPosts
+      const newPost: PlazaPost = {
+        id: `plaza-post-${Date.now()}`,
+        category: category as any,
+        title: unifiedTitle.trim(),
+        content: unifiedContent.trim(),
+        author: authorName,
+        location: unifiedLocation.trim() || "서울 마포구",
+        date: new Date().toISOString().split("T")[0],
+        priceInfo: unifiedPriceInfo.trim() || "협의 제안",
+        targetAmount: unifiedTargetAmount.trim() || "제한 없음",
+        urgentsInfo: unifiedUrgentsInfo.trim() || "기타 사양 참조",
+        joinedByMe: false,
+        participantsCount: 0,
+        votes: 1,
+        comments: [],
+        status: "모집중",
+      } as any;
+      setPlazaPosts((prev) => [newPost, ...prev]);
+
+      // Select the category so they can see their post
+      if (category === "interior") {
+        setActiveMainTab("interior");
+      } else {
+        setActiveMainTab("flea-market");
+        setActivePlazaTab(category as any);
+      }
+    }
+
+    // Reset unified writing states
+    setUnifiedTitle("");
+    setUnifiedContent("");
+    setUnifiedAuthor("");
+    setUnifiedLocation("");
+    setUnifiedPriceInfo("");
+    setUnifiedTargetAmount("");
+    setUnifiedUrgentsInfo("");
+    setIsWritingPost(false);
+    setSelectedPlazaPostId(null);
+
+    setNotifications((prev) => [
+      `📝 새 글이 에브리베이크 실시간 채널에 배포되었습니다.`,
+      ...prev,
+    ]);
+  };
 
   const handleCreateTroublePost = (e: React.FormEvent) => {
     e.preventDefault();
@@ -2252,6 +2344,17 @@ export default function App() {
   };
 
   const handleVotePost = (id: string) => {
+    if (!isLoggedIn) {
+      setNotifications((prev) => [
+        {
+          id: Date.now(),
+          type: "error",
+          message: "🔒 로그인이 되어야 아이디어를 추천할 수 있습니다!"
+        } as any,
+        ...prev,
+      ]);
+      return;
+    }
     setCommunityPosts((prev) =>
       prev.map((post) => {
         if (post.id === id) {
@@ -2381,6 +2484,17 @@ export default function App() {
 
   const handleAddPlazaComment = (postId: string, e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      setNotifications((prev) => [
+        {
+          id: Date.now(),
+          type: "error",
+          message: "🔒 댓글 및 견적 작성을 하려면 로그인이 필요합니다!"
+        } as any,
+        ...prev,
+      ]);
+      return;
+    }
     if (!newPlazaCommentText.trim()) return;
     const author = newPlazaCommentAuthor.trim() || "나의공간 점주 (나)";
     const newComment: PlazaComment = {
@@ -5054,15 +5168,534 @@ export default function App() {
                 {/* 7. COMMUNITY BOARD VIEW                             */}
                 {/* ==================================================== */}
                 {currentView === "community" && (
-                  <div className="max-w-6xl mx-auto px-6 py-8 animate-fade-in">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 animate-fade-in text-left">
                     <button
                       onClick={() => handleNav("home")}
-                      className="mb-6 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
+                      className="mb-5 flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
                     >
                       <ChevronLeft className="w-4 h-4" /> 홈으로 이동
                     </button>
 
                     {/* 메인 커뮤니티 대형 헤더 및 소개부 (주제별 동적 반영) */}
+                    <div className="mb-8 space-y-2 text-center max-w-3xl mx-auto mt-4 animate-fade-in">
+                      <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">
+                        EveryBake Business League
+                      </span>
+                      <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight leading-tight">
+                        {activeMainTab === "why-not-sell" &&
+                          "💡 이거 왜 안 팔아? 에브리베이크"}
+                        {activeMainTab === "flea-market" &&
+                          "🛒 에브리베이크 알뜰 광장"}
+                        {activeMainTab === "interior" &&
+                          "🛠️ 빵집 인테리어 견적 매칭"}
+                        {activeMainTab === "trouble" && "💬 에베 고민창구"}
+                      </h1>
+                      <p className="text-stone-550 text-sm mt-1.5 leading-relaxed font-semibold">
+                        {activeMainTab === "why-not-sell" && (
+                          <>
+                            전국 사장님들이 직접 원하시는 물품의 신규 입점
+                            계약을 제안하는 실시간 상생 건의 보드입니다.{" "}
+                            <strong className="text-[#f97316]">
+                              30추천 도달 시
+                            </strong>{" "}
+                            대형 도매 MD팀이 즉각 공급처 직거래 발굴에
+                            착수합니다.
+                          </>
+                        )}
+                        {activeMainTab === "flea-market" && (
+                          <>
+                            자재 대량 공동구매부터 남은 재고 중고 할인 처분,
+                            대용량 식자재 소분 상호 나눔, 당일 단기 긴급 제빵
+                            알바 연동까지! 전국 매장의 비용 혁신 마켓
+                            플레이스입니다.
+                          </>
+                        )}
+                        {activeMainTab === "interior" && (
+                          <>
+                            노후화된 기기 교체나 인테리어 파사드 파트 보수가
+                            고민이신 사장님들이 시공 모집글을 남기시면, 전문
+                            공인 인테리어 빌더들이{" "}
+                            <strong className="text-[#f97316]">
+                              공개 비교 견적 제안
+                            </strong>{" "}
+                            및 포트폴리오 상담을 실시간 연동해 드립니다.
+                          </>
+                        )}
+                        {activeMainTab === "trouble" && (
+                          <>
+                            매장 운영, 인력 관리, 유통 등 사장님들의 말 못 할
+                            현실적인 모든 우려와 고민을 속 시원히 공유하고, 전국
+                            가맹점주 동료들과 본사 전문가의 실시간 상생 피드백을
+                            수렴하는 소통 허브입니다.
+                          </>
+                        )}
+                      </p>
+                    </div>
+
+                    {/* 네 개의 대분류 커뮤니티 탭 (깔끔하고 시각적으로 뚜렷한 정렬) */}
+                    <div className="flex flex-col sm:flex-row justify-center items-stretch gap-3 mb-10 w-full max-w-4xl mx-auto border-b border-stone-200 pb-6">
+                      {[
+                        {
+                          id: "why-not-sell",
+                          label: "💡 이거 왜 안 팔아? 에브리베이크",
+                          desc: "도입 희망 상품 건의 및 투표",
+                        },
+                        {
+                          id: "flea-market",
+                          label: "🛒 에브리베이크 알뜰 광장",
+                          desc: "공구·중고거래·소분나눔·당일인력",
+                        },
+                        {
+                          id: "interior",
+                          label: "🛠️ 빵집 인테리어 매칭",
+                          desc: "보수/디자인 요청 및 견적 비교",
+                        },
+                        {
+                          id: "trouble",
+                          label: "💬 에베 고민창구",
+                          desc: "동료 점주 상생 소통 및 고민 해결",
+                        },
+                      ].map((mainTab) => (
+                        <button
+                          key={mainTab.id}
+                          onClick={() => {
+                            setActiveMainTab(mainTab.id as any);
+                            setSelectedPlazaPostId(null); // 다른 메인 탭 전환 시 상세 정보 초기화
+                          }}
+                          className={`flex-1 text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
+                            activeMainTab === mainTab.id
+                              ? "bg-stone-900 border-transparent text-white shadow-md scale-[1.01]"
+                              : "bg-white hover:bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-400"
+                          }`}
+                        >
+                          <p className="text-xs sm:text-sm font-black tracking-tight">
+                            {mainTab.label}
+                          </p>
+                          <p
+                            className={`text-[10px] mt-1 ${activeMainTab === mainTab.id ? "text-stone-300" : "text-stone-400"} font-bold`}
+                          >
+                            {mainTab.desc}
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Naver Cafe-style 2-Column Responsive Layout */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                      
+                      {/* LEFT COLUMN: Cafe Navigation Sidebar */}
+                      <div className="lg:col-span-3 space-y-4 lg:sticky lg:top-5">
+                        
+                        {/* Cafe Profile & Unified Write Button Widget */}
+                        <div className="bg-white border border-stone-200 rounded-2xl p-4 shadow-xs">
+                          <div className="flex items-center gap-3 mb-4">
+                            <span className="text-2xl">🥐</span>
+                            <div>
+                              <h2 className="text-sm font-black text-stone-900">에브리베이크 카페</h2>
+                              <p className="text-[10px] text-[#f97316] font-bold uppercase tracking-wider">EveryBake Owner Lounge</p>
+                            </div>
+                          </div>
+                          
+                          {/* Cafe stats */}
+                          <div className="grid grid-cols-2 gap-2 text-[10px] text-stone-500 font-semibold border-t border-b border-stone-100 py-2 mb-4">
+                            <div>
+                              <span className="text-stone-400 block font-normal">정회원 수</span>
+                              <strong className="text-stone-800 text-xs">1,420 명</strong>
+                            </div>
+                            <div>
+                              <span className="text-stone-400 block font-normal">오늘 새글</span>
+                              <strong className="text-emerald-500 text-xs">+18 개</strong>
+                            </div>
+                          </div>
+
+                          {/* UNIFIED 'WRITE POST' BUTTON */}
+                          <button
+                            onClick={() => {
+                              if (!isLoggedIn) {
+                                setNotifications((prev) => [
+                                  ...prev,
+                                  {
+                                    id: Date.now(),
+                                    type: "error",
+                                    message: "🔒 로그인이 안되어있으면 글을 적을 수 없어요 ㅠㅠ"
+                                  } as any
+                                ]);
+                                setCurrentView("login");
+                                return;
+                              }
+                              setUnifiedSubCat(
+                                activeMainTab === "why-not-sell" ? activeCommTab :
+                                activeMainTab === "flea-market" ? activePlazaTab :
+                                activeMainTab === "interior" ? "interior" : "trouble"
+                              );
+                              setIsWritingPost(true);
+                              setSelectedPlazaPostId(null);
+                            }}
+                            className="w-full py-3 bg-[#f97316] hover:bg-orange-600 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_2px_8px_rgba(249,115,22,0.25)] cursor-pointer flex items-center justify-center gap-2"
+                          >
+                            <span className="text-xs">✏️</span>
+                            <span>커뮤니티 통합 글쓰기</span>
+                          </button>
+                        </div>
+
+                        {/* CAFE CATEGORIES list */}
+                        <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-xs">
+                          <div className="bg-stone-50/80 px-4 py-3 border-b border-stone-200">
+                            <span className="text-[10px] uppercase font-black tracking-wider text-stone-500">
+                              게시판 카테고리
+                            </span>
+                          </div>
+
+                          <div className="p-2 space-y-1">
+                            
+                            {/* Category block 1 */}
+                            <div className="space-y-0.5">
+                              <div className="px-3 py-1.5 text-xs font-extrabold text-stone-900 flex items-center gap-1.5">
+                                <span>💡</span>
+                                <span>이거 왜 안 팔아?</span>
+                              </div>
+                              <div className="pl-6 pr-1 space-y-0.5">
+                                {[
+                                  { id: "dough", label: "🥐 프리미엄 생지 공동제안" },
+                                  { id: "coffee", label: "☕ 원두 및 커피기기 제안" },
+                                  { id: "raw", label: "🌾 원부자재 제안" }
+                                ].map((sub) => (
+                                  <button
+                                    key={sub.id}
+                                    onClick={() => {
+                                      setActiveMainTab("why-not-sell");
+                                      setActiveCommTab(sub.id as any);
+                                      setSelectedPlazaPostId(null);
+                                      if (isWritingPost) {
+                                        setUnifiedSubCat(sub.id);
+                                      }
+                                    }}
+                                    className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                                      activeMainTab === "why-not-sell" && activeCommTab === sub.id
+                                        ? "bg-orange-50 text-[#f97316] font-bold"
+                                        : "text-stone-600 hover:bg-stone-50"
+                                    }`}
+                                  >
+                                    {sub.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            <hr className="border-stone-100 my-1" />
+
+                            {/* Category block 2 */}
+                            <div className="space-y-0.5">
+                              <div className="px-3 py-1.5 text-xs font-extrabold text-stone-950 flex items-center gap-1.5">
+                                <span>🛒</span>
+                                <span>에브리베이크 알뜰 광장</span>
+                              </div>
+                              <div className="pl-6 pr-1 space-y-0.5">
+                                {[
+                                  { id: "coop", label: "📦 포장자재 공동구매" },
+                                  { id: "used", label: "🤝 단기 재고 중고장터" },
+                                  { id: "share", label: "🎁 부재료 소분 무료나눔" },
+                                  { id: "job", label: "🚨 당일 땜빵 제빵인력" }
+                                ].map((sub) => (
+                                  <button
+                                    key={sub.id}
+                                    onClick={() => {
+                                      setActiveMainTab("flea-market");
+                                      setActivePlazaTab(sub.id as any);
+                                      setSelectedPlazaPostId(null);
+                                      if (isWritingPost) {
+                                        setUnifiedSubCat(sub.id);
+                                      }
+                                    }}
+                                    className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                                      activeMainTab === "flea-market" && activePlazaTab === sub.id
+                                        ? "bg-orange-50 text-[#f97316] font-bold"
+                                        : "text-stone-600 hover:bg-stone-50"
+                                    }`}
+                                  >
+                                    {sub.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            <hr className="border-stone-100 my-1" />
+
+                            {/* Category 3 */}
+                            <button
+                              onClick={() => {
+                                setActiveMainTab("interior");
+                                setSelectedPlazaPostId(null);
+                                if (isWritingPost) {
+                                  setUnifiedSubCat("interior");
+                                }
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                activeMainTab === "interior"
+                                  ? "bg-orange-50 text-[#f97316] font-extrabold"
+                                  : "text-stone-805 hover:bg-stone-50"
+                              }`}
+                            >
+                              <span>🛠️</span>
+                              <span>빵집 인테리어 매칭</span>
+                            </button>
+
+                            {/* Category 4 */}
+                            <button
+                              onClick={() => {
+                                setActiveMainTab("trouble");
+                                setSelectedPlazaPostId(null);
+                                if (isWritingPost) {
+                                  setUnifiedSubCat("trouble");
+                                }
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                activeMainTab === "trouble"
+                                  ? "bg-orange-50 text-[#f97316] font-extrabold"
+                                  : "text-stone-805 hover:bg-stone-50"
+                              }`}
+                            >
+                              <span>💬</span>
+                              <span>에베 점주 고민 창구</span>
+                            </button>
+
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* RIGHT COLUMN: Interactive Board Workspace */}
+                      <div className="lg:col-span-9 space-y-6">
+
+                        {/* UNIFIED WRITE WIZARD FORM */}
+                        {isWritingPost && (
+                          <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm relative animate-fade-in space-y-4">
+                            <div className="flex justify-between items-center border-b border-[#f97316]/10 pb-4">
+                              <h3 className="text-sm font-black text-stone-900 flex items-center gap-1.5">
+                                <span>✏️</span>
+                                <span>새 게시글 작성 (커뮤니티 통합 허브)</span>
+                              </h3>
+                              <button
+                                onClick={() => setIsWritingPost(false)}
+                                className="text-stone-400 hover:text-stone-800 text-xs font-bold bg-stone-100 px-2.5 py-1.5 rounded-lg cursor-pointer"
+                              >
+                                작성 취소
+                              </button>
+                            </div>
+
+                            <form onSubmit={(e) => {
+                              handleCreateUnifiedPost(e);
+                            }} className="space-y-4">
+                              
+                              {/* Selection of the Category */}
+                              <div className="space-y-3 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+                                <div>
+                                  <label className="block text-[10px] uppercase font-black tracking-wider text-[#f97316] mb-2">
+                                    📢 작성할 게시판 카테고리 (아래 카드를 직접 클릭하여 자유롭게 변경해 보세요)
+                                  </label>
+                                  
+                                  {/* Grid chip selector for easy clicking */}
+                                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                    {[
+                                      { id: "dough", label: "🥐 프리미엄 생지 공동제안", tab: "why-not-sell" },
+                                      { id: "coffee", label: "☕ 원두 및 커피기기 제안", tab: "why-not-sell" },
+                                      { id: "raw", label: "🌾 원부자재 제안", tab: "why-not-sell" },
+                                      { id: "coop", label: "📦 포장자재 공동구매", tab: "flea-market" },
+                                      { id: "used", label: "🤝 단기 재고 중고장터", tab: "flea-market" },
+                                      { id: "share", label: "🎁 부재료 소분 무료나눔", tab: "flea-market" },
+                                      { id: "job", label: "🚨 당일 땜빵 제빵인력", tab: "flea-market" },
+                                      { id: "interior", label: "🛠️ 빵집 인테리어 매칭", tab: "interior" },
+                                      { id: "trouble", label: "💬 에베 점주 고민 창구", tab: "trouble" }
+                                    ].map((cat) => {
+                                      const isCatActive = unifiedSubCat === cat.id;
+                                      return (
+                                        <button
+                                          key={cat.id}
+                                          type="button"
+                                          onClick={() => {
+                                            setUnifiedSubCat(cat.id);
+                                            setActiveMainTab(cat.tab as any);
+                                            if (cat.tab === "why-not-sell") {
+                                              setActiveCommTab(cat.id as any);
+                                            } else if (cat.tab === "flea-market") {
+                                              setActivePlazaTab(cat.id as any);
+                                            }
+                                          }}
+                                          className={`px-3 py-2.5 rounded-xl border-2 text-[11px] font-extrabold text-left transition-all cursor-pointer flex flex-col justify-between ${
+                                            isCatActive
+                                              ? "border-[#f97316] bg-orange-50/80 text-[#f97316] scale-[1.01] shadow-xs"
+                                              : "border-stone-200 bg-white text-stone-600 hover:border-stone-300 hover:bg-stone-50"
+                                          }`}
+                                        >
+                                          <span>{cat.label}</span>
+                                          <span className="text-[9px] text-stone-400 font-normal mt-1 block">
+                                            {cat.tab === "why-not-sell" ? "이거 왜 안팔아" : cat.tab === "flea-market" ? "알뜰 광장" : "단독 게시판"}
+                                          </span>
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-stone-200/60">
+                                  <div>
+                                    <label className="block text-[9px] uppercase font-bold text-stone-500 mb-1">
+                                      선택된 카테고리 상세
+                                    </label>
+                                    <select
+                                      value={unifiedSubCat}
+                                      onChange={(e) => {
+                                        const val = e.target.value;
+                                        setUnifiedSubCat(val);
+                                        if (["dough", "coffee", "raw"].includes(val)) {
+                                          setActiveMainTab("why-not-sell");
+                                          setActiveCommTab(val as any);
+                                        } else if (["coop", "used", "share", "job"].includes(val)) {
+                                          setActiveMainTab("flea-market");
+                                          setActivePlazaTab(val as any);
+                                        } else {
+                                          setActiveMainTab(val as any);
+                                        }
+                                      }}
+                                      className="w-full text-xs rounded-lg border border-stone-250 bg-white px-3 py-2 outline-hidden font-bold text-stone-700"
+                                    >
+                                      <optgroup label="💡 이거 왜 안 팔아?">
+                                        <option value="dough">🥐 프리미엄 생지 공동제안</option>
+                                        <option value="coffee">☕ 원두 및 커피기기 제안</option>
+                                        <option value="raw">🌾 원부자재 제안</option>
+                                      </optgroup>
+                                      <optgroup label="🛒 알뜰 광장">
+                                        <option value="coop">📦 포장자재 공동구매</option>
+                                        <option value="used">🤝 단기 재고 중고장터</option>
+                                        <option value="share">🎁 부재료 소분 무료나눔</option>
+                                        <option value="job">🚨 당일 땜빵 제빵인력</option>
+                                      </optgroup>
+                                      <optgroup label="기타 게시판">
+                                        <option value="interior">🛠️ 빵집 인테리어 매칭 견적</option>
+                                        <option value="trouble">💬 에베 점주 고민 창구</option>
+                                      </optgroup>
+                                    </select>
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] uppercase font-bold text-stone-500 mb-1">
+                                      상호명 / 점주명 (로그인 연동)
+                                    </label>
+                                    <input
+                                      type="text"
+                                      required
+                                      value={unifiedAuthor}
+                                      onChange={(e) => setUnifiedAuthor(e.target.value)}
+                                      placeholder={userStoreName ? `${userStoreName} 사장님` : "예: 망원 크루아상점주"}
+                                      className="w-full text-xs rounded-lg border border-stone-250 bg-stone-100 px-3 py-2 outline-hidden font-semibold"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Title */}
+                              <div>
+                                <label className="block text-[10px] uppercase font-bold text-[#f97316] mb-1">
+                                  게시글 제목
+                                </label>
+                                <input
+                                  type="text"
+                                  required
+                                  value={unifiedTitle}
+                                  onChange={(e) => setUnifiedTitle(e.target.value)}
+                                  placeholder="게시판 성격에 맞는 핵심적인 제목을 작성해 보세요."
+                                  className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 outline-hidden font-medium"
+                                />
+                              </div>
+
+                              {/* Rich dynamic fields depending on category choice */}
+                              {["coop", "used", "share", "job", "interior"].includes(unifiedSubCat) && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-4 rounded-xl border border-stone-150">
+                                  <div>
+                                    <label className="block text-[9px] uppercase font-bold text-stone-500 mb-1">
+                                      상업 구역 / 위치한 지역명
+                                    </label>
+                                    <input
+                                      type="text"
+                                      required
+                                      value={unifiedLocation}
+                                      onChange={(e) => setUnifiedLocation(e.target.value)}
+                                      placeholder="예: 서울 마포구 상암동"
+                                      className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 outline-hidden font-medium"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] uppercase font-bold text-stone-500 mb-1">
+                                      {unifiedSubCat === "job" ? "시급 제안" : unifiedSubCat === "interior" ? "예산 범위 제한" : "공급 제안 단가"}
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={unifiedPriceInfo}
+                                      onChange={(e) => setUnifiedPriceInfo(e.target.value)}
+                                      placeholder={unifiedSubCat === "job" ? "예: 시급 13,000원" : unifiedSubCat === "interior" ? "예: 150만원 상당" : "예: 박스당 18,000원"}
+                                      className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 outline-hidden font-medium"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] uppercase font-bold text-stone-500 mb-1">
+                                      {unifiedSubCat === "job" ? "필요 시각 / 모집인원" : "목표 물량 / 할당 분량"}
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={unifiedTargetAmount}
+                                      onChange={(e) => setUnifiedTargetAmount(e.target.value)}
+                                      placeholder="예: 200박스 한정 / 선착순 3개 가맹"
+                                      className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 outline-hidden font-medium"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[9px] uppercase font-bold text-stone-500 mb-1">
+                                      {unifiedSubCat === "interior" ? "하자 보수 기한 요구" : "추가 요구 / 우대 조건"}
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={unifiedUrgentsInfo}
+                                      onChange={(e) => setUnifiedUrgentsInfo(e.target.value)}
+                                      placeholder="예: 근거리 지점 우선공동배송 희망"
+                                      className="w-full text-xs rounded-lg border border-stone-200 bg-white px-3 py-2 outline-hidden font-medium"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Details content */}
+                              <div>
+                                <label className="block text-[10px] uppercase font-bold text-[#f97316] mb-1">
+                                  상세 설명 및 전달문구
+                                </label>
+                                <textarea
+                                  required
+                                  rows={4}
+                                  value={unifiedContent}
+                                  onChange={(e) => setUnifiedContent(e.target.value)}
+                                  placeholder="요구 사항, 소재 규격, 인테리어 설계 조건, 건의 이유 등을 상세하고 유려하게 적어주십시오."
+                                  className="w-full text-xs rounded-xl border border-stone-250 bg-white p-3 outline-hidden resize-none font-medium leading-relaxed"
+                                />
+                              </div>
+
+                              <button
+                                type="submit"
+                                className="w-full py-3.5 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+                              >
+                                <span>📄 가맹본부 실시간 보드에 배포 승인</span>
+                                <span>&rarr;</span>
+                              </button>
+                            </form>
+                          </div>
+                        )}
+
+                        {/* RENDER ACTIVE FEED CONTENT IF NOT WRITING IN WIZARD */}
+                        {!isWritingPost && (
+                          <div className="space-y-6">
+                            {/* 메인 커뮤니티 대형 헤더 및 소개부 (주제별 동적 반영) */}
                     <div className="mb-8 space-y-2 text-center max-w-3xl mx-auto">
                       <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">
                         EveryBake Business League
@@ -6602,6 +7235,10 @@ export default function App() {
                         </div>
                       </div>
                     )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
 
