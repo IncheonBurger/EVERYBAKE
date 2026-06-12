@@ -5176,59 +5176,16 @@ export default function App() {
                       <ChevronLeft className="w-4 h-4" /> 홈으로 이동
                     </button>
 
-                    {/* 메인 커뮤니티 대형 헤더 및 소개부 (주제별 동적 반영) */}
-                    <div className="mb-8 space-y-2 text-center max-w-3xl mx-auto mt-4 animate-fade-in">
-                      <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">
-                        EveryBake Business League
-                      </span>
-                      <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight leading-tight">
-                        {activeMainTab === "why-not-sell" &&
-                          "💡 이거 왜 안 팔아? 에브리베이크"}
-                        {activeMainTab === "flea-market" &&
-                          "🛒 에브리베이크 알뜰 광장"}
-                        {activeMainTab === "interior" &&
-                          "🛠️ 빵집 인테리어 견적 매칭"}
-                        {activeMainTab === "trouble" && "💬 에베 고민창구"}
+                    {/* 에브리베이크 커뮤니티 광장 대형 메인 헤더 */}
+                    <div className="mb-10 space-y-3 text-center max-w-4xl mx-auto mt-4 animate-fade-in relative">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200/60 rounded-full text-[10.5px] font-black uppercase text-amber-700 tracking-widest shadow-xs">
+                        EveryBake Community Plaza
+                      </div>
+                      <h1 className="text-3xl sm:text-4.5xl font-black text-[#1c1917] tracking-tight leading-none pt-2 flex items-center justify-center gap-2">
+                        <span>📢 에브리베이크 커뮤니티 광장</span>
                       </h1>
-                      <p className="text-stone-550 text-sm mt-1.5 leading-relaxed font-semibold">
-                        {activeMainTab === "why-not-sell" && (
-                          <>
-                            전국 사장님들이 직접 원하시는 물품의 신규 입점
-                            계약을 제안하는 실시간 상생 건의 보드입니다.{" "}
-                            <strong className="text-[#f97316]">
-                              30추천 도달 시
-                            </strong>{" "}
-                            대형 도매 MD팀이 즉각 공급처 직거래 발굴에
-                            착수합니다.
-                          </>
-                        )}
-                        {activeMainTab === "flea-market" && (
-                          <>
-                            자재 대량 공동구매부터 남은 재고 중고 할인 처분,
-                            대용량 식자재 소분 상호 나눔, 당일 단기 긴급 제빵
-                            알바 연동까지! 전국 매장의 비용 혁신 마켓
-                            플레이스입니다.
-                          </>
-                        )}
-                        {activeMainTab === "interior" && (
-                          <>
-                            노후화된 기기 교체나 인테리어 파사드 파트 보수가
-                            고민이신 사장님들이 시공 모집글을 남기시면, 전문
-                            공인 인테리어 빌더들이{" "}
-                            <strong className="text-[#f97316]">
-                              공개 비교 견적 제안
-                            </strong>{" "}
-                            및 포트폴리오 상담을 실시간 연동해 드립니다.
-                          </>
-                        )}
-                        {activeMainTab === "trouble" && (
-                          <>
-                            매장 운영, 인력 관리, 유통 등 사장님들의 말 못 할
-                            현실적인 모든 우려와 고민을 속 시원히 공유하고, 전국
-                            가맹점주 동료들과 본사 전문가의 실시간 상생 피드백을
-                            수렴하는 소통 허브입니다.
-                          </>
-                        )}
+                      <p className="text-stone-500 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-semibold">
+                        전국 가맹 사장님들의 자유로운 소통과 상생, 원부자재 비용 혁신 및 점주 공동 협업을 위한 비즈니스 스퀘어입니다.
                       </p>
                     </div>
 
@@ -5695,109 +5652,49 @@ export default function App() {
                         {/* RENDER ACTIVE FEED CONTENT IF NOT WRITING IN WIZARD */}
                         {!isWritingPost && (
                           <div className="space-y-6">
-                            {/* 메인 커뮤니티 대형 헤더 및 소개부 (주제별 동적 반영) */}
-                    <div className="mb-8 space-y-2 text-center max-w-3xl mx-auto">
-                      <span className="text-xs font-extrabold uppercase tracking-widest text-[#f97316]">
-                        EveryBake Business League
-                      </span>
-                      <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight leading-tight">
-                        {activeMainTab === "why-not-sell" &&
-                          "💡 이거 왜 안 팔아? 에브리베이크"}
-                        {activeMainTab === "flea-market" &&
-                          "🛒 에브리베이크 알뜰 광장"}
-                        {activeMainTab === "interior" &&
-                          "🛠️ 빵집 인테리어 견적 매칭"}
-                        {activeMainTab === "trouble" && "💬 에베 고민창구"}
-                      </h1>
-                      <p className="text-stone-550 text-sm mt-1.5 leading-relaxed font-semibold">
-                        {activeMainTab === "why-not-sell" && (
-                          <>
-                            전국 사장님들이 직접 원하시는 물품의 신규 입점
-                            계약을 제안하는 실시간 상생 건의 보드입니다.{" "}
-                            <strong className="text-[#f97316]">
-                              30추천 도달 시
-                            </strong>{" "}
-                            대형 도매 MD팀이 즉각 공급처 직거래 발굴에
-                            착수합니다.
-                          </>
-                        )}
-                        {activeMainTab === "flea-market" && (
-                          <>
-                            자재 대량 공동구매부터 남은 재고 중고 할인 처분,
-                            대용량 식자재 소분 상호 나눔, 당일 단기 긴급 제빵
-                            알바 연동까지! 전국 매장의 비용 혁신 마켓
-                            플레이스입니다.
-                          </>
-                        )}
-                        {activeMainTab === "interior" && (
-                          <>
-                            노후화된 기기 교체나 인테리어 파사드 파트 보수가
-                            고민이신 사장님들이 시공 모집글을 남기시면, 전문
-                            공인 인테리어 빌더들이{" "}
-                            <strong className="text-[#f97316]">
-                              공개 비교 견적 제안
-                            </strong>{" "}
-                            및 포트폴리오 상담을 실시간 연동해 드립니다.
-                          </>
-                        )}
-                        {activeMainTab === "trouble" && (
-                          <>
-                            매장 운영, 인력 관리, 유통 등 사장님들의 말 못 할
-                            현실적인 모든 우려와 고민을 속 시원히 공유하고, 전국
-                            가맹점주 동료들과 본사 전문가의 실시간 상생 피드백을
-                            수렴하는 소통 허브입니다.
-                          </>
-                        )}
-                      </p>
-                    </div>
-
-                    {/* 네 개의 대분류 커뮤니티 탭 (깔끔하고 시각적으로 뚜렷한 정렬) */}
-                    <div className="flex flex-col sm:flex-row justify-center items-stretch gap-3 mb-10 w-full max-w-4xl mx-auto border-b border-stone-200 pb-6">
-                      {[
-                        {
-                          id: "why-not-sell",
-                          label: "💡 이거 왜 안 팔아? 에브리베이크",
-                          desc: "도입 희망 상품 건의 및 투표",
-                        },
-                        {
-                          id: "flea-market",
-                          label: "🛒 에브리베이크 알뜰 광장",
-                          desc: "공구·중고거래·소분나눔·당일인력",
-                        },
-                        {
-                          id: "interior",
-                          label: "🛠️ 빵집 인테리어 매칭",
-                          desc: "보수/디자인 요청 및 견적 비교",
-                        },
-                        {
-                          id: "trouble",
-                          label: "💬 에베 고민창구",
-                          desc: "동료 점주 상생 소통 및 고민 해결",
-                        },
-                      ].map((mainTab) => (
-                        <button
-                          key={mainTab.id}
-                          onClick={() => {
-                            setActiveMainTab(mainTab.id as any);
-                            setSelectedPlazaPostId(null); // 다른 메인 탭 전환 시 상세 정보 초기화
-                          }}
-                          className={`flex-1 text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
-                            activeMainTab === mainTab.id
-                              ? "bg-stone-900 border-transparent text-white shadow-md scale-[1.01]"
-                              : "bg-white hover:bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-400"
-                          }`}
-                        >
-                          <p className="text-xs sm:text-sm font-black tracking-tight">
-                            {mainTab.label}
-                          </p>
-                          <p
-                            className={`text-[10px] mt-1 ${activeMainTab === mainTab.id ? "text-stone-300" : "text-stone-400"} font-bold`}
-                          >
-                            {mainTab.desc}
-                          </p>
-                        </button>
-                      ))}
-                    </div>
+                            {/* 선택된 카테고리 기획 가이드라인 배너 */}
+                            <div className="bg-white border border-stone-200 p-5 rounded-2xl shadow-xs space-y-2 text-left relative overflow-hidden">
+                              <div className="absolute top-0 right-0 p-3 opacity-10 text-6xl font-black select-none pointer-events-none">
+                                {activeMainTab === "why-not-sell" && "💡"}
+                                {activeMainTab === "flea-market" && "🛒"}
+                                {activeMainTab === "interior" && "🛠️"}
+                                {activeMainTab === "trouble" && "💬"}
+                              </div>
+                              <span className="text-[10px] font-black tracking-widest text-[#f97316] uppercase block">
+                                EveryBake Official Guide
+                              </span>
+                              <h4 className="text-sm sm:text-base font-black text-stone-900 flex items-center gap-1.5">
+                                <span>
+                                  {activeMainTab === "why-not-sell" && "💡 이거 왜 안 팔아? 에브리베이크"}
+                                  {activeMainTab === "flea-market" && "🛒 에브리베이크 알뜰 광장"}
+                                  {activeMainTab === "interior" && "🛠️ 빵집 인테리어 견적 매칭"}
+                                  {activeMainTab === "trouble" && "💬 에베 고민창구"}
+                                </span>
+                              </h4>
+                              <p className="text-[11px] sm:text-xs text-stone-500 leading-relaxed font-semibold max-w-3xl">
+                                {activeMainTab === "why-not-sell" && (
+                                  <>
+                                    전국 사장님들이 직접 원하시는 물품의 신규 입점 계약을 제안하는 실시간 상생 건의 보드입니다.{" "}
+                                    <strong className="text-[#f97316]">30추천 도달 시</strong> 대형 도매 MD팀이 즉각 공급처 직거래 발굴에 착수합니다.
+                                  </>
+                                )}
+                                {activeMainTab === "flea-market" && (
+                                  <>
+                                    자재 대량 공동구매부터 남은 재고 중고 할인 처분, 대용량 식자재 소분 상호 나눔, 당일 단기 긴급 제빵 알바 연동까지! 전국 매장의 비용 혁신 마켓 플레이스입니다.
+                                  </>
+                                )}
+                                {activeMainTab === "interior" && (
+                                  <>
+                                    노후화된 기기 교체나 인테리어 파사드 파트 보수가 고민이신 사장님들이 시공 모집글을 남기시면, 전문 공인 인테리어 빌더들이 <strong className="text-[#f97316]">공개 비교 견적 제안</strong> 및 포트폴리오 상담을 실시간 연동해 드립니다.
+                                  </>
+                                )}
+                                {activeMainTab === "trouble" && (
+                                  <>
+                                    매장 운영, 인력 관리, 유통 등 사장님들의 말 못 할 현실적인 모든 우려와 고민을 속 시원히 공유하고, 전국 가맹점주 동료들과 본사 전문가의 실시간 상생 피드백을 수렴하는 소통 허브입니다.
+                                  </>
+                                )}
+                              </p>
+                            </div>
 
                     {/* ============================================== */}
                     {/* 1) 이거 왜 안 팔아? 에브리베이크 뷰          */}
