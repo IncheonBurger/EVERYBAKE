@@ -887,7 +887,7 @@ export default function PartnerPortal({
                       <div className="flex justify-between items-center pb-3 border-b border-stone-150">
                         <div>
                           <span className="text-[9px] uppercase tracking-widest text-[#f97316] font-bold">IoT DEVICE A</span>
-                          <h4 className="text-stone-900 font-black text-sm">도우컨디셔너 #1 (D-CON-PRO)</h4>
+                          <h4 className="text-stone-900 font-black text-sm">도우컨디셔너 #1 (D-CON-EVERYBAKE)</h4>
                         </div>
                         <button
                           onClick={() => setProoferPower(!prooferPower)}
@@ -1351,7 +1351,7 @@ export default function PartnerPortal({
                               onChange={(e) => setAsEquip(e.target.value)}
                               className="w-full px-3 py-2 bg-white border border-stone-200 text-xs rounded-lg font-semibold focus:outline-none focus:border-[#f97316]"
                             >
-                              <option value="도우컨디셔너 #1">도우컨디셔너 #1 (D-CON-PRO)</option>
+                              <option value="도우컨디셔너 #1">도우컨디셔너 #1 (D-CON-EVERYBAKE)</option>
                               <option value="B2B 로터리 터치 오븐">크루아상 로터리 오븐 (OVN-SMART)</option>
                               <option value="커피 에스프레소 머신">에베인 멀티보일러 커피 머신</option>
                             </select>

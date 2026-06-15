@@ -79,7 +79,7 @@ export default function EventsView({
       id: "sub-2",
       storeName: "한남동 프렌치 아틀리에",
       bakerName: "Marc Dupont",
-      doughUsed: "아티장 프렌치 바게트",
+      doughUsed: "EVERYBAKE 프렌치 바게트",
       title: "정통 파리지앵 쿠프 넣기 & 저온 발효 극대화",
       tip: "실온 해동을 15분만 진행한 뒤 예열된 오븐에 칼집을 깊게 내어 구우면 훨씬 볼륨감있고 빠작한 바게트가 완성됩니다.",
       votes: 98,

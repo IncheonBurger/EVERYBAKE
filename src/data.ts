@@ -4,7 +4,7 @@ export const CURATED_DOUGHS: DoughItem[] = [
   // ================= HARD (식사빵류) =================
   {
     id: "g-002",
-    name: "아티장 프렌치 바게트 (1box / 20ea)",
+    name: "EVERYBAKE 프렌치 바게트 (1box / 20ea)",
     masterName: "🇫🇷 [파리] B 블랑제리",
     region: "파리",
     price: 42000,

@@ -391,6 +391,9 @@ export default function App() {
   // Selected equipment for the detail view
   const [selectedEquipId, setSelectedEquipId] = useState<string>("eq-pro-01");
 
+  // Media tab state for equipment details: "product" (single shot) | "fit" (in-store fit)
+  const [detailMediaTab, setDetailMediaTab] = useState<"product" | "fit">("product");
+
   // Define beautiful details data object for all equipments
   const equipData: Record<
     string,
@@ -436,7 +439,7 @@ export default function App() {
         {
           title: "Baking Power",
           subtitle: "고안개 고압 스팀 분출 & 세라믹 하우징",
-          desc: "정밀 아티장 스타일 브리오슈와 바게트 등 크러스트 형성을 위한 스팀 다류 통제 기능 기본 제공.",
+          desc: "정밀 EVERYBAKE 스타일 브리오슈와 바게트 등 크러스트 형성을 위한 스팀 다류 통제 기능 기본 제공.",
         },
       ],
     },
@@ -2952,19 +2955,8 @@ export default function App() {
                               : "z-10"
                         }`}
                       >
-                        {/* Complete luxury environment background featuring the high-end dark marble kitchen scenario with full stunning fidelity */}
-                        <div className="absolute inset-0 bg-[#0c0b0a] z-0 overflow-hidden">
-                          {/* Emphasizes rich dark charcoal marble, copper accessories, and luxury wood cabinetry exactly as designed */}
-                          <img
-                            src={kctActualOvenStoryImage}
-                            alt="Luxury kitchen with KCT oven and proofer"
-                            className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-[1000ms] ease-out ${
-                              hoveredPanel === "left"
-                                ? "scale-105 brightness-105 contrast-105"
-                                : "scale-100 brightness-[0.88] contrast-100"
-                            }`}
-                            referrerPolicy="no-referrer"
-                          />
+                        {/* Clean luxurious studio background with subtle warm radial lighting to emphasize the product */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#121110] to-[#040404] z-0 overflow-hidden">
                           {/* Elegantly placed glow emphasizing the internal warm baking light inside the oven doors */}
                           <div
                             className={`absolute w-[20rem] md:w-[32rem] h-[20rem] md:h-[32rem] bg-orange-500/10 rounded-full blur-[70px] md:blur-[95px] left-[55%] top-[55%] -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 pointer-events-none mix-blend-screen ${
@@ -2975,13 +2967,34 @@ export default function App() {
                         </div>
 
                         {/* Sophisticated gradient wash and professional vignette to protect clean white typography readability */}
-                        <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/95 via-black/40 to-transparent z-6 transition-opacity duration-500 pointer-events-none" />
-                        <div className="absolute inset-y-0 left-0 w-[40%] bg-gradient-to-r from-black/70 via-black/25 to-transparent z-6 pointer-events-none" />
+                        <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/95 via-black/40 to-transparent z-6 pointer-events-none" />
+                        <div className="absolute inset-y-0 left-0 w-[60%] bg-gradient-to-r from-black/90 via-black/35 to-transparent z-6 pointer-events-none md:block hidden" />
 
-                        {/* Content Container */}
-                        <div className="absolute inset-0 p-6 md:p-12 lg:p-16 flex flex-col justify-between z-10">
+                        {/* 3D Floating Product Main Photo - Perfectly Centered in the Left Panel to Prevent Distortion */}
+                        <div className="absolute inset-0 z-5 pointer-events-none select-none flex items-center justify-center overflow-hidden">
+                          <motion.div
+                            animate={{
+                              y: hoveredPanel === "left" ? -15 : 0,
+                              scale: hoveredPanel === "left" ? 1.08 : 1.02,
+                              filter: hoveredPanel === "left" 
+                                ? "drop-shadow(0 40px 60px rgba(249,115,22,0.45))" 
+                                : "drop-shadow(0 20px 35px rgba(0,0,0,0.75))"
+                            }}
+                            className="h-[75%] md:h-[82%] w-full flex items-center justify-center"
+                          >
+                            <img
+                              src={ovenImage}
+                              alt="EveryBake Smart Pro Main Product"
+                              className="h-full w-auto max-h-[105%] md:max-h-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
+                              referrerPolicy="no-referrer"
+                            />
+                          </motion.div>
+                        </div>
+
+                        {/* Content Container - Vertically aligned and left-structured */}
+                        <div className="absolute inset-0 p-6 md:p-12 lg:p-16 flex flex-col justify-between items-start text-left z-10 w-full h-full">
                           {/* Top: Premium Brand Detail Tag or navigation */}
-                          <div className="text-left mt-2 md:mt-4">
+                          <div className="mt-2 text-left z-15">
                             <button
                               onClick={(e) => {
                                   e.stopPropagation();
@@ -2993,16 +3006,16 @@ export default function App() {
                             </button>
                           </div>
 
-                          {/* Bottom Content Area */}
-                          <div className="text-left space-y-3.5">
+                          {/* Bottom Content Area - Slogans placed clean and clear on the left side */}
+                          <div className="w-full max-w-[85%] md:max-w-[75%] pb-2 md:pb-4 transition-all duration-700 z-10 space-y-4">
                             {/* Sliding/Fading description of Left Panel Expansion (focused on appliance & message) */}
-                            <div className={`overflow-hidden transition-all duration-700 max-w-lg ${
-                              hoveredPanel === "left" ? "max-h-24 opacity-100 translate-y-0" : "max-h-0 opacity-0 translate-y-4"
+                            <div className={`overflow-hidden transition-all duration-700 ${
+                              hoveredPanel === "left" ? "max-h-24 opacity-100 mb-3" : "max-h-0 opacity-0 mb-0"
                             }`}>
                               <p className="text-[10px] md:text-xs uppercase font-extrabold tracking-wider text-[#f97316]">
                                 The Art of Precision Engineering
                               </p>
-                              <p className="text-[11px] md:text-sm text-white/70 leading-relaxed font-medium mt-1">
+                              <p className="text-[11px] md:text-xs text-white/70 leading-relaxed font-semibold mt-1">
                                 EveryBake AI Dough Conditioner coordinates perfect temperature & humidity, preserving the pristine texture of raw gluten for an unmatched rise.
                               </p>
                             </div>
@@ -3015,14 +3028,16 @@ export default function App() {
                                   : "opacity-100 scale-100"
                               }`}
                             >
-                              <p className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md">
-                                당신의 식탁,
-                                <br />
-                                당신의 매 순간
-                              </p>
-                              <p className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#f97316] tracking-tighter drop-shadow-md">
-                                에브리베이크
-                              </p>
+                              <div className="space-y-2">
+                                <p className="text-xl sm:text-2xl md:text-4xl lg:text-5.5xl xl:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
+                                  당신의 식탁,
+                                  <br />
+                                  당신의 매 순간
+                                </p>
+                                <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6.5xl xl:text-7.5xl font-extrabold text-[#f97316] tracking-tighter drop-shadow-[0_4px_20px_rgba(249,115,22,0.35)] mt-1.5 leading-none">
+                                  에브리베이크
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -3108,7 +3123,7 @@ export default function App() {
                                 The Heritage of Craftsmanship
                               </p>
                               <p className="text-[11px] md:text-sm text-white/70 leading-relaxed font-medium mt-1">
-                                Skilled artisanal hands shape premium raw dough, fusing age-old fermentation mastery with precise, state-of-the-art core thermal synchronization.
+                                Skilled EVERYBAKE hands shape premium raw dough, fusing age-old fermentation mastery with precise, state-of-the-art core thermal synchronization.
                               </p>
                             </div>
 
@@ -3857,49 +3872,83 @@ export default function App() {
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full mb-16">
                       {/* Left Column: Premium Showpiece Image Gallery */}
                       <div className="lg:col-span-6 w-full">
-                        <div className="w-full bg-stone-50 rounded-[40px] px-8 py-16 flex flex-col items-center justify-center relative overflow-hidden border border-stone-150/80 shadow-xs">
+                        <div className="w-full bg-stone-50 rounded-[40px] px-8 py-12 flex flex-col items-center justify-center relative overflow-hidden border border-stone-150/80 shadow-sm min-h-[500px]">
                           <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
                           {/* Subtle luxurious background accent */}
-                          <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-200/10 rounded-full blur-[100px] pointer-events-none" />
-                          <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-300/10 rounded-full blur-[100px] pointer-events-none" />
+                          <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-200/5 rounded-full blur-[100px] pointer-events-none" />
+                          <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-300/5 rounded-full blur-[100px] pointer-events-none" />
 
-                          <div className="relative flex flex-col items-center">
-                            {selectedEquipId === "eq-mini-01" ? (
-                              <div className="relative py-4 flex flex-col items-center justify-center min-h-[310px]">
-                                <KCTMiniOvenIllust
-                                  scale={1.22}
-                                  className="relative z-10 filter drop-shadow-[0_25px_50px_rgba(0,0,0,0.3)] hover:scale-[1.25] transition-transform duration-500"
-                                />
-                                <div className="absolute -top-8 -right-8 bg-emerald-600 text-white text-[8px] font-black tracking-widest px-2.5 py-1 rounded shadow-md uppercase">
-                                  Compact Single Tray System
-                                </div>
-                              </div>
-                            ) : (
-                              <>
+                          {/* Refined Media Switcher Tabs */}
+                          <div className="absolute top-6 left-6 z-15 flex bg-stone-200/60 backdrop-blur-sm p-1 rounded-xl border border-stone-200/50">
+                            <button
+                              onClick={() => setDetailMediaTab("product")}
+                              className={`px-3 py-1.5 rounded-lg text-[10px] font-black tracking-tight transition-all cursor-pointer ${
+                                detailMediaTab === "product"
+                                  ? "bg-white text-stone-900 shadow-sm font-extrabold"
+                                  : "text-stone-500 hover:text-stone-950 font-bold"
+                              }`}
+                            >
+                              📷 제품 단독 외관
+                            </button>
+                            <button
+                              onClick={() => setDetailMediaTab("fit")}
+                              className={`px-3 py-1.5 rounded-lg text-[10px] font-black tracking-tight transition-all cursor-pointer ${
+                                detailMediaTab === "fit"
+                                  ? "bg-white text-stone-900 shadow-sm font-extrabold"
+                                  : "text-stone-500 hover:text-stone-950 font-bold"
+                              }`}
+                            >
+                              🌟 매장 빌트인뷰
+                            </button>
+                          </div>
+
+                          <div className="relative flex flex-col items-center w-full pt-10">
+                            {detailMediaTab === "fit" ? (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ duration: 0.5 }}
+                                className="w-full flex flex-col items-center justify-center"
+                              >
                                 <img
-                                  src={currentDevice.image}
-                                  alt={`${currentDevice.name} Showpiece`}
-                                  className={`w-auto object-contain filter drop-shadow-[0_24px_40px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-transform duration-700 ease-out rounded-2xl ${
-                                    selectedEquipId === "eq-mini-01"
-                                      ? "h-[220px] md:h-[260px] max-w-[240px]"
-                                      : "h-[360px] md:h-[500px]"
-                                  }`}
+                                  src={kctActualOvenStoryImage}
+                                  alt="Luxury Store Fitting"
+                                  className="w-full h-auto max-h-[380px] md:max-h-[420px] object-cover rounded-3.5xl border border-stone-150/75 shadow-lg hover:scale-[1.01] transition-transform duration-500"
                                   referrerPolicy="no-referrer"
                                 />
-
-                                {selectedEquipId === "eq-mini-01" && (
-                                  <>
-                                    {/* Compact layout tabletop wood stand */}
-                                    <div className="w-48 h-3.5 bg-stone-300 rounded-full mt-4 filter drop-shadow-sm flex items-center justify-center text-[8px] text-stone-600 font-extrabold uppercase tracking-widest font-mono">
-                                      60cm Cafe Countertop Base
-                                    </div>
-                                    <div className="absolute -top-4 -right-4 bg-emerald-600 text-white text-[8px] font-black tracking-widest px-2.5 py-1 rounded shadow-md uppercase">
+                                <span className="text-[10px] text-stone-400 font-extrabold tracking-wider uppercase font-mono mt-4 block">
+                                  EveryBake Smart Kitchen Installation
+                                </span>
+                              </motion.div>
+                            ) : (
+                              <div className="relative flex flex-col items-center justify-center w-full min-h-[350px]">
+                                {selectedEquipId === "eq-mini-01" ? (
+                                  <div className="relative py-4 flex flex-col items-center justify-center min-h-[310px]">
+                                    <KCTMiniOvenIllust
+                                      scale={1.22}
+                                      className="relative z-10 filter drop-shadow-[0_25px_50px_rgba(0,0,0,0.3)] hover:scale-[1.25] transition-transform duration-500"
+                                    />
+                                    <div className="absolute -top-8 -right-8 bg-emerald-600 text-white text-[8px] font-black tracking-widest px-2.5 py-1 rounded shadow-md uppercase">
                                       Compact Single Tray System
                                     </div>
-                                  </>
+                                  </div>
+                                ) : (
+                                  <motion.div
+                                    initial={{ opacity: 0, scale: 0.96 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="flex flex-col items-center justify-center"
+                                  >
+                                    <img
+                                      src={currentDevice.image}
+                                      alt={`${currentDevice.name} Showpiece`}
+                                      className={`w-auto object-contain filter drop-shadow-[0_30px_60px_rgba(0,0,0,0.22)] hover:scale-[1.03] transition-transform duration-700 ease-out h-[400px] md:h-[580px] lg:h-[620px]`}
+                                      referrerPolicy="no-referrer"
+                                    />
+                                  </motion.div>
                                 )}
-                              </>
+                              </div>
                             )}
                           </div>
                         </div>
@@ -4015,21 +4064,22 @@ export default function App() {
 
                       {/* Story Stack - All Vertical (No side-by-side text/cols layout!) */}
                       <div className="space-y-28 max-w-4xl mx-auto">
-                        {/* Item 1: Artisan Baker with image */}
+                        {/* Item 1: EVERYBAKE Baker with image */}
                         <div className="space-y-6">
-                          {/* Immersive centered image */}
-                          <div className="w-full rounded-[32px] overflow-hidden bg-stone-50 border border-stone-150 shadow-xs">
+                          {/* Immersive centered image displaying the real 170cm EveryBake dough conditioner product */}
+                          <div className="w-full rounded-[32px] overflow-hidden bg-stone-950 border border-stone-850/80 shadow-lg py-12 md:py-16 flex items-center justify-center min-h-[420px] relative">
+                            <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
                             <img
-                              src={artisanBakerDetailImage}
-                              alt="Artisan Master Baker"
-                              className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
+                              src={ovenImage}
+                              alt="EveryBake Smart Pro Dough Conditioner"
+                              className="h-[360px] md:h-[480px] w-auto object-contain filter drop-shadow-[0_25px_50px_rgba(0,0,0,0.65)] hover:scale-[1.03] transition-transform duration-700 pointer-events-none"
                               referrerPolicy="no-referrer"
                             />
                           </div>
                           {/* Centered clean description stack */}
                           <div className="text-center max-w-2xl mx-auto space-y-3 pt-2">
                             <span className="text-[10px] font-extrabold text-[#f97316] uppercase tracking-widest block font-mono">
-                              01 / PROFESSIONAL ARTISAN FIDELITY
+                              01 / PROFESSIONAL EVERYBAKE FIDELITY
                             </span>
                             <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
                               30년 제빵 명인의 손가락 끝 감각, 그대로
@@ -4436,7 +4486,7 @@ export default function App() {
                       </h1>
                       <p className="text-stone-550 text-sm">
                         KCT와 협약 배합을 맺은 전국 제과 명인들의 고유 반죽과
-                        글로벌 아티장 라인업을 오븐 스마트 통신 바코드와
+                        글로벌 EVERYBAKE 라인업을 오븐 스마트 통신 바코드와
                         연동하여 편리하게 자영업 발주해 보십시오.
                       </p>
                     </div>
