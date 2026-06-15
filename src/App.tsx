@@ -4066,13 +4066,12 @@ export default function App() {
                       <div className="space-y-28 max-w-4xl mx-auto">
                         {/* Item 1: EVERYBAKE Baker with image */}
                         <div className="space-y-6">
-                          {/* Immersive centered image displaying the real 170cm EveryBake dough conditioner product */}
-                          <div className="w-full rounded-[32px] overflow-hidden bg-stone-950 border border-stone-850/80 shadow-lg py-12 md:py-16 flex items-center justify-center min-h-[420px] relative">
-                            <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+                          {/* Immersive centered image */}
+                          <div className="w-full rounded-[32px] overflow-hidden bg-stone-50 border border-stone-150 shadow-xs">
                             <img
-                              src={ovenImage}
-                              alt="EveryBake Smart Pro Dough Conditioner"
-                              className="h-[360px] md:h-[480px] w-auto object-contain filter drop-shadow-[0_25px_50px_rgba(0,0,0,0.65)] hover:scale-[1.03] transition-transform duration-700 pointer-events-none"
+                              src={artisanBakerDetailImage}
+                              alt="EVERYBAKE Master Baker"
+                              className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
                               referrerPolicy="no-referrer"
                             />
                           </div>
