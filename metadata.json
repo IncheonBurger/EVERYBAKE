@@ -1,6 +1,6 @@
 {
-  "name": "KCT Partners",
-  "description": "KCT Partners B2B 플랫폼. 1인 카페 사장님들을 위한 스마트 하드웨어 도우컨디셔너와 프리미엄 생지, 고품질 원두 및 파트너 제안 통합 연동 시스템.",
+  "name": "Hannet AI Scanner S•CO",
+  "description": "정밀 지능형 비전 AI 기술로 다양한 빵과 결제 품종을 신속·정확하게 자동 인식하는 스마트 셀프 계산 솔루션 Hannet AI Scanner S•CO 공식 런칭 페이지.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

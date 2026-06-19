@@ -27,6 +27,7 @@ export default function Header({
 
   const baseLinks = [
     { id: "equip-list", name: "도우컨디셔너/오븐" },
+    { id: "ai-pos", name: "AI 포스" },
     { id: "dough-main", name: "생지 라이브러리" },
     { id: "coffee", name: "커피/원두/머신" },
     { id: "ingredients", name: "원부자재" },
@@ -71,7 +72,7 @@ export default function Header({
         {/* [중앙] 메인 메뉴 (도우컨디셔너, 생지, 커피, 원부자재, 이벤트, 커뮤니티) */}
         <div className="hidden md:flex items-center justify-center gap-1.5 lg:gap-2.5 xl:gap-4.5 mx-auto">
           {baseLinks.map((link) => {
-            const isActive = currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail");
+            const isActive = currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail") || (link.id === "ai-pos" && currentView === "ai-pos-detail");
             return (
               <button
                 key={link.id}
@@ -224,7 +225,7 @@ export default function Header({
           </div>
           <div className="grid grid-cols-1 gap-1">
             {links.map((link) => {
-              const isActive = currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail");
+              const isActive = currentView === link.id || (link.id === "equip-list" && currentView === "equip-detail") || (link.id === "dough-main" && currentView === "dough-detail") || (link.id === "ai-pos" && currentView === "ai-pos-detail");
               return (
                 <button
                   key={link.id}

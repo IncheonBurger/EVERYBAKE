@@ -47,6 +47,7 @@ import GlobalMap from "./components/GlobalMap";
 import DoughCard from "./components/DoughCard";
 import PartnerPortal from "./components/PartnerPortal";
 import EventsView from "./components/EventsView";
+import AiPosDetail from "./components/AiPosDetail";
 import {
   CURATED_DOUGHS,
   INGREDIENTS_DATA,
@@ -369,7 +370,7 @@ export default function App() {
 
   // Navigation View Tracking
   // Current view can be: "home" | "equip-list" | "equip-detail" | "dough-main" | "dough-detail" | "coffee" | "community" | "inquiry" | "login" | "partner-portal"
-  const [currentView, setCurrentView] = useState<string>("home");
+  const [currentView, setCurrentView] = useState<string>("ai-pos");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(
     null,
@@ -567,6 +568,14 @@ export default function App() {
     null,
   );
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+
+  // States for Interactive AI POS system
+  const [posVoiceTranscript, setPosVoiceTranscript] = useState<string>("");
+  const [posParsedItems, setPosParsedItems] = useState<{name: string; qty: number; price: number}[]>([]);
+  const [posOvenSignalSent, setPosOvenSignalSent] = useState<boolean>(false);
+  const [posActiveStatus, setPosActiveStatus] = useState<string>("대기중... (주문 입력을 기다리는 중)");
+  const [posWeatherState, setPosWeatherState] = useState<string>("맑음 (24°C)");
+  const [isParsingVoice, setIsParsingVoice] = useState<boolean>(false);
 
   // States for reviews on KCT Smart Pro Machine (equip-detail)
   const [equipReviews, setEquipReviews] = useState<Review[]>([
@@ -2046,6 +2055,7 @@ export default function App() {
 
     const majorCategories = [
       "equip-list",
+      "ai-pos",
       "dough-main",
       "coffee",
       "ingredients",
@@ -2571,6 +2581,11 @@ export default function App() {
     e.preventDefault();
     if (!inqCompany.trim() || !inqManager.trim() || !inqDetails.trim()) return;
 
+    let autoReply = "안녕하세요 파트너님! 소중한 제안 기획서가 실시간 접수되었습니다. 기술 특허 및 스마트 온습도 연동 테스트 타당성 검사 진행 후 3영업일 이내 문자로 1차 실무 미팅 소집 일정을 연락드리겠습니다. 대단히 감사합니다.";
+    if (inqCategory === "AI포스 도입문의") {
+      autoReply = "안녕하세요 점주님! EveryBake AI POS 도입 문의가 실시간 접수되었습니다. 담당 기술 지원팀에서 영업장의 빵 진열 환경 및 저울 연동 설치 규격을 파악하여 즉각 연락드리겠습니다. 에브리베이크와 함께 스마트 매장 무인화 솔루션을 성공적으로 구축해 보세요! 대단히 감사합니다.";
+    }
+
     const newInquiry: Inquiry = {
       id: `inq-${Date.now()}`,
       company: inqCompany.trim(),
@@ -2580,8 +2595,7 @@ export default function App() {
       details: inqDetails.trim(),
       date: new Date().toISOString().split("T")[0],
       status: "reception",
-      answer:
-        "안녕하세요 파트너님! 소중한 제안 기획서가 실시간 접수되었습니다. 기술 특허 및 스마트 온습도 연동 테스트 타당성 검사 진행 후 3영업일 이내 문자로 1차 실무 미팅 소집 일정을 연락드리겠습니다. 대단히 감사합니다.",
+      answer: autoReply,
     };
 
     setSubmittedInquiries((prev) => [newInquiry, ...prev]);
@@ -3491,7 +3505,7 @@ export default function App() {
                         플랫폼 전용 서비스 선택
                       </h3>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
                         {/* 1. 도우컨디셔너 / 오븐 */}
                         <div
                           onClick={() => handleNav("equip-list")}
@@ -3516,7 +3530,31 @@ export default function App() {
                           </div>
                         </div>
 
-                        {/* 2. 프리미엄 생지 */}
+                        {/* 2. AI 스마트 포스 */}
+                        <div
+                          onClick={() => handleNav("ai-pos")}
+                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
+                          id="cat-card-ai-pos"
+                        >
+                          <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
+                            🖥️
+                          </div>
+                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
+                            AI 스마트 포스
+                          </h4>
+                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
+                            기기 자동제어 동기화
+                            <br />
+                            실시간 주문 예측 로봇
+                          </p>
+                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
+                              자세히 보기 <ChevronRight className="w-3 h-3" />
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* 3. 프리미엄 생지 */}
                         <div
                           onClick={() => handleNav("dough-main")}
                           className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
@@ -3677,6 +3715,28 @@ export default function App() {
                       </div>
                     </div>
                   </>
+                )}
+
+                {/* ==================================================== */}
+                {/* AI POS VIEW (NEWLY ADDED CATEGORY & SIMULATOR)       */}
+                {/* ==================================================== */}
+                {currentView === "ai-pos" && (
+                  <AiPosDetail
+                    onBack={() => handleNav("home")}
+                    onInquiry={() => handleNav("inquiry")}
+                    posVoiceTranscript={posVoiceTranscript}
+                    setPosVoiceTranscript={setPosVoiceTranscript}
+                    posParsedItems={posParsedItems}
+                    setPosParsedItems={setPosParsedItems}
+                    posOvenSignalSent={posOvenSignalSent}
+                    setPosOvenSignalSent={setPosOvenSignalSent}
+                    posActiveStatus={posActiveStatus}
+                    setPosActiveStatus={setPosActiveStatus}
+                    posWeatherState={posWeatherState}
+                    setPosWeatherState={setPosWeatherState}
+                    isParsingVoice={isParsingVoice}
+                    setIsParsingVoice={setIsParsingVoice}
+                  />
                 )}
 
                 {/* ==================================================== */}
@@ -4050,6 +4110,40 @@ export default function App() {
 
                     {/* SECTION 2: APPLE-STYLE LINEAR STORYTELLING FLOW WITH MULTIPLE PREMIUM IMAGES */}
                     <div className="w-full py-16 border-t border-stone-200/70 space-y-24">
+                      {/* AI 스마트제어 실물 도입 시연 영상 Section - Placed directly above the storytelling headers */}
+                      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+                        <div className="text-center mb-10 space-y-2">
+                          <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase text-blue-600 tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100/50">
+                            <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+                            AI SMART CONTROL REAL VIDEO
+                          </span>
+                          <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
+                            AI 스마트제어 실물 도입 시연 영상
+                          </h2>
+                          <p className="text-stone-500 text-xs font-light max-w-md mx-auto">
+                            실제 베이커리에 가동되는 고정밀 온습도 관리와 일체형 컨트롤 시스템의 실제 제어 모습을 최고 화질로 확인해 보세요.
+                          </p>
+                        </div>
+
+                        <div className="relative bg-[#0c0d12] rounded-[32px] overflow-hidden shadow-2xl border border-stone-200 aspect-video group">
+                          <iframe
+                            src="https://www.youtube.com/embed/mLZZ5pt3Zbc?autoplay=0&mute=1&loop=1&playlist=mLZZ5pt3Zbc&controls=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0"
+                            title="AI 스마트제어 실물 도입 시연 영상"
+                            className="w-full h-full border-0 absolute inset-0 opacity-95 text-[#0c0d12]"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          />
+                          
+                          {/* Inner overlay details to look professional */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/20 via-transparent to-stone-950/10 pointer-events-none" />
+                          
+                          <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 z-10 pointer-events-none">
+                            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                            <span className="text-[9px] font-black tracking-widest text-[#22d3ee] font-mono">IoT ENGINE v3.4 ACTIVE</span>
+                          </div>
+                        </div>
+                      </div>
+
                       {/* Introduction Header for Stories */}
                       <div className="text-center max-w-2xl mx-auto space-y-2 mb-16">
                         <span className="text-[10px] font-black uppercase text-stone-400 tracking-widest font-mono">
@@ -4137,12 +4231,15 @@ export default function App() {
                                 />
                               </div>
                             ) : (
-                              <img
-                                src={kctActualOvenStoryImage}
-                                alt="KCT Smart Pro Actual Product Showpiece"
-                                className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
-                                referrerPolicy="no-referrer"
-                              />
+                              <div className="w-full min-h-[450px] bg-[#fafafa] py-12 flex items-center justify-center relative overflow-hidden">
+                                <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+                                <img
+                                  src={currentDevice.image}
+                                  alt={`${currentDevice.name} Actual Product`}
+                                  className="w-auto h-[400px] object-contain filter drop-shadow-[0_32px_64px_rgba(0,0,0,0.18)] hover:scale-[1.02] transition-transform duration-700 ease-out pointer-events-none"
+                                  referrerPolicy="no-referrer"
+                                />
+                              </div>
                             )}
                           </div>
                           {/* Centered clean description stack */}
@@ -7731,6 +7828,7 @@ export default function App() {
                                 <option>냉동 생지 납품 제안</option>
                                 <option>커피 원두 및 머신 제안</option>
                                 <option>기타 카페 부자재</option>
+                                <option>AI포스 도입문의</option>
                                 <option>일반 고객 Q&A 문의</option>
                               </select>
                             </div>
