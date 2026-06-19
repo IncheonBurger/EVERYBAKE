@@ -370,7 +370,7 @@ export default function App() {
 
   // Navigation View Tracking
   // Current view can be: "home" | "equip-list" | "equip-detail" | "dough-main" | "dough-detail" | "coffee" | "community" | "inquiry" | "login" | "partner-portal"
-  const [currentView, setCurrentView] = useState<string>("ai-pos");
+  const [currentView, setCurrentView] = useState<string>("home");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(
     null,
