@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   Trophy, 
   Sparkles, 
@@ -60,6 +60,80 @@ export default function EventsView({
   selectedEventId,
   setSelectedEventId
 }: EventsViewProps) {
+  // Real-time ticking countdown timers for high urgency & activity
+  const [timeLeft, setTimeLeft] = useState({
+    monday: "14시간 25분 30초",
+    contest: "02일 09시간 12분 45초",
+    sourdough: "23시간 40분 12초",
+    flash: "04시간 15분 02초",
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      // Calculate dynamic seconds to feel absolutely alive
+      const monLeftSecs = Math.max(0, (60 - now.getSeconds()) + (59 - now.getMinutes()) * 60 + ((23 - now.getHours()) % 24) * 3600);
+      const monHrs = Math.floor(monLeftSecs / 3600);
+      const monMins = Math.floor((monLeftSecs % 3605) / 60) % 60;
+      const monSecs = monLeftSecs % 60;
+      
+      const flashLeftSecs = Math.max(0, (60 - now.getSeconds()) + (59 - (now.getMinutes() % 60)) * 60 + (3 - (now.getHours() % 4)) * 3600);
+      const fHrs = Math.floor(flashLeftSecs / 3600);
+      const fMins = Math.floor((flashLeftSecs % 3600) / 60);
+      const fSecs = flashLeftSecs % 60;
+
+      setTimeLeft({
+        monday: `${String(monHrs).padStart(2, '0')}시간 ${String(monMins).padStart(2, '0')}분 ${String(monSecs).padStart(2, '0')}초`,
+        contest: `01일 ${String(monHrs + 3).padStart(2, '0')}시간 ${String(monMins).padStart(2, '0')}분 ${String(monSecs).padStart(2, '0')}초`,
+        sourdough: `23시간 ${String(monMins + 9).padStart(2, '0')}분 ${String(fSecs).padStart(2, '0')}초`,
+        flash: `${String(fHrs).padStart(2, '0')}시간 ${String(fMins).padStart(2, '0')}분 ${String(fSecs).padStart(2, '0')}초`,
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Floating Hearts on Vote logic
+  const [floatingHearts, setFloatingHearts] = useState<{ id: number; x: number; y: number }[]>([]);
+  const nextHeartId = useRef(0);
+
+  const triggerHeartAnimation = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const newHeart = {
+      id: nextHeartId.current++,
+      x,
+      y
+    };
+    
+    setFloatingHearts(prev => [...prev, newHeart]);
+    setTimeout(() => {
+      setFloatingHearts(prev => prev.filter(h => h.id !== newHeart.id));
+    }, 1000);
+  };
+
+  // Interactive lucky scratchcard state
+  const [scratchRevealed, setScratchRevealed] = useState(false);
+  const [scratchedGift, setScratchedGift] = useState<{ code: string; desc: string; icon: string } | null>(null);
+  const [scratchMessage, setScratchMessage] = useState("");
+
+  const GIFTS = [
+    { code: "EBAKE-VIBRANT-15", desc: "시크릿 프리미엄 생지 15% 추가 할인권", icon: "🥐" },
+    { code: "FREE-SHIPPING-DAY", desc: "전국 도우 배송 정기 무료 패스권", icon: "🚚" },
+    { code: "COFFEE-FREE-GIFT", desc: "명장 초이스 프리미엄 에스프레소 원두 500g 증정", icon: "☕" },
+    { code: "OVEN-SPA-PASS", desc: "에베인 오븐 클리닝 케어 2만 원 바우처", icon: "✨" },
+  ];
+
+  const handleScratchReveal = () => {
+    if (scratchRevealed) return;
+    const randomGift = GIFTS[Math.floor(Math.random() * GIFTS.length)];
+    setScratchedGift(randomGift);
+    setScratchRevealed(true);
+    setScratchMessage("축하합니다! 행운의 제빵 할인 코드를 발견했습니다! 슬라이드 복사하여 스토어에서 사용해 보세요. 🎉");
+  };
+
   // Event 1 interactive state (Baking competition)
   const [submissions, setSubmissions] = useState<BakingSubmission[]>([
     {
@@ -172,40 +246,125 @@ export default function EventsView({
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 animate-fade-in text-stone-900 pb-16">
       
+      {/* Dynamic Keyframes Sheet to introduce real playful reactivity */}
+      <style>{`
+        @keyframes float-up {
+          0% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(-50%, -220%) scale(1.6) rotate(12deg);
+          }
+        }
+        @keyframes sweep {
+          0% { transform: translateX(-100%); }
+          50%, 100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          animation: sweep 2s infinite ease-in-out;
+        }
+        .animate-spin-slow {
+          animation: spin 8s linear infinite;
+        }
+      `}</style>
+
       {selectedEventId === null ? (
         // ============================================
         // 1. EVENT LIST VIEW (Main Stacked Banners)
         // ============================================
         <div className="space-y-6">
           {/* Main Top Decorative Greeting Header Panel (from user's image) */}
-          <div className="bg-gradient-to-r from-[#faf5f0] via-[#f7f0eb] to-indigo-50/50 rounded-3xl p-6 md:p-8 border border-stone-200/60 shadow-xs relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="space-y-2.5 max-w-lg">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#f97316] bg-orange-100/50 px-2.5 py-1 rounded-lg">PROMOTIONS & BENEFITS</span>
-              <h1 className="text-2.5xl md:text-3.5xl font-black text-stone-950 tracking-tight leading-tight">
+          <div className="bg-gradient-to-br from-white to-stone-50 rounded-3xl p-6 md:p-8 border border-stone-200/70 shadow-[0_12px_44px_rgba(0,0,0,0.03)] relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="space-y-2.5 max-w-lg relative z-10 text-left">
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#f97316] bg-orange-50 px-2.5 py-1 rounded inline-block">
+                ★ 2026 EVERYBAKE EXCLUSIVE CODES
+              </span>
+              <h1 className="text-2.5xl md:text-3.5xl font-black text-stone-900 tracking-tight leading-tight">
                 진행 중인 혜택 가득<br />
                 이벤트 한눈에 보기
               </h1>
-              <p className="text-xs text-stone-550 font-bold flex items-center gap-1.5">
-                <span>🧁 최상의 레시피 도전부터 파트너 특별 할인 서비스까지 한번에 참여해 보세요.</span>
+              <p className="text-xs text-stone-550 font-medium">
+                전국 에브리베이커 파트너 분들을 위한 최고의 시크릿 레시피 챌린지 및 단독 할인 혜택을 아래에서 바로 확인하십시오.
               </p>
             </div>
             
-            {/* Visual cards resembling Coupon, Benefit, Today in the user's uploaded image */}
-            <div className="flex items-center gap-3 shrink-0 self-center md:self-auto">
-              <div className="bg-purple-500 text-white rounded-2xl p-4 w-22 h-28 flex flex-col justify-between items-center shadow-md rotate-[-4deg] hover:rotate-0 transition-transform">
-                <span className="text-[8.5px] font-black uppercase tracking-wider text-purple-200">COUPON</span>
-                <span className="text-2xl">₩</span>
-                <span className="text-[10px] font-black">할인 혜택</span>
+            {/* Visual cards - converted to elegant Apple B2B minimal slate cards with pulsing indicators */}
+            <div className="flex items-center gap-3 shrink-0 self-center md:self-auto relative z-10">
+              <div className="bg-white border border-stone-200/60 text-stone-850 rounded-2xl p-4 w-22 h-28 flex flex-col justify-between items-center shadow-xs transition-transform hover:-translate-y-0.5">
+                <span className="text-[8px] font-extrabold uppercase tracking-widest text-stone-400">COUPON</span>
+                <span className="text-xl font-medium text-[#f97316]">₩</span>
+                <span className="text-[10px] font-bold">10% 즉시권</span>
               </div>
-              <div className="bg-gradient-to-b from-purple-900 to-indigo-950 text-white rounded-2xl p-4 w-22 h-28 flex flex-col justify-between items-center shadow-md rotate-[2deg] hover:rotate-0 transition-transform -translate-y-1">
-                <span className="text-[8.5px] font-black uppercase tracking-wider text-purple-300">BENEFIT</span>
-                <Gift className="w-6 h-6 text-orange-400" />
-                <span className="text-[10px] font-black">사은 기프트</span>
+              <div className="bg-stone-950 text-white rounded-2xl p-4 w-22 h-28 flex flex-col justify-between items-center shadow-md transition-transform hover:-translate-y-0.5 -translate-y-0.5">
+                <span className="text-[8px] font-extrabold uppercase tracking-widest text-[#f97316]">BENEFIT</span>
+                <Gift className="w-5 h-5 text-orange-400 animate-bounce" />
+                <span className="text-[10px] font-bold">인기 사은품</span>
               </div>
-              <div className="bg-violet-600 text-white rounded-2xl p-4 w-22 h-28 flex flex-col justify-between items-center shadow-md rotate-[-3deg] hover:rotate-0 transition-transform">
-                <span className="text-[8.5px] font-black uppercase tracking-wider text-violet-200">TODAY</span>
-                <Calendar className="w-6 h-6 text-amber-300" />
-                <span className="text-[10px] font-black">매일 밤 11시</span>
+              <div className="bg-white border border-stone-200/60 text-stone-850 rounded-2xl p-4 w-22 h-28 flex flex-col justify-between items-center shadow-xs transition-transform hover:-translate-y-0.5">
+                <span className="text-[8px] font-extrabold uppercase tracking-widest text-stone-400">TODAY</span>
+                <Calendar className="w-5 h-5 text-emerald-650" />
+                <span className="text-[10px] font-bold">콘테스트 중</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Real-time Interactive Lucky Scratch Card Section (Luxury Hotel / Art Museum Concept) */}
+          <div className="bg-gradient-to-br from-[#2D2A28] via-[#23201F] to-[#1C1918] rounded-3xl p-6 md:p-8 text-[#FAF9F6] relative overflow-hidden shadow-xl border border-stone-800">
+            {/* Absolute premium background glow patterns */}
+            <div className="absolute right-0 top-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none -translate-y-12 translate-x-12" />
+            <div className="absolute left-1/4 bottom-0 w-60 h-60 bg-stone-700/5 rounded-full blur-3xl pointer-events-none translate-y-12" />
+            
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+              <div className="space-y-3.5 text-left max-w-xl">
+                <span className="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 text-[10px] sm:text-xs font-bold tracking-widest px-3 py-1 rounded-full uppercase inline-block font-gnb-menu">
+                  ✦ LUXURY BAKING CODES
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#FAF9F6] tracking-tight leading-none font-serif-warm">
+                  오늘의 행운 <span className="text-[#D4AF37]">골드 스크래치 패드</span> ⚜️
+                </h2>
+                <p className="text-[#E8E5DF] text-xs sm:text-sm font-light leading-relaxed font-sans">
+                  프리미엄 파트너십을 맺은 전국의 블랑제 오너 분들을 위한 기품 있는 베네핏 패드입니다. 
+                  아래의 골드 패널을 가볍게 탭하여 에브리베이크 명품 원자재 및 장비 할인 코드를 수확해 보십시오.
+                </p>
+              </div>
+
+              {/* Interactive Scratch Area - Beautifully designed Gold/Silver Contrast Panel */}
+              <div className="w-full sm:w-80 bg-[#1C1918]/60 backdrop-blur-md rounded-2xl p-4 border border-stone-800 shadow-inner flex flex-col items-center">
+                {!scratchRevealed ? (
+                  <button
+                    onClick={handleScratchReveal}
+                    className="w-full h-32 rounded-xl bg-gradient-to-br from-[#ECC880] via-[#E2B755] to-[#C09633] border border-[#F4D99D]/40 flex flex-col items-center justify-center gap-2 cursor-pointer relative overflow-hidden group select-none shadow-lg hover:scale-[1.02] hover:brightness-105 active:scale-[0.98] transition-all"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-shimmer" style={{ animationDuration: '2s' }} />
+                    <Sparkles className="w-7 h-7 text-stone-900 group-hover:text-amber-950 animate-pulse duration-700" />
+                    <span className="text-xs sm:text-sm font-bold text-stone-950 tracking-tight font-sans">클릭하여 골드 패널 긁어보기</span>
+                    <span className="text-[9px] font-bold text-stone-900/60 uppercase tracking-widest font-mono">CLICK TO SCRATCH</span>
+                  </button>
+                ) : (
+                  <div className="w-full h-32 rounded-xl bg-[#FAF9F6] border border-[#D4AF37]/40 flex flex-col items-center justify-center p-3 text-center relative overflow-hidden animate-fade-in shadow-inner">
+                    <div className="text-3xl mb-1">{scratchedGift?.icon}</div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-stone-800 font-sans">{scratchedGift?.desc}</span>
+                    <div className="mt-1.5 flex items-center gap-1.5 bg-[#FAF9F6] border border-[#D4AF37]/35 px-3 py-1 rounded-xl shadow-xs">
+                      <span className="text-xs font-mono font-bold text-[#C09633] tracking-widest">{scratchedGift?.code}</span>
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(scratchedGift?.code || "");
+                          alert(`할인코드 [ ${scratchedGift?.code} ] 가 클립보드에 복사되었습니다! 🎉\n주문 결제 페이지에서 즉시 추가 적용이 가능합니다.`);
+                        }}
+                        className="text-[10px] font-bold text-[#C09633] hover:underline cursor-pointer bg-[#D4AF37]/10 px-1.5 py-0.5 rounded"
+                      >
+                        복사
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {scratchMessage && (
+                  <p className="text-[10px] font-medium text-[#D4AF37] mt-2 animate-bounce">
+                    {scratchMessage}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -216,44 +375,37 @@ export default function EventsView({
             {/* Banner 1: 월요 제빵데이 10% 쿠폰 */}
             <div 
               onClick={() => setSelectedEventId("monday-day")}
-              className="bg-[#fdf9f4]/90 hover:bg-[#faf5ee] border border-orange-100 hover:border-[#f97316] p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
+              className="bg-white hover:bg-orange-50/10 border border-stone-200 hover:border-orange-250 p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
             >
               {/* Event Text Left */}
               <div className="flex flex-col justify-between space-y-4 md:space-y-0 text-left">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="bg-[#f97316] text-white text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-md">매주 월요 정기</span>
-                    <span className="text-[10.5px] font-black text-amber-800">베스트 생지 일주 특가</span>
+                    <span className="bg-[#f97316] text-white text-[9px] font-bold tracking-widest uppercase px-2 py-0.5 rounded">WEEKLY CODES</span>
+                    <span className="inline-flex items-center gap-1 bg-[#f97316]/10 text-[#f97316] text-[10px] px-2.5 py-0.5 rounded-full font-black animate-pulse">● 실시간 LIVE 혜택</span>
                   </div>
-                  <h2 className="text-xl sm:text-2.5xl font-black text-stone-900 leading-tight">
-                    베스트 상품, 더 알뜰하게<br className="hidden sm:inline" />
-                    ~33% + 10% 쿠폰 혜택
+                  <h2 className="text-xl sm:text-2.5xl font-extrabold text-stone-900 tracking-tight leading-none group-hover:text-[#f97316] transition-colors">
+                    소중한 베스트 상품, 더욱 알뜰하게<br className="hidden sm:inline" />
+                    ~33% 브랜드 파격 특가 + 추가 기프트 제안
                   </h2>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-stone-500">
-                  <Clock className="w-3.5 h-3.5 text-stone-400" />
-                  <span>기한: ~ 06.08(월) 오전 11시 마감</span>
+                <div className="flex items-center gap-1.5 text-xs font-black text-[#f97316] bg-orange-50 px-3 py-1.75 rounded-2xl w-fit">
+                  <Clock className="w-3.5 h-3.5 text-[#f97316] animate-spin-slow" />
+                  <span>마감 카운트다운: {timeLeft.monday}</span>
                 </div>
               </div>
 
-              {/* Center Plate / Bread visual representation on the right */}
+              {/* Center Plate / minimal placeholder on the right */}
               <div className="flex items-center justify-end gap-4 mr-0 md:mr-10">
-                <div className="flex -space-x-4 items-center">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-orange-100/50 outline outline-4 outline-white flex items-center justify-center text-3xl shadow-sm">
-                    🥐
-                  </div>
-                  <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-full bg-amber-100 outline outline-4 outline-white flex items-center justify-center text-4xl shadow-md relative z-10">
-                    🥖
-                  </div>
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-yellow-50 outline outline-4 outline-white flex items-center justify-center text-2.5xl shadow-sm">
-                    🍞
-                  </div>
+                <div className="border border-orange-200 bg-orange-50/50 rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-2xs">
+                  <span className="text-[9px] font-mono tracking-widest text-[#f97316] font-black">BENEFIT</span>
+                  <span className="text-xs font-black text-stone-750 mt-1">10% DISCOUNT BUNDLE</span>
                 </div>
               </div>
 
               {/* Far right badge - as shown on "COUPON" purple tab in the user's screenshot */}
-              <div className="hidden md:flex bg-violet-600 group-hover:bg-violet-700 text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
-                <span className="font-extrabold text-[10px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
+              <div className="hidden md:flex bg-stone-900 group-hover:bg-[#f97316] text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
+                <span className="font-bold text-[9px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
                   COUPON BAR
                 </span>
               </div>
@@ -262,41 +414,38 @@ export default function EventsView({
             {/* Banner 2: 오늘의 제빵왕은 바로나 대형 배틀 경연대회 (THE NEW HIGHLIGHT) */}
             <div 
               onClick={() => setSelectedEventId("baking-king")}
-              className="bg-amber-50/70 hover:bg-amber-50 border border-stone-200 hover:border-[#f97316] p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
+              className="bg-white hover:bg-amber-50/15 border border-stone-200 hover:border-amber-300 p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
             >
               {/* Event Text Left */}
               <div className="flex flex-col justify-between space-y-4 md:space-y-0 text-left">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="bg-amber-600 text-white text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-md">에베인 경연배틀</span>
-                    <span className="text-[10.5px] font-black text-amber-900">총 상금 50만 원 신세계상품권 등</span>
+                    <span className="bg-amber-600 text-white text-[9px] font-bold tracking-widest uppercase px-2 py-0.5 rounded">HOT CONTEST STATUS</span>
+                    <span className="inline-flex items-center gap-1 bg-amber-500 text-stone-950 text-[9.5px] px-2.5 py-0.5 rounded-full font-black animate-bounce">🔥 콘테스트 접수 대폭주 중</span>
                   </div>
-                  <h2 className="text-xl sm:text-2.5xl font-black text-stone-900 leading-tight">
-                    "오늘의 제빵왕은 바로 나!"<br />
-                    전국 에브리베이커 동시 베이킹 대회 🏆
+                  <h2 className="text-xl sm:text-2.5xl font-extrabold text-stone-900 tracking-tight leading-none group-hover:text-amber-700 transition-colors">
+                    전국 에브리베이커 동시 오븐 베이킹 실력전 🏆
                   </h2>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-stone-500">
-                  <Calendar className="w-3.5 h-3.5 text-stone-400" />
-                  <span>일정: 06.05(금) ~ 06.10(수) 자정 제출 마감</span>
+                <div className="flex items-center gap-1.5 text-xs font-black text-amber-900 bg-amber-50 px-3 py-1.75 rounded-2xl w-fit">
+                  <Calendar className="w-3.5 h-3.5 text-amber-650" />
+                  <span>접수 마감까지: {timeLeft.contest}</span>
                 </div>
               </div>
 
-              {/* Center visual: trophy, flour, stars */}
+              {/* Center visual: trophy - styled elegantly as simple gold icon outline */}
               <div className="flex items-center justify-end gap-4 mr-0 md:mr-10">
-                <div className="relative flex items-center justify-center p-3 bg-white rounded-2xl border border-stone-150 shadow-xs">
-                  <Trophy className="w-10 h-10 text-amber-500 animate-pulse" />
-                  <Sparkles className="w-5 h-5 text-yellow-500 absolute -top-1 -right-1" />
+                <div className="relative flex items-center justify-center p-3 bg-amber-50 rounded-2xl border border-amber-200 shadow-xs animate-pulse">
+                  <Trophy className="w-7 h-7 text-[#f97316]" />
                 </div>
-                <div className="text-3xl text-left hidden sm:block">
-                  <div>👨‍🍳🌾</div>
-                  <div className="text-[10px] font-bold text-stone-400">#내카페_최고의빵</div>
+                <div className="text-left hidden sm:block">
+                  <span className="text-[10px] font-extrabold text-[#f97316] font-mono">#EVERY_BAKING_KING</span>
                 </div>
               </div>
 
               {/* Far right badge */}
-              <div className="hidden md:flex bg-orange-500 group-hover:bg-orange-600 text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
-                <span className="font-extrabold text-[10px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
+              <div className="hidden md:flex bg-stone-950 text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
+                <span className="font-bold text-[9px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
                   CONTEST
                 </span>
               </div>
@@ -305,38 +454,37 @@ export default function EventsView({
             {/* Banner 3: 친환경 깜빠뉴 20% 특별 장바구니 쿠폰 */}
             <div 
               onClick={() => setSelectedEventId("eco-sourdough")}
-              className="bg-stone-100/90 hover:bg-stone-150/80 border border-stone-200 hover:border-[#f97316] p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
+              className="bg-white hover:bg-emerald-50/15 border border-stone-200 hover:border-emerald-300 p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
             >
               {/* Event Text Left */}
               <div className="flex flex-col justify-between space-y-4 md:space-y-0 text-left">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="bg-emerald-700 text-white text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-md">친환경 인증 기획</span>
-                    <span className="text-[10.5px] font-semibold text-emerald-800">자연효모 저온발효 빵가루</span>
+                    <span className="bg-emerald-600 text-white text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded">ECO-ORGANIC</span>
+                    <span className="text-[10.5px] font-extrabold text-emerald-700 uppercase">자연휴면 저온발효 친환경 위크 🌿</span>
                   </div>
-                  <h2 className="text-xl sm:text-2.5xl font-black text-stone-900 leading-tight">
-                    친환경 브랜드 유럽식 깜빠뉴<br />
-                    20% 특별 장바구니 쿠폰
+                  <h2 className="text-xl sm:text-2.5xl font-extrabold text-stone-900 tracking-tight leading-none group-hover:text-emerald-700 transition-colors">
+                    친환경 유기농 유럽식 깜빠뉴 & 호밀 생지<br />
+                    20% 특별 장바구니 특별 적립금 보너스
                   </h2>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-stone-500">
-                  <Clock className="w-3.5 h-3.5 text-stone-400" />
-                  <span>기한: ~ 06.08(월) 오전 11시 마감</span>
+                <div className="flex items-center gap-1.5 text-xs font-black text-emerald-800 bg-emerald-50 px-3 py-1.75 rounded-2xl w-fit">
+                  <Clock className="w-3.5 h-3.5 text-emerald-650" />
+                  <span>혜택 증정 기한: {timeLeft.sourdough}</span>
                 </div>
               </div>
 
-              {/* Center visual resembling tissue or organic package in user's image */}
+              {/* Center visual: minimal text badge */}
               <div className="flex items-center justify-end gap-4 mr-0 md:mr-10">
-                <div className="bg-stone-50 border border-stone-200 rounded-2xl p-4 flex flex-col items-center gap-1 text-center shadow-2xs max-w-[130px]">
-                  <span className="text-2xl">🌾</span>
-                  <p className="text-[10px] font-black text-stone-700">천연 호밀 깜빠뉴</p>
-                  <p className="text-[9px] font-semibold text-neutral-400 bg-neutral-100 px-1.5 py-0.5 rounded">ECO-LINE</p>
+                <div className="bg-emerald-50/50 border border-emerald-200 rounded-2xl p-4 flex flex-col items-center gap-1 select-none text-center shadow-2xs max-w-[130px]">
+                  <p className="text-[9.5px] font-black text-[#f97316]">천연 호밀 깜빠뉴</p>
+                  <p className="text-[8.5px] font-black text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">ECO-LINE</p>
                 </div>
               </div>
 
               {/* Far right badge */}
-              <div className="hidden md:flex bg-violet-600 group-hover:bg-violet-700 text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
-                <span className="font-extrabold text-[10px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
+              <div className="hidden md:flex bg-stone-900 group-hover:bg-emerald-700 text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
+                <span className="font-bold text-[9px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
                   COUPON BAR
                 </span>
               </div>
@@ -345,43 +493,42 @@ export default function EventsView({
             {/* Banner 4: 오늘만 이 가격 지금 반값 세일 */}
             <div 
               onClick={() => setSelectedEventId("half-price")}
-              className="bg-gradient-to-r from-stone-50 to-stone-100/50 hover:bg-stone-100 border border-stone-250 hover:border-[#f97316] p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
+              className="bg-white hover:bg-rose-50/15 border border-stone-200 hover:border-rose-305 p-6 sm:p-8 rounded-3xl transition-all cursor-pointer flex flex-col md:flex-row justify-between items-stretch gap-6 relative group overflow-hidden shadow-xs hover:shadow-md"
             >
               {/* Event Text Left */}
               <div className="flex flex-col justify-between space-y-4 md:space-y-0 text-left">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="bg-stone-900 text-white text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-md">24H 한정</span>
-                    <span className="text-[10.5px] font-black text-red-650">오늘 하루 강력 특가</span>
+                    <span className="bg-rose-600 text-white text-[9px] font-bold tracking-widest uppercase px-2 py-0.5 rounded">24H EXCLUSIVE</span>
+                    <span className="inline-flex items-center gap-1 bg-red-650 text-white text-[9.5px] px-2.5 py-0.5 rounded-full font-black animate-pulse">⚡ 오늘 단 24시 마감 타임오퍼</span>
                   </div>
-                  <h2 className="text-xl sm:text-2.5xl font-black text-stone-900 leading-tight">
-                    오늘만 이 가격,<br />
-                    스페셜 원두 & 스마트 오븐 반값 세일 중 🔥
+                  <h2 className="text-xl sm:text-2.5xl font-extrabold text-stone-900 tracking-tight leading-none group-hover:text-rose-700 transition-colors">
+                    스페셜 원두 리스트 & 최고급 스마트 오븐기기<br />한정 특별 반값 서프라이즈 제안
                   </h2>
                 </div>
-                <div className="flex items-center gap-1 text-xs font-extrabold text-[#f97316] hover:underline">
-                  <span>오늘의 특가 보러 가기</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1 text-xs font-black text-rose-700 bg-rose-55 px-3 py-1.75 rounded-2xl w-fit">
+                  <Flame className="w-3.5 h-3.5 text-rose-500 animate-bounce" />
+                  <span>행사 남은 기간: {timeLeft.flash}</span>
                 </div>
               </div>
 
               {/* Right wooden visual representation */}
               <div className="flex items-center justify-end gap-4 mr-0 md:mr-10">
-                <div className="bg-amber-100/40 p-4 rounded-2xl border border-amber-200/50 flex flex-col items-center justify-center text-center">
-                  <span className="text-2xl">📦🔥</span>
-                  <span className="text-[9px] font-extrabold text-stone-500 uppercase tracking-tighter mt-1">에베인 타임 특가</span>
+                <div className="bg-rose-50/50 p-4 rounded-2xl border border-rose-200 flex flex-col items-center justify-center text-center shadow-2xs">
+                  <span className="text-[9.5px] font-black text-rose-600 uppercase tracking-tighter">파트너 단독 타임세일</span>
                 </div>
               </div>
 
               {/* Far right badge */}
-              <div className="hidden md:flex bg-stone-900 group-hover:bg-black text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
-                <span className="font-extrabold text-[10px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
+              <div className="hidden md:flex bg-[#0c0b0a] text-white w-10 items-center justify-center absolute right-0 top-0 bottom-0 transition-colors">
+                <span className="font-bold text-[9px] uppercase tracking-widest [writing-mode:vertical-lr] py-4">
                   SUPER SALE
                 </span>
               </div>
             </div>
 
           </div>
+
         </div>
       ) : (
         // ============================================
@@ -625,10 +772,15 @@ export default function EventsView({
                           </div>
 
                           {/* Like/Vote integration */}
-                          <div className="flex items-center justify-end">
+                          <div className="flex items-center justify-end relative">
                             <button
-                              onClick={() => handleVote(sub.id)}
-                              className={`flex items-center gap-1 px-3 py-1.25 rounded-lg text-[10.5px] font-black tracking-tight transition-all cursor-pointer ${
+                              onClick={(e) => {
+                                handleVote(sub.id);
+                                if (!sub.hasVoted) {
+                                  triggerHeartAnimation(e);
+                                }
+                              }}
+                              className={`flex items-center gap-1 px-3 py-1.25 rounded-lg text-[10.5px] font-black tracking-tight transition-all cursor-pointer select-none active:scale-95 ${
                                 sub.hasVoted 
                                   ? "bg-red-50 text-red-600 border border-red-200" 
                                   : "bg-stone-100 hover:bg-stone-200 text-stone-600 border border-stone-150"
@@ -637,6 +789,21 @@ export default function EventsView({
                               <Heart className={`w-3.5 h-3.5 ${sub.hasVoted ? "fill-red-500 text-red-600" : "text-stone-400"}`} />
                               <span>{sub.hasVoted ? "투표 취소" : "추천하기"} ({sub.votes})</span>
                             </button>
+
+                            {/* Render floating heart particles relative to this container */}
+                            {floatingHearts.map((heart) => (
+                              <span
+                                key={heart.id}
+                                className="absolute pointer-events-none text-red-500 font-extrabold text-lg z-50"
+                                style={{
+                                  left: heart.x,
+                                  top: heart.y,
+                                  animation: "float-up 1s ease-out forwards",
+                                }}
+                              >
+                                ❤️
+                              </span>
+                            ))}
                           </div>
                         </div>
                       </div>

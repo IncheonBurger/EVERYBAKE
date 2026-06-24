@@ -49,7 +49,7 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
   // Video Player States
   const [videoFileUrl, setVideoFileUrl] = useState<string | null>(null);
   const [videoPlaying, setVideoPlaying] = useState<boolean>(true);
-  const [videoActiveTab, setVideoActiveTab] = useState<"demo" | "upload">("demo");
+  const [videoActiveTab, setVideoActiveTab] = useState<"demo" | "upload" | "preview">("preview");
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // Sound generator (Web Audio API)
@@ -249,371 +249,251 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
     };
   }, []);
 
-  // HTML single file code definition matching Apple UX exactly
+  // HTML single file code definition matching Premium Gallery & Magazine design exactly
   const singleHtmlCode = `<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hannet AI SCANNER S•CO — EveryBake</title>
-  <!-- Premium Pretendard Font Face -->
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css">
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            appleGray: {
-              50: '#f5f5f7',
-              100: '#e8e8ed',
-              400: '#86868b',
-              800: '#1d1d1f',
-              900: '#121212',
-            }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryBake - Premium Bakery Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    
+    <style>
+        :root {
+            --bg-color: #FAF9F6; /* 고급스러운 웜 오프화이트 */
+            --text-main: #1a1a1a;
+            --text-muted: #888888;
+            --border-color: #e5e5e5;
         }
-      }
-    }
-  </script>
-  <style>
-    /* Clean Apple Fluid Scroll-Driven Entry CSS */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.reveal-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: 'Pretendard', sans-serif; overflow-x: hidden; }
+        
+        /* 폰트 유틸리티 */
+        .serif { font-family: 'Noto Serif KR', serif; }
+
+        /* --- 1. 투명하고 매끄러운 헤더 --- */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+            padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center;
+            background: transparent; transition: background 0.3s;
+        }
+        .logo { font-size: 2rem; font-weight: 900; letter-spacing: 1px; cursor: pointer; color: #fff; transition: color 0.3s; }
+        .nav-links { display: flex; gap: 3rem; }
+        .nav-links a { text-decoration: none; font-weight: 600; color: #fff; font-size: 1rem; transition: color 0.3s; }
+        .nav-icons { color: #fff; font-size: 1.2rem; display: flex; gap: 1.5rem; }
+        
+        /* 스크롤 시 헤더 반전 (흰색 배경) */
+        header.scrolled { background: rgba(250, 249, 246, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
+        header.scrolled .logo, header.scrolled .nav-links a, header.scrolled .nav-icons { color: var(--text-main); }
+
+        /* --- 2. 100vh 풀스크린 메인 슬라이더 (이분할 폐기) --- */
+        .hero-slider { position: relative; width: 100%; height: 100vh; overflow: hidden; background: #000; }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 1s ease-in-out;
+            background-size: cover; background-position: center;
+        }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); } /* 텍스트 가독성용 딤 처리 */
+        
+        .slide-content {
+            position: absolute; top: 50%; left: 10%; transform: translateY(-50%); z-index: 2; color: #fff;
+        }
+        .slide-title { font-size: 4.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 1.5rem; }
+        .slide-desc { font-size: 1.2rem; font-weight: 300; margin-bottom: 3rem; letter-spacing: 1px; }
+        .btn-outline { 
+            display: inline-block; padding: 1rem 2.5rem; border: 1px solid #fff; color: #fff; 
+            text-decoration: none; font-weight: 400; transition: all 0.3s; 
+        }
+        .btn-outline:hover { background: #fff; color: #000; }
+
+        /* 슬라이더 컨트롤러 */
+        .slider-controls { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; align-items: center; gap: 2rem; color: #fff; font-size: 1.1rem; }
+        .control-btn { cursor: pointer; opacity: 0.7; transition: opacity 0.3s; }
+        .control-btn:hover { opacity: 1; }
+        .slide-indicator { font-weight: 600; letter-spacing: 2px; }
+
+        /* --- 3. Signature Lineup (갤러리형 추천상품) --- */
+        .signature-section { padding: 10rem 5%; background: var(--bg-color); }
+        .section-header { margin-bottom: 5rem; text-align: left; }
+        .section-subtitle { font-size: 0.9rem; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 1rem; text-transform: uppercase; }
+        .section-title { font-size: 3rem; font-weight: 700; color: var(--text-main); }
+        
+        .gallery-wrap { display: flex; gap: 2rem; overflow-x: auto; padding-bottom: 2rem; scrollbar-width: none; }
+        .gallery-wrap::-webkit-scrollbar { display: none; }
+        
+        .gallery-item { flex: 0 0 400px; cursor: pointer; group; }
+        .item-img { width: 100%; height: 500px; background: #e5e5e5; margin-bottom: 1.5rem; overflow: hidden; }
+        .item-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gallery-item:hover .item-img img { transform: scale(1.03); }
+        
+        .item-info { display: flex; justify-content: space-between; align-items: flex-end; }
+        .item-text h4 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 600; }
+        .item-text p { color: var(--text-muted); font-size: 1rem; }
+        .btn-cart { text-decoration: underline; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-underline-offset: 4px; }
+
+        /* --- 4. Magazine / Journal Section (비대칭 레이아웃) --- */
+        .journal-section { display: flex; min-height: 80vh; background: #fff; border-top: 1px solid var(--border-color); }
+        .journal-img { flex: 1; background: #e5e5e5; background-image: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop'); background-size: cover; background-position: center; }
+        .journal-content { flex: 1; padding: 8rem 5%; display: flex; flex-direction: column; justify-content: center; }
+        .journal-content h2 { font-size: 3.5rem; font-weight: 700; line-height: 1.3; margin-bottom: 2rem; }
+        .journal-content p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 4rem; max-width: 80%; }
+        .btn-dark { display: inline-block; padding: 1rem 3rem; background: var(--text-main); color: #fff; text-decoration: none; width: fit-content; border: 1px solid var(--text-main); transition: all 0.3s; }
+        .btn-dark:hover { background: transparent; color: var(--text-main); }
+    </style>
 </head>
-<body class="bg-white text-appleGray-800 font-sans antialiased overflow-x-hidden selection:bg-appleGray-100 selection:text-black">
+<body>
 
-  <!-- Apple Global Navigation Header -->
-  <header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-appleGray-100/80">
-    <div class="max-w-6xl mx-auto px-6 h-14 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <span class="text-sm font-bold text-black tracking-tight">EveryBake AI POS</span>
-        <span class="text-appleGray-100">|</span>
-        <span class="text-xs text-appleGray-400 font-medium">S•CO AI Scanner</span>
-      </div>
-      <nav class="flex items-center gap-6">
-        <a href="#hero" class="text-xs text-appleGray-400 hover:text-black transition-colors">개요</a>
-        <a href="#360view" class="text-xs text-appleGray-400 hover:text-black transition-colors">디자인</a>
-        <a href="#howitworks" class="text-xs text-appleGray-400 hover:text-black transition-colors">작동방식</a>
-        <a href="#details" class="text-xs text-appleGray-400 hover:text-black transition-colors">사양</a>
-        <button class="px-3.5 py-1.5 bg-[#1d1d1f] hover:bg-black text-[11px] font-bold text-white rounded-full transition-all active:scale-95">도입 제안 요청</button>
-      </nav>
-    </div>
-  </header>
+    <header id="main-header">
+        <div class="logo serif">EveryBake</div>
+        <nav class="nav-links">
+            <a href="#">Store</a>
+            <a href="#">Event</a>
+            <a href="#">Community</a>
+            <a href="#">Partnership</a>
+        </nav>
+        <div class="nav-icons">
+            <span>Log In</span>
+            <span>Cart(0)</span>
+        </div>
+    </header>
 
-  <!-- 1. Hero Section (메인 화면) -->
-  <section id="hero" class="min-h-screen bg-appleGray-50 flex flex-col justify-between pt-16 pb-12 relative overflow-hidden">
-    <div class="max-w-5xl mx-auto px-6 text-center pt-8 space-y-5 reveal">
-      <span class="text-[10px] font-black tracking-widest text-[#f97316] uppercase bg-[#f97316]/5 px-3.5 py-1 rounded-full border border-[#f97316]/10 inline-block">
-        EveryBake S•CO AI Scanner
-      </span>
-      <h1 class="text-4xl sm:text-6xl font-black text-black tracking-tighter leading-[1.08]">
-        AI 포스.<br />
-        빵을 올리고, 인식하고, 결제까지.
-      </h1>
-      <p class="text-appleGray-400 text-sm sm:text-base max-w-xl mx-auto font-light leading-relaxed">
-        차가운 정밀 공학 알루미늄 바디와 무결점 지능형 비전 AI 솔루션.<br />
-        오류 없는 신속한 체크아웃 경험이 베이커리 매장의 가치를 극대화합니다.
-      </p>
-    </div>
-
-    <!-- Main View Image (ai_pos_main.png) -->
-    <div class="max-w-4xl mx-auto px-6 w-full flex justify-center items-center py-6 reveal">
-      <img src="./images/ai_pos_main.png" alt="AI포스 메인" class="max-h-[500px] w-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.08)]">
-    </div>
-
-    <!-- Mouse Scroll Down indicator -->
-    <div class="flex flex-col items-center justify-center gap-1.5 text-[10px] text-appleGray-400 reveal">
-      <span class="font-bold tracking-widest uppercase">SCROLL FOR COMPLETE HARNESS</span>
-      <div class="w-1 h-3 bg-appleGray-400/25 rounded-full relative overflow-hidden">
-        <div class="w-full h-1/2 bg-appleGray-400 absolute top-0 rounded-full animate-bounce"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. 360 View Section (정면 / 측면 / 후면) -->
-  <section id="360view" class="py-24 bg-white border-b border-appleGray-100">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="text-center mb-16 space-y-3 reveal">
-        <span class="text-[10px] font-bold text-appleGray-400 uppercase tracking-widest">360° PRECISION PROFILE</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-black tracking-tight">
-          모든 각도에서 완벽한 폼팩터.
-        </h2>
-        <p class="text-appleGray-400 text-xs sm:text-sm max-w-lg mx-auto font-light leading-relaxed">
-          어떤 각도에서도 타협 없는 일체형 아키텍처.<br />
-          인간 공학과 미니멀리즘 디자인이 빚어낸 견고하고 유려한 자태.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- 2.1 FRONT -->
-        <div class="bg-appleGray-50 rounded-[28px] p-6 flex flex-col justify-between items-center text-center shadow-sm hover:shadow-md transition-all h-[420px] reveal">
-          <span class="text-[10px] font-bold text-[#f97316] tracking-wider uppercase font-mono bg-[#f97316]/5 px-2.5 py-0.5 rounded-full border border-[#f97316]/10">01 / FRONT VIEW</span>
-          <div class="flex-1 flex items-center justify-center py-4 w-full">
-            <img src="./images/ai_pos_front.png" alt="정면" class="max-h-[220px] w-auto object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.06)] hover:scale-105 transition-transform duration-500">
-          </div>
-          <div class="space-y-1">
-            <h4 class="text-xs font-black text-black">정면에 최적화된 작동 중심 구조</h4>
-            <p class="text-[11px] text-appleGray-450 font-light leading-relaxed px-2">
-              한 장의 글래스 스크린과 저지상고 플레이트. 고객이 직관적으로 빵을 정위치에 놓도록 돕습니다.
-            </p>
-          </div>
+    <section class="hero-slider">
+        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1581336648835-027581179ab8?q=80&w=2070&auto=format&fit=crop');">
+            <div class="slide-content">
+                <h1 class="slide-title serif">완벽한 굽기의 미학,<br>스마트 디바이스</h1>
+                <p class="slide-desc">좁은 매장의 한계를 정복하는 170cm 수직 적층 오븐.</p>
+                <a href="#" class="btn-outline">자세히 보기 +</a>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1608198093002-ad4e005484ec?q=80&w=2069&auto=format&fit=crop');">
+            <div class="slide-content">
+                <h1 class="slide-title serif">명장의 숨결이 깃든<br>프리미엄 생지</h1>
+                <p class="slide-desc">최고의 재료와 명장의 데이터가 만들어내는 결의 차이.</p>
+                <a href="#" class="btn-outline">자세히 보기 +</a>
+            </div>
         </div>
 
-        <!-- 2.2 SIDE -->
-        <div class="bg-appleGray-50 rounded-[28px] p-6 flex flex-col justify-between items-center text-center shadow-sm hover:shadow-md transition-all h-[420px] reveal">
-          <span class="text-[10px] font-bold text-[#f97316] tracking-wider uppercase font-mono bg-[#f97316]/5 px-2.5 py-0.5 rounded-full border border-[#f97316]/10">02 / SIDE VIEW</span>
-          <div class="flex-1 flex items-center justify-center py-4 w-full">
-            <img src="./images/ai_pos_side.png" alt="측면" class="max-h-[220px] w-auto object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.06)] hover:scale-105 transition-transform duration-500">
-          </div>
-          <div class="space-y-1">
-            <h4 class="text-xs font-black text-black">인체공학적 수직 암 설계</h4>
-            <p class="text-[11px] text-appleGray-450 font-light leading-relaxed px-2">
-              가장 이상적인 결제 시야각 15도를 만족시키는 미니멀 기하학 지지 프레임.
-            </p>
-          </div>
+        <div class="slider-controls">
+            <div class="control-btn" id="prev-btn">〈</div>
+            <div class="slide-indicator"><span id="current-slide">1</span> / 2</div>
+            <div class="control-btn" id="pause-btn">||</div>
+            <div class="control-btn" id="next-btn">〉</div>
+        </div>
+    </section>
+
+    <section class="signature-section">
+        <div class="section-header">
+            <p class="section-subtitle">Best Product</p>
+            <h2 class="section-title serif">추천상품</h2>
+            <p style="color: var(--text-muted); margin-top: 1rem;">지금 가장 사랑받는 인기 상품들을 만나보세요.</p>
         </div>
 
-        <!-- 2.3 REAR -->
-        <div class="bg-appleGray-50 rounded-[28px] p-6 flex flex-col justify-between items-center text-center shadow-sm hover:shadow-md transition-all h-[420px] reveal">
-          <span class="text-[10px] font-bold text-[#f97316] tracking-wider uppercase font-mono bg-[#f97316]/5 px-2.5 py-0.5 rounded-full border border-[#f97316]/10">03 / REAR VIEW</span>
-          <div class="flex-1 flex items-center justify-center py-4 w-full">
-            <img src="./images/ai_pos_back.png" alt="후면" class="max-h-[220px] w-auto object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.06)] hover:scale-105 transition-transform duration-500">
-          </div>
-          <div class="space-y-1">
-            <h4 class="text-xs font-black text-black">타협 없는 깔끔한 선 정리</h4>
-            <p class="text-[11px] text-appleGray-450 font-light leading-relaxed px-2">
-              배선을 프레임 쉘 내부공간으로 완전히 매립시켜, 뒤에서 보아도 군더더기 없는 전경을 선사합니다.
-            </p>
-          </div>
+        <div class="gallery-wrap">
+            <div class="gallery-item">
+                <div class="item-img"><img src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=80&w=1914&auto=format&fit=crop" alt="생지"></div>
+                <div class="item-info">
+                    <div class="item-text">
+                        <h4>오리지널 프랑스 크루아상</h4>
+                        <p>68,000원</p>
+                    </div>
+                    <div class="btn-cart">CART</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="item-img"><img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=2070&auto=format&fit=crop" alt="생지"></div>
+                <div class="item-info">
+                    <div class="item-text">
+                        <h4>천연 효모 호밀 시골 깜빠뉴</h4>
+                        <p>48,000원</p>
+                    </div>
+                    <div class="btn-cart">CART</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="item-img"><img src="https://images.unsplash.com/photo-1589367920969-ab8e050eb0e9?q=80&w=1974&auto=format&fit=crop" alt="생지"></div>
+                <div class="item-info">
+                    <div class="item-text">
+                        <h4>명장 생지 샘플 패키지</h4>
+                        <p>29,900원</p>
+                    </div>
+                    <div class="btn-cart">CART</div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="item-img"><img src="https://images.unsplash.com/photo-1598373182133-52452f7691ef?q=80&w=2070&auto=format&fit=crop" alt="생지"></div>
+                <div class="item-info">
+                    <div class="item-text">
+                        <h4>베이킹 명인 호밀 베이글</h4>
+                        <p>49,000원</p>
+                    </div>
+                    <div class="btn-cart">CART</div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 3. How It Works Section (작동 방식) -->
-  <section id="howitworks" class="py-24 bg-appleGray-50 border-b border-appleGray-100">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="text-center mb-16 space-y-3 reveal">
-        <span class="text-[10px] font-bold text-appleGray-400 uppercase tracking-widest font-mono">FLOW PIPELINE</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-black tracking-tight">
-          더 빠르고, 더 스마트한 셀프 계산 경험.
-        </h2>
-        <p class="text-appleGray-400 text-xs sm:text-sm max-w-lg mx-auto font-light leading-relaxed">
-          올려두고, 단 0.2초 만에 인식하고, 결제까지 물 흐르듯.<br />
-          간결하고 완벽한 시나리오를 경험하세요.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- STEP 1 -->
-        <div class="bg-white rounded-[24px] p-6 shadow-xs border border-appleGray-100/50 hover:border-black transition-all flex flex-col justify-between h-[360px] reveal">
-          <div class="space-y-2">
-            <span class="text-[10px] font-extrabold text-[#f97316] font-mono">STEP 01</span>
-            <h4 class="text-sm font-bold text-black font-sans">01 빵을 올리면</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              비전 플레이트 정중앙에 빵을 올립니다. 로드셀 정밀 계측 엔진이 즉각 활성화됩니다.
-            </p>
-          </div>
-          <div class="w-full flex justify-center items-center py-2 h-[160px]">
-            <img src="./images/ai_pos_step1.png" alt="01 빵을 올리면" class="max-h-[140px] w-auto object-contain drop-shadow-md">
-          </div>
+    <section class="journal-section">
+        <div class="journal-img"></div>
+        <div class="journal-content">
+            <p class="section-subtitle">EveryBake Journal</p>
+            <h2 class="serif">맛과 정성을 담아<br>빵의 가치를 재해석하다</h2>
+            <p>빵을 통해 일상 속 작은 행복과 특별한 순간을 선하는 베이커리. 에브리베이크는 성실한 재료와 정성을 담은 제작 과정으로 최고의 품질을 유지하며, 사람과 사람을 연결하는 커뮤니티로 남겠습니다.</p>
+            <a href="#" class="btn-dark">자세히 보기 +</a>
         </div>
+    </section>
 
-        <!-- STEP 2 -->
-        <div class="bg-white rounded-[24px] p-6 shadow-xs border border-appleGray-100/50 hover:border-black transition-all flex flex-col justify-between h-[360px] reveal">
-          <div class="space-y-2">
-            <span class="text-[10px] font-extrabold text-[#f97316] font-mono">STEP 02</span>
-            <h4 class="text-sm font-bold text-black font-sans">02 AI가 인식하고</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              카메라가 형태와 질감을 정밀 분석하여, 어떤 빵인지 오차 없이 0.2초 이내 판별합니다.
-            </p>
-          </div>
-          <div class="w-full flex justify-center items-center py-2 h-[160px]">
-            <img src="./images/ai_pos_step2.png" alt="02 AI가 인식하고" class="max-h-[140px] w-auto object-contain drop-shadow-md">
-          </div>
-        </div>
-
-        <!-- STEP 3 -->
-        <div class="bg-white rounded-[24px] p-6 shadow-xs border border-appleGray-100/50 hover:border-black transition-all flex flex-col justify-between h-[360px] reveal">
-          <div class="space-y-2">
-            <span class="text-[10px] font-extrabold text-[#f97316] font-mono">STEP 03</span>
-            <h4 class="text-sm font-bold text-black font-sans">03 상품과 가격 확인</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              검출 결과가 포스 디스플레이에 노출되며, 수량과 최종 가치를 명료히 정리합니다.
-            </p>
-          </div>
-          <div class="w-full flex justify-center items-center py-2 h-[160px]">
-            <img src="./images/ai_pos_step3.png" alt="03 상품/가격 확인" class="max-h-[140px] w-auto object-contain drop-shadow-md">
-          </div>
-        </div>
-
-        <!-- STEP 4 -->
-        <div class="bg-white rounded-[24px] p-6 shadow-xs border border-appleGray-100/50 hover:border-black transition-all flex flex-col justify-between h-[360px] reveal">
-          <div class="space-y-2">
-            <span class="text-[10px] font-extrabold text-[#f97316] font-mono">STEP 04</span>
-            <h4 class="text-sm font-bold text-black font-sans">04 결제 완료</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              NFC 비접촉, 카드 스마트 투입, 페이 결재 등 일체형 결제 스택에서 단번에 영수 처리를 완료합니다.
-            </p>
-          </div>
-          <div class="w-full flex justify-center items-center py-2 h-[160px]">
-            <img src="./images/ai_pos_step4.png" alt="04 결제 완료" class="max-h-[140px] w-auto object-contain drop-shadow-md">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Details & Material (디테일 컷) -->
-  <section id="details" class="py-24 bg-white">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="text-center mb-16 space-y-3 reveal">
-        <span class="text-[10px] font-bold text-appleGray-400 uppercase tracking-widest font-mono">INNOVATIVE CRAFT</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-black tracking-tight">
-          정밀한 설계, 혁신적인 디테일.
-        </h2>
-        <p class="text-appleGray-400 text-xs sm:text-sm max-w-sm mx-auto font-light leading-relaxed">
-          수려한 외관 너머, 모든 디테일 구성 요소가 유기적 일치를 이룹니다.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-        <!-- DETAIL 1 -->
-        <div class="bg-appleGray-50 rounded-[28px] p-6 flex flex-col justify-between hover:shadow-md transition-all h-[420px] reveal">
-          <div class="space-y-1.5 text-left">
-            <span class="text-[10px] font-bold text-[#f97316] tracking-wider uppercase font-mono">01 / VISION SCANNER</span>
-            <h4 class="text-sm font-extrabold text-black">고해상도 카메라 & LED 조명</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              카메라 하프 미러 가공부 밑의 무결점 LED 인선 인디케이터가 AI 상태 및 스캔 조도를 완벽하게 자동 보정합니다.
-            </p>
-          </div>
-          <div class="flex-1 flex items-center justify-center w-full py-4 overflow-hidden rounded-xl">
-            <img src="./images/ai_pos_detail1.png" alt="고해상도 카메라 & LED 조명" class="max-h-[220px] w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform duration-500">
-          </div>
-        </div>
-
-        <!-- DETAIL 2 -->
-        <div class="bg-appleGray-50 rounded-[28px] p-6 flex flex-col justify-between hover:shadow-md transition-all h-[420px] reveal">
-          <div class="space-y-1.5 text-left">
-            <span class="text-[10px] font-bold text-[#f97316] tracking-wider uppercase font-mono">02 / LIGHT GUIDE</span>
-            <h4 class="text-sm font-extrabold text-black">부드러운 곡선과 라이트 가이드</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              CNC 정밀 벤딩 기저의 실버 쉘라인을 따라 유려하게 점멸되는 파장 라인. 매장의 고급 감성을 완성하는 마침표입니다.
-            </p>
-          </div>
-          <div class="flex-1 flex items-center justify-center w-full py-4 overflow-hidden rounded-xl">
-            <img src="./images/ai_pos_detail2.png" alt="부드러운 곡선과 라이트 가이드" class="max-h-[220px] w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform duration-500">
-          </div>
-        </div>
-
-        <!-- DETAIL 3 -->
-        <div class="bg-appleGray-50 rounded-[28px] p-6 flex flex-col justify-between hover:shadow-md transition-all h-[420px] reveal">
-          <div class="space-y-1.5 text-left">
-            <span class="text-[10px] font-bold text-[#f97316] tracking-wider uppercase font-mono">03 / NON-SLIP SCAN MAT</span>
-            <h4 class="text-sm font-extrabold text-black">논슬립 스캔 매트</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              분진과 밀가루 미끄러짐 유입을 원천 차단하는 고급 항균 고무 매트 스케일 탑재. 오염에도 극세사 천으로 가벼이 세척 가능합니다.
-            </p>
-          </div>
-          <div class="flex-1 flex items-center justify-center w-full py-4 overflow-hidden rounded-xl">
-            <img src="./images/ai_pos_detail3.png" alt="논슬립 스캔 매트" class="max-h-[220px] w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform duration-500">
-          </div>
-        </div>
-
-        <!-- DETAIL 4 -->
-        <div class="bg-appleGray-50 rounded-[28px] p-6 flex flex-col justify-between hover:shadow-md transition-all h-[420px] reveal">
-          <div class="space-y-1.5 text-left">
-            <span class="text-[10px] font-bold text-[#f97316] tracking-wider uppercase font-mono">04 / PAYMENT MODULE</span>
-            <h4 class="text-sm font-extrabold text-black">통합 결제 모듈</h4>
-            <p class="text-[11px] text-appleGray-450 leading-relaxed font-light">
-              체크아웃 영역의 한 획을 긋는 다기능 결제 동글. IC 리더, MST, 바코드, QR 및 NFC 수취 지원을 일체화하였습니다.
-            </p>
-          </div>
-          <div class="flex-1 flex items-center justify-center w-full py-4 overflow-hidden rounded-xl">
-            <img src="./images/ai_pos_detail4.png" alt="통합 결제 모듈" class="max-h-[220px] w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform duration-500">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Spec Table Section -->
-  <section class="bg-appleGray-50 py-20 border-t border-appleGray-100">
-    <div class="max-w-4xl mx-auto px-6 space-y-10">
-      <div class="space-y-2 reveal">
-        <h3 class="text-xl font-bold text-black tracking-tight">AI POS 주요 시스템 하드웨어 연원 사양</h3>
-        <p class="text-xs text-appleGray-400 font-light leading-relaxed">
-          에브리베이크 챔버 라인에 완전 동치되어 납품되는 프리미엄 지능형 하드웨어 단말 제원 사양서입니다.
-        </p>
-      </div>
-
-      <div class="border border-appleGray-100 bg-white rounded-2xl overflow-hidden reveal">
-        <div class="grid grid-cols-3 border-b border-appleGray-100 bg-appleGray-50/55 px-6 py-3.5 text-xs font-bold text-appleGray-450">
-          <div>항목 구분</div>
-          <div class="col-span-2">상세 제원 사양</div>
-        </div>
-        <div class="grid grid-cols-3 border-b border-appleGray-100 px-6 py-4 text-xs font-light text-appleGray-800">
-          <div class="font-bold text-black">제품 치수 및 하중</div>
-          <div class="col-span-2 font-light">540mm(W) x 390mm(D) x 460mm(H) | 약 12kg 순수 중량</div>
-        </div>
-        <div class="grid grid-cols-3 border-b border-appleGray-100 px-6 py-4 text-xs font-light text-appleGray-800">
-          <div class="font-bold text-black">정밀 비전 코어</div>
-          <div class="col-span-2 font-light">Nvidia Jetson Orin Nano 기반 지능형 온디바이스 에지 연산 칩셋 내장</div>
-        </div>
-        <div class="grid grid-cols-3 border-b border-appleGray-100 px-6 py-4 text-xs font-light text-appleGray-800">
-          <div class="font-bold text-black">스마트 카메라 센서</div>
-          <div class="col-span-2 font-light">1200만 화소 초고화소 디포커싱 감쇠 보정 센서 | F/1.8 광학 필터 렌드 어셈블리</div>
-        </div>
-        <div class="grid grid-cols-3 px-6 py-4 text-xs font-light text-appleGray-800">
-          <div class="font-bold text-black">통신 및 무선 규격</div>
-          <div class="col-span-2 font-light">Wi-Fi 6E (802.11 ax) 무선 탑재, Bluetooth 5.2 스마트 연동 전용 안테나 쉘 배정</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-white py-12 border-t border-appleGray-100 text-[11px] text-appleGray-400 font-light">
-    <div class="max-w-4xl mx-auto px-6 text-center space-y-3">
-      <p>본 기기는 EveryBake 지능형 통합 하드웨어 보증 2년 무상 혜택을 지원합니다. 외관 및 스펙 사양은 개별 현장 규격 조율에 따라 최적 가공 설계로 변동될 수 있습니다.</p>
-      <p class="font-medium text-appleGray-800">© 2026 EveryBake AI POS Solution & Retail Group. All Rights Reserved.</p>
-    </div>
-  </footer>
-
-  <script>
-    // Smooth scroll IntersectionObserver fade-in logic
-    document.addEventListener('DOMContentLoaded', () => {
-      const reveals = document.querySelectorAll('.reveal');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal-visible');
-          }
+    <script>
+        // 헤더 스크롤 효과
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
         });
-      }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px'
-      });
 
-      reveals.forEach(el => observer.observe(el));
-    });
-  </script>
+        // 슬라이더 로직
+        const slides = document.querySelectorAll('.slide');
+        const currentSlideText = document.getElementById('current-slide');
+        let currentSlide = 0;
+        let slideInterval;
+        let isPlaying = true;
+
+        function showSlide(index) {
+            slides.forEach(s => s.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlideText.innerText = index + 1;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function startSlide() { slideInterval = setInterval(nextSlide, 3000); }
+        function stopSlide() { clearInterval(slideInterval); }
+
+        document.getElementById('next-btn').addEventListener('click', () => { stopSlide(); nextSlide(); if(isPlaying) startSlide(); });
+        document.getElementById('prev-btn').addEventListener('click', () => { stopSlide(); prevSlide(); if(isPlaying) startSlide(); });
+        
+        const pauseBtn = document.getElementById('pause-btn');
+        pauseBtn.addEventListener('click', () => {
+            if(isPlaying) { stopSlide(); pauseBtn.innerText = '▶'; }
+            else { startSlide(); pauseBtn.innerText = '||'; }
+            isPlaying = !isPlaying;
+        });
+
+        // 초기 실행
+        startSlide();
+    </script>
 </body>
 </html>`;
 
@@ -1599,7 +1479,17 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
               </div>
 
               {/* Select Tab */}
-              <div className="flex bg-stone-100 p-0.5 rounded-lg text-[10px] font-semibold self-start sm:self-auto">
+              <div className="flex bg-stone-100 p-0.5 rounded-lg text-[10px] font-semibold self-start sm:self-auto gap-1">
+                <button
+                  onClick={() => setVideoActiveTab("preview")}
+                  className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
+                    videoActiveTab === "preview"
+                      ? "bg-white text-stone-900 shadow-sm"
+                      : "text-stone-400 hover:text-stone-700"
+                  }`}
+                >
+                  웹 시뮬레이터 (수정 반영됨) ✨
+                </button>
                 <button
                   onClick={() => setVideoActiveTab("demo")}
                   className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
@@ -1624,7 +1514,16 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
             </div>
 
             <div className="relative bg-stone-950 rounded-2xl overflow-hidden shadow-2xl border border-stone-900 aspect-video group">
-              {videoActiveTab === "demo" ? (
+              {videoActiveTab === "preview" ? (
+                <div className="w-full h-full relative bg-[#FAF9F6]">
+                  <iframe
+                    srcDoc={singleHtmlCode}
+                    title="EveryBake Standalone Premium Landing Page Preview"
+                    className="w-full h-full border-0 absolute inset-0 bg-[#FAF9F6]"
+                    sandbox="allow-scripts allow-same-origin allow-popups"
+                  />
+                </div>
+              ) : videoActiveTab === "demo" ? (
                 <div className="w-full h-full relative">
                   <iframe
                     src="https://www.youtube.com/embed/awlHNsoaX94?autoplay=1&mute=1&loop=1&playlist=awlHNsoaX94&controls=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0"
@@ -1638,12 +1537,12 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-950/20 via-transparent to-stone-950/10 pointer-events-none" />
                   
                   {/* Overlay indicators positioned nicely */}
-                  <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 z-10 pointer-events-none">
+                  <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-[#ffffff]/10 z-10 pointer-events-none">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[9px] font-black tracking-widest text-[#22d3ee] font-mono">MODEL v2.4 (LIVE ACTIVE)</span>
                   </div>
                   
-                  <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 text-[9px] font-bold text-white font-mono z-10 pointer-events-none">
+                  <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-[#ffffff]/10 text-[9px] font-bold text-white font-mono z-10 pointer-events-none">
                     SCAN SPEED: 0.2s
                   </div>
                 </div>

@@ -1,14 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Nanum+Myeongjo:wght@400;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Gowun+Dodum&family=Maru+Buri:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@500;650;700;800&display=swap');
+
+@font-face {
+  font-family: 'gabiabombaram';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/gabiabombaram.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Pretendard", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-bombaram: "gabiabombaram", cursive, sans-serif;
+  --font-serif-warm: "Maru Buri", "Nanum Myeongjo", "Cormorant Garamond", serif;
+  --font-serif-brand: "Playfair Display", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-tech-info: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gnb-brand: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-gnb-menu: "Plus Jakarta Sans", "Outfit", sans-serif;
+
+  --color-stone-950: #2c2a29;
+  --color-stone-900: #332d2a;
+  --color-stone-850: #3d3633;
+  --color-stone-800: #423b38;
+  --color-stone-750: #4f4642;
+  --color-stone-700: #574e4a;
+  --color-stone-650: #655b57;
+  --color-stone-600: #736762;
+  --color-stone-550: #7d706a;
+  --color-stone-450: #8c7e79;
+  --color-stone-405: #a1928b;
+  --color-stone-350: #c2b6b0;
+  --color-stone-250: #e5e1dc;
+  
+  --color-orange-250: #ffcbb3;
+  --color-orange-450: #f46215;
+  --color-orange-650: #ca5711;
+  --color-orange-850: #8d3a0a;
+
+  --color-emerald-250: #a7f3d0;
+
+  --color-rose-55: #fff1f2;
+  --color-rose-305: #fda4af;
+  --color-rose-750: #be123c;
+  
+  --color-neutral-900: #332d2a;
+  --color-gray-950: #2c2a29;
+  --color-gray-900: #332d2a;
+  --color-black: #2c2a29;
 }
 
 @layer base {
   body {
     font-family: var(--font-sans);
+    color: #332d2a;
+    line-height: 1.75;
+    letter-spacing: 0.015em;
+    background-color: #fcfbfa; /* Warm rich ivory slate background */
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #2c2a29;
+    letter-spacing: 0.01em;
+    line-height: 1.45;
+  }
+}
+
+/* 제품 스펙 및 성분 등 정보 전달 영역을 위한 Pretendard 폰트 클래스 */
+.product-spec-font {
+  font-family: var(--font-tech-info) !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.55 !important;
+}
+
+.font-gnb-brand {
+  font-family: var(--font-gnb-brand) !important;
+}
+
+.font-gnb-menu {
+  font-family: var(--font-gnb-menu) !important;
 }
 
 /* Custom CSS fine-tuning for transitions and maps */
@@ -86,5 +156,44 @@
 
 .animate-fly-rtl {
   animation: flyingBreadRtL var(--fly-duration, 6s) linear infinite;
+}
+
+/* Premium Cinematic Fade and Focus (Depth) transitions for EVERYBAKE Warm transition screen */
+@keyframes warmCinematicDepth {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translate3d(0, 10px, 0);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+.animate-cinematic-depth {
+  animation: warmCinematicDepth 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes warmCinematicDepthSlow {
+  0% {
+    opacity: 0;
+    transform: scale(0.97) translate3d(0, 15px, 0);
+    filter: blur(8px);
+  }
+  25% {
+    opacity: 0;
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+.animate-cinematic-depth-slow {
+  animation: warmCinematicDepthSlow 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 

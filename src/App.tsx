@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Laptop,
   Cpu,
@@ -38,7 +38,7 @@ import {
   Search,
   CreditCard,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import Header from "./components/Header";
 import CartSidebar from "./components/CartSidebar";
 import OvenSim from "./components/OvenSim";
@@ -91,7 +91,6 @@ export const getDoughSales = (id: string): number => {
   }
   return Math.abs(hash % 450) + 210;
 };
-import warmBakingFamilyImage from "./assets/images/warm_baking_family_1780289855930.png";
 import artisanBakerDetailImage from "./assets/images/artisan_baker_detail_1780289872811.png";
 import modernSmartOvenImage from "./assets/images/modern_smart_oven_close_1780289886400.png";
 import kctActualOvenStoryImage from "./assets/images/kct_actual_oven_story_1780296704183.png";
@@ -375,6 +374,44 @@ export default function App() {
   const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(
     null,
   );
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const heroTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const recommendScrollRef = useRef<HTMLDivElement | null>(null);
+
+  const resetHeroTimer = () => {
+    if (heroTimerRef.current) {
+      clearInterval(heroTimerRef.current);
+    }
+    heroTimerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev === 0 ? 1 : 0));
+    }, 5000);
+  };
+
+  useEffect(() => {
+    if (currentView === "home") {
+      resetHeroTimer();
+    } else {
+      if (heroTimerRef.current) {
+        clearInterval(heroTimerRef.current);
+        heroTimerRef.current = null;
+      }
+    }
+    return () => {
+      if (heroTimerRef.current) {
+        clearInterval(heroTimerRef.current);
+      }
+    };
+  }, [currentView]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? 1 : 0));
+    resetHeroTimer();
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? 1 : 0));
+    resetHeroTimer();
+  };
 
   // B2B Partner Portal login states
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -449,7 +486,7 @@ export default function App() {
       code: "KCT-SM-HOME",
       name: "KCT 컴팩트 홈베이크",
       tag: "가정용 프리미엄 홈베이킹 패밀리 가전",
-      image: warmBakingFamilyImage,
+      image: modernSmartOvenImage,
       desc: "주방 아일랜드에 알맞춤한 콤팩트 명품. 상부 스팀오븐 1단 + 하부 해동도우컨디셔너 1베이가 일체화되어 가정에서도 제과점 수준의 오븐 스텍과 숙성 컨트롤을 완벽하게 재현합니다.",
       price: 1500000,
       badgeColor: "bg-amber-50 border-amber-100",
@@ -1060,6 +1097,9 @@ export default function App() {
     null,
   );
   const [shuffledLivePosts, setShuffledLivePosts] = useState<any[]>([]);
+  const [currentLiveIndex, setCurrentLiveIndex] = useState(0);
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  const [activeRecommendIndex, setActiveRecommendIndex] = useState(0);
 
   // Custom plaza post creation form states
   const [newPlazaTitle, setNewPlazaTitle] = useState("");
@@ -1992,17 +2032,28 @@ export default function App() {
 
       // Shuffle array
       const shuffled = [...p].sort(() => 0.5 - Math.random());
-      setShuffledLivePosts(shuffled.slice(0, 6));
+      setShuffledLivePosts(shuffled);
     };
 
     updateAndShuffle();
+  }, [communityPosts, plazaPosts]);
 
+  useEffect(() => {
+    if (shuffledLivePosts.length === 0) return;
     const interval = setInterval(() => {
-      updateAndShuffle();
+      setCurrentLiveIndex((prev) => (prev + 1) % shuffledLivePosts.length);
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [communityPosts, plazaPosts]);
+  }, [shuffledLivePosts]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentEventIndex((prev) => (prev + 1) % 2);
+    }, 2800);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLivePostClick = (post: any) => {
     if (post.source === "community") {
@@ -2087,7 +2138,7 @@ export default function App() {
             setTransitionFadeState("idle");
             setPendingView(null);
           }, 300);
-        }, 400);
+        }, 1800);
       }, 350);
     } else {
       // Instant transition without delay or overlay screen for subcategories, details, or other helper views
@@ -2668,20 +2719,10 @@ export default function App() {
   const checkoutTotal = checkoutSubtotal + checkoutDeliveryFee;
 
   return (
-    <div className="min-h-screen bg-[#faf6eb] text-stone-900 pb-16 antialiased relative">
-      {/* 🥐 Full-Page ambient background illustration applied universally to all categories and views */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none bg-[#faf6eb]">
-        <img
-          src={everyBakeLogo}
-          alt="EveryBake Ambient Wallpaper"
-          className="w-full h-full object-cover opacity-[0.38] md:opacity-[0.22] lg:opacity-[0.18]"
-          referrerPolicy="no-referrer"
-        />
-        {/* Subtle warming layers and generous gradient washes to shield all product listings and descriptive text */}
-        <div className="absolute inset-0 bg-[#faf6eb]/30 mix-blend-color" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent to-[#faf6eb]/30" />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#faf6eb] via-[#faf6eb]/80 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#faf6eb] via-[#faf6eb]/85 to-transparent" />
+    <div className="min-h-screen bg-[#FCFBFA] text-stone-900 pb-16 antialiased relative">
+      {/* Pristine high-end minimalist B2B ambient layer */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none bg-[#FCFBFA]">
+        <div className="absolute inset-0 bg-[#FCFBFA]" />
       </div>
 
       <Header
@@ -2715,7 +2756,7 @@ export default function App() {
           setCartOpen(false);
         }}
       />
-      <main className="pt-20 font-sans relative z-10">
+      <main className={`${currentView === "home" ? "pt-0" : "pt-20"} font-sans relative z-10`}>
         {searchQuery.trim() !== "" ? (
           <div className="max-w-5xl mx-auto px-6 py-8 animate-fade-in text-left">
             <div className="flex justify-between items-center pb-4 border-b border-stone-200 mb-6">
@@ -2934,409 +2975,431 @@ export default function App() {
                 {/* ==================================================== */}
                 {currentView === "home" && (
                   <div className="animate-fade-in font-sans">
-                    {/* Split Screen Hero Section */}
-                    <div className="w-full h-[calc(100vh-80px)] overflow-hidden flex flex-col md:flex-row relative select-none bg-[#0c0b0a] font-sans">
-                      {/* Left Panel: AI 도우컨디셔너 */}
-                      <div
-                        onMouseEnter={() => setHoveredPanel("left")}
-                        onMouseLeave={() => setHoveredPanel(null)}
-                        onClick={() => handleNav("equip-list")}
-                        style={
-                          isMobile
-                            ? {
-                                width: "100%",
-                                height:
-                                  hoveredPanel === "left"
-                                    ? "68%"
-                                    : hoveredPanel === "right"
-                                      ? "32%"
-                                      : "50%",
-                              }
-                            : {
-                                width:
-                                  hoveredPanel === "left"
-                                    ? "72%"
-                                    : hoveredPanel === "right"
-                                      ? "28%"
-                                      : "50%",
-                              }
-                        }
-                        className={`w-full md:h-full relative overflow-hidden cursor-pointer group border-b md:border-b-0 md:border-r border-stone-800 bg-[#0e0d0c] transition-all duration-700 ease-out ${
-                          hoveredPanel === "left"
-                            ? "shadow-[25px_0_65px_rgba(0,0,0,0.95)] z-20 scale-[1.01] translate-x-[2px]"
-                            : hoveredPanel === "right"
-                              ? "opacity-80 z-10 scale-[0.99]"
-                              : "z-10"
+                    {/* Fullscreen Auto Slider (Museum & Luxury Hotel Vibe) */}
+                    <div className="w-full h-screen overflow-hidden relative select-none bg-stone-950 font-sans">
+                      
+                      {/* Slide 1: Hardware & AI Dough Conditioner */}
+                      <div 
+                        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                          currentSlide === 0 ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
                         }`}
                       >
-                        {/* Clean luxurious studio background with subtle warm radial lighting to emphasize the product */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#121110] to-[#040404] z-0 overflow-hidden">
-                          {/* Elegantly placed glow emphasizing the internal warm baking light inside the oven doors */}
-                          <div
-                            className={`absolute w-[20rem] md:w-[32rem] h-[20rem] md:h-[32rem] bg-orange-500/10 rounded-full blur-[70px] md:blur-[95px] left-[55%] top-[55%] -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 pointer-events-none mix-blend-screen ${
-                              hoveredPanel === "left" ? "opacity-100 scale-110" : "opacity-60 scale-100"
-                            }`}
-                            style={{ transform: "translate(-50%, -50%)" }}
-                          />
-                        </div>
+                        {/* Refined dark background with custom warm center light and luxury overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#161413] via-[#0F0E0D] to-[#080707] z-0 overflow-hidden" />
+                        
+                        {/* Subtle glowing backlight */}
+                        <div className="absolute w-[35rem] h-[35rem] bg-[#f97316]/10 rounded-full blur-[120px] left-[60%] top-[50%] -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-screen" />
+                        
+                        {/* Premium dark vignette overlay */}
+                        <div className="absolute inset-0 bg-black/45 z-2" />
+                        <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/80 to-transparent z-3 pointer-events-none" />
 
-                        {/* Sophisticated gradient wash and professional vignette to protect clean white typography readability */}
-                        <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/95 via-black/40 to-transparent z-6 pointer-events-none" />
-                        <div className="absolute inset-y-0 left-0 w-[60%] bg-gradient-to-r from-black/90 via-black/35 to-transparent z-6 pointer-events-none md:block hidden" />
-
-                        {/* 3D Floating Product Main Photo - Perfectly Centered in the Left Panel to Prevent Distortion */}
-                        <div className="absolute inset-0 z-5 pointer-events-none select-none flex items-center justify-center overflow-hidden">
+                        {/* 3D Floating Product Image - Placed on the right side on desktop with soft floating animation */}
+                        <div className="absolute inset-0 z-5 pointer-events-none select-none flex items-center justify-center md:justify-end overflow-hidden px-6 md:px-16 lg:px-24">
                           <motion.div
                             animate={{
-                              y: hoveredPanel === "left" ? -15 : 0,
-                              scale: hoveredPanel === "left" ? 1.08 : 1.02,
-                              filter: hoveredPanel === "left" 
-                                ? "drop-shadow(0 40px 60px rgba(249,115,22,0.45))" 
-                                : "drop-shadow(0 20px 35px rgba(0,0,0,0.75))"
+                              y: [-8, 8, -8],
                             }}
-                            className="h-[75%] md:h-[82%] w-full flex items-center justify-center"
+                            transition={{
+                              duration: 6,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                            className="h-[55%] md:h-[75%] w-full md:w-1/2 flex items-center justify-center opacity-35 md:opacity-100 transition-all duration-700"
                           >
                             <img
                               src={ovenImage}
                               alt="EveryBake Smart Pro Main Product"
-                              className="h-full w-auto max-h-[105%] md:max-h-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
+                              className="h-full w-auto max-h-[100%] object-contain filter drop-shadow-[0_25px_50px_rgba(249,115,22,0.25)]"
                               referrerPolicy="no-referrer"
                             />
                           </motion.div>
                         </div>
 
-                        {/* Content Container - Vertically aligned and left-structured */}
-                        <div className="absolute inset-0 p-6 md:p-12 lg:p-16 flex flex-col justify-between items-start text-left z-10 w-full h-full">
-                          {/* Top: Premium Brand Detail Tag or navigation */}
-                          <div className="mt-2 text-left z-15">
+                        {/* Content Container - Beautifully aligned on the left */}
+                        <div className="absolute inset-0 p-6 sm:p-12 md:p-20 lg:p-24 flex flex-col justify-center items-start text-left z-10 w-full h-full">
+                          <div className="max-w-xl space-y-4 md:space-y-5">
+                            <span className="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 text-[10px] sm:text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full uppercase inline-block font-gnb-menu">
+                              ✦ PRECISION ENGINEERING
+                            </span>
+                            
+                            <h2 className="text-2xl sm:text-3.5xl md:text-4xl lg:text-[45px] xl:text-[50px] font-light text-white leading-tight tracking-wide font-serif-warm drop-shadow-sm">
+                              당신의 식탁,
+                              <br />
+                              당신의 매 순간
+                              <br />
+                              <span className="text-[#D4AF37] font-semibold tracking-widest">에브리베이크</span>
+                            </h2>
+                            
+                            <p className="text-stone-300 text-xs sm:text-sm md:text-base font-light leading-relaxed max-w-md font-sans tracking-wide">
+                              매 순간 최상의 온도와 습도를 조율하여 생지의 본연의 가치를 보존합니다. 
+                              에브리베이크의 스마트 코어 기술이 자아내는 고결한 풍미를 맞이해 보십시오.
+                            </p>
+
                             <button
                               onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleNav("equip-list");
+                                e.stopPropagation();
+                                handleNav("equip-list");
                               }}
-                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/60 hover:bg-[#f97316] text-white text-[10px] sm:text-xs md:text-sm font-extrabold tracking-tight border border-white/10 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
+                              className="inline-flex items-center justify-center px-8 py-3 bg-[#D4AF37] hover:bg-white text-stone-950 hover:text-stone-950 text-xs font-medium tracking-[0.15em] transition-all duration-300 uppercase cursor-pointer mt-2"
                             >
                               <span>AI도우컨디셔너 자세히 보기 &gt;</span>
                             </button>
                           </div>
-
-                          {/* Bottom Content Area - Slogans placed clean and clear on the left side */}
-                          <div className="w-full max-w-[85%] md:max-w-[75%] pb-2 md:pb-4 transition-all duration-700 z-10 space-y-4">
-                            {/* Sliding/Fading description of Left Panel Expansion (focused on appliance & message) */}
-                            <div className={`overflow-hidden transition-all duration-700 ${
-                              hoveredPanel === "left" ? "max-h-24 opacity-100 mb-3" : "max-h-0 opacity-0 mb-0"
-                            }`}>
-                              <p className="text-[10px] md:text-xs uppercase font-extrabold tracking-wider text-[#f97316]">
-                                The Art of Precision Engineering
-                              </p>
-                              <p className="text-[11px] md:text-xs text-white/70 leading-relaxed font-semibold mt-1">
-                                EveryBake AI Dough Conditioner coordinates perfect temperature & humidity, preserving the pristine texture of raw gluten for an unmatched rise.
-                              </p>
-                            </div>
-
-                            {/* Branded Copy */}
-                            <div
-                              className={`transition-all duration-700 transform ${
-                                hoveredPanel === "right"
-                                  ? "opacity-30 scale-95"
-                                  : "opacity-100 scale-100"
-                              }`}
-                            >
-                              <div className="space-y-2">
-                                <p className="text-xl sm:text-2xl md:text-4xl lg:text-5.5xl xl:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
-                                  당신의 식탁,
-                                  <br />
-                                  당신의 매 순간
-                                </p>
-                                <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6.5xl xl:text-7.5xl font-extrabold text-[#f97316] tracking-tighter drop-shadow-[0_4px_20px_rgba(249,115,22,0.35)] mt-1.5 leading-none">
-                                  에브리베이크
-                                </p>
-                              </div>
-                            </div>
-                          </div>
                         </div>
                       </div>
 
-                      {/* Right Panel: 프리미엄 생지 */}
-                      <div
-                        onMouseEnter={() => setHoveredPanel("right")}
-                        onMouseLeave={() => setHoveredPanel(null)}
-                        onClick={() => handleNav("dough-main")}
-                        style={
-                          isMobile
-                            ? {
-                                width: "100%",
-                                height:
-                                  hoveredPanel === "right"
-                                    ? "68%"
-                                    : hoveredPanel === "left"
-                                      ? "32%"
-                                      : "50%",
-                              }
-                            : {
-                                width:
-                                  hoveredPanel === "right"
-                                    ? "72%"
-                                    : hoveredPanel === "left"
-                                      ? "28%"
-                                      : "50%",
-                              }
-                        }
-                        className={`w-full md:h-full relative overflow-hidden cursor-pointer group bg-[#0d0d0f] transition-all duration-700 ease-out ${
-                          hoveredPanel === "right"
-                            ? "shadow-[-25px_0_65px_rgba(0,0,0,0.92)] z-20 scale-[1.005] -translate-x-[2px]"
-                            : hoveredPanel === "left"
-                              ? "opacity-50 z-10"
-                              : "z-10"
+                      {/* Slide 2: Premium Master Dough Library */}
+                      <div 
+                        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                          currentSlide === 1 ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
                         }`}
                       >
-                        {/* Background Image: Flour Dust Cloud & Master Baker (artisan_baker_detail) over a dark-toned sophisticated natural stone backdrop */}
-                        <div className="absolute inset-0 bg-[#0f0e0d] z-0 overflow-hidden">
+                        {/* Background Image: Flour Dust Cloud & Master Baker */}
+                        <div className="absolute inset-0 bg-[#0F0E0D] z-0 overflow-hidden">
                           <img
                             src={artisanBakerDetailImage}
                             alt="프리미엄 생지 마스터 베이커"
-                            className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-out mix-blend-lighten opacity-85 ${
-                              hoveredPanel === "right"
-                                ? "scale-[1.07] brightness-110 saturate-[1.05]"
-                                : "scale-100 brightness-95 saturate-[0.85]"
-                            }`}
+                            className="absolute inset-0 w-full h-full object-cover object-center scale-102 brightness-90 saturate-[0.85]"
                             referrerPolicy="no-referrer"
                           />
-                          {/* Warm glowing oven light representing baking environment peeking in from the side */}
-                          <div className="absolute w-[24rem] h-[24rem] md:w-[32rem] md:h-[32rem] bg-orange-500/20 rounded-full blur-[90px] md:blur-[110px] right-[-10%] bottom-[-5%] pointer-events-none mix-blend-screen" />
                         </div>
+                        
+                        {/* Luxury dark gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/50 to-black/90 z-2" />
+                        <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/85 to-transparent z-3 pointer-events-none" />
 
-                        {/* Shadow wash / vignette representing high-end natural stone feel */}
-                        <div className="absolute inset-0 bg-radial-gradient from-transparent to-black/80 z-1" />
+                        {/* Content Container - Beautifully aligned on the left */}
+                        <div className="absolute inset-0 p-6 sm:p-12 md:p-20 lg:p-24 flex flex-col justify-center items-start text-left z-10 w-full h-full">
+                          <div className="max-w-2xl space-y-4 md:space-y-5">
+                            <span className="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 text-[10px] sm:text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full uppercase inline-block font-gnb-menu">
+                              ✦ ARTISANAL MASTERPIECE
+                            </span>
+                            
+                            <h2 className="text-xl sm:text-2.5xl md:text-3.2xl lg:text-[36px] xl:text-[42px] font-light text-white leading-snug tracking-wide font-serif-warm drop-shadow-sm">
+                              최고의 재료와 명장의 숨결이 깃든
+                              <br />
+                              <span className="text-[#D4AF37] font-semibold tracking-widest">프리미엄 마스터 생지 라이브러리</span>
+                            </h2>
+                            
+                            <p className="text-stone-300 text-xs sm:text-sm md:text-base font-light leading-relaxed max-w-lg font-sans tracking-wide">
+                              명장의 섬세한 손길이 닿아 탄생한 예술적인 천연 발효 도우 컬렉션입니다. 
+                              유럽 현지 직수입 명품 원료와 하이엔드 저온 동결 공법으로 완성된 극상의 텍스처를 경험해 보세요.
+                            </p>
 
-                        {/* Subtly tuned overlay gradient that protects text readability but leaves flour dust extremely bright and prominent */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/40 group-hover:from-black/95 transition-all duration-700 w-full h-full z-2" />
-
-                        {/* Content Container */}
-                        <div className="absolute inset-0 p-6 md:p-12 lg:p-16 flex flex-col justify-between z-10">
-                          {/* Top: Button Link */}
-                          <div className="text-left md:text-right mt-2 md:mt-4">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleNav("dough-main");
                               }}
-                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/60 hover:bg-[#f97316] text-white text-[10px] sm:text-xs md:text-sm font-extrabold tracking-tight border border-white/10 hover:border-transparent transition-all shadow-md group/btn cursor-pointer"
+                              className="inline-flex items-center justify-center px-8 py-3 border border-[#D4AF37]/60 hover:border-[#D4AF37] text-white hover:text-stone-950 bg-transparent hover:bg-[#D4AF37] text-xs font-medium tracking-[0.15em] transition-all duration-300 uppercase cursor-pointer mt-2"
                             >
                               <span>프리미엄 생지 자세히보기 &gt;</span>
                             </button>
                           </div>
-
-                          {/* Bottom Content Area */}
-                          <div className="text-left md:text-right space-y-3.5">
-                            {/* Sliding/Fading description of Right Panel Expansion (focused on human element & artisanal process) */}
-                            <div className={`overflow-hidden transition-all duration-700 max-w-lg md:ml-auto ${
-                              hoveredPanel === "right" ? "max-h-24 opacity-100 translate-y-0" : "max-h-0 opacity-0 translate-y-4"
-                            }`}>
-                              <p className="text-[10px] md:text-xs uppercase font-extrabold tracking-wider text-[#f97316]">
-                                The Heritage of Craftsmanship
-                              </p>
-                              <p className="text-[11px] md:text-sm text-white/70 leading-relaxed font-medium mt-1">
-                                Skilled EVERYBAKE hands shape premium raw dough, fusing age-old fermentation mastery with precise, state-of-the-art core thermal synchronization.
-                              </p>
-                            </div>
-
-                            {/* Secondary copy copy to balance the split layout */}
-                            <div
-                              className={`transition-all duration-700 transform ${
-                                hoveredPanel === "left"
-                                  ? "opacity-30 scale-95"
-                                  : "opacity-100 scale-100"
-                              }`}
-                            >
-                              <p className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-white/90 tracking-tight">
-                                최고의 재료와 명장의 숨결이 깃든
-                              </p>
-                              <p className="text-sm sm:text-lg md:text-2xl lg:text-3xl font-black text-amber-400 mt-1">
-                                프리미엄 마스터 생지 라이브러리
-                              </p>
-                            </div>
-                          </div>
                         </div>
                       </div>
+
+                      {/* Manual Slider Controller - Bottom Center Navigation */}
+                      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex items-center gap-6 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 shadow-2xl">
+                        <button
+                          onClick={handlePrevSlide}
+                          className="text-white hover:text-[#D4AF37] transition-all duration-300 cursor-pointer p-1 rounded-full hover:bg-white/5 active:scale-90"
+                          aria-label="Previous Slide"
+                        >
+                          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </button>
+                        
+                        <div className="flex items-center gap-2">
+                          <span className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${currentSlide === 0 ? "bg-[#D4AF37] w-6" : "bg-white/40"}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${currentSlide === 1 ? "bg-[#D4AF37] w-6" : "bg-white/40"}`} />
+                        </div>
+
+                        <button
+                          onClick={handleNextSlide}
+                          className="text-white hover:text-[#D4AF37] transition-all duration-300 cursor-pointer p-1 rounded-full hover:bg-white/5 active:scale-90"
+                          aria-label="Next Slide"
+                        >
+                          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </button>
+                      </div>
+
                     </div>
 
                     {/* ==================================================== */}
                     {/* DYNAMIC DASHBOARD SECTIONS REQUIRED BY USER          */}
                     {/* ==================================================== */}
-                    <div className="max-w-5xl mx-auto px-6 pt-12 pb-4 space-y-12">
-                      {/* 1) 에베인 실시간 커뮤니티 상황 (2 seconds interval rolling) */}
-                      <div className="space-y-4 font-sans">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2.5 border-b border-stone-200">
-                          <div className="text-left">
-                            <span className="text-[9px] bg-amber-100 text-amber-800 font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-md">
-                              LIVE NETWORK
-                            </span>
-                            <h2 className="text-lg sm:text-xl font-black text-stone-900 tracking-tight flex items-center gap-1.5 mt-1">
-                              💬 에베인 실시간 커뮤니티 상황
-                            </h2>
-                          </div>
-                          <span className="text-[10px] text-stone-400 font-bold flex items-center gap-1 select-none">
-                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                            2초마다 실시간 제안 순서 로테이션 중
+                    
+                    {/* 1) 에베인 실시간 커뮤니티 상황 (Full Width 50:50 Screen-filled Premium Layout) */}
+                    <div className="w-full min-h-screen bg-white text-stone-900 overflow-hidden relative flex flex-col md:flex-row border-b border-stone-150">
+                      
+                      {/* Left Column (Fixed area with gold & white minimalist aesthetic) */}
+                      <div className="w-full md:w-1/2 min-h-[50vh] md:h-screen flex flex-col justify-center items-start text-left p-8 sm:p-16 md:p-20 lg:p-24 xl:p-28 bg-white relative">
+                        <div className="max-w-md space-y-6 md:space-y-8 z-10">
+                          <span className="text-stone-400 font-semibold tracking-[0.25em] text-[11px] uppercase block font-sans">
+                            ✦ LIVE NETWORK STATUS
                           </span>
+                          
+                          <h2 className="text-3xl sm:text-4.2xl md:text-[42px] xl:text-[48px] font-light text-stone-900 leading-tight tracking-wide font-serif-warm">
+                            에베인 실시간
+                            <br />
+                            <span className="text-stone-950 font-bold tracking-widest block mt-2">커뮤니티 상황</span>
+                          </h2>
+                          
+                          <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-sm font-light tracking-wide">
+                            베이커리 점주뿐만 아니라 카페 창업을 꿈꾸는 예비 창업가, 그리고 집에서 따뜻한 온기를 굽는 홈베이커까지 모두를 위한 열린 소통 공간입니다. 
+                            번뜩이는 아이디어와 따뜻한 피드백이 교차하는 생생한 에베인들의 이야기를 확인해 보세요.
+                          </p>
+
+                          <div className="pt-4">
+                            <button
+                              onClick={() => {
+                                setCurrentView("community");
+                                setActiveMainTab("why-not-sell");
+                              }}
+                              className="inline-flex items-center justify-between px-8 py-3.5 border border-stone-900 hover:bg-stone-950 text-stone-900 hover:text-white text-xs sm:text-sm font-medium tracking-[0.15em] transition-all duration-300 uppercase cursor-pointer"
+                              style={{ width: '240px' }}
+                            >
+                              <span>커뮤니티로 이동하기</span>
+                              <span className="text-base font-light">→</span>
+                            </button>
+                          </div>
                         </div>
-
-                        {shuffledLivePosts.length === 0 ? (
-                          <div className="py-8 text-center text-xs text-stone-400">
-                            실시간 피드를 동기화하고 있습니다...
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                            {shuffledLivePosts.map((post) => (
-                              <div
-                                key={post.id}
-                                onClick={() => handleLivePostClick(post)}
-                                className="group bg-white p-4.5 rounded-xl border border-stone-200/80 hover:border-[#f97316] hover:shadow-md cursor-pointer transition-all flex flex-col justify-between space-y-3.5 text-left relative overflow-hidden"
-                              >
-                                {/* Smooth top line accent matching source */}
-                                <div
-                                  className={`absolute top-0 left-0 right-0 h-1 ${
-                                    post.source === "plaza"
-                                      ? "bg-amber-500"
-                                      : "bg-[#f97316]"
-                                  }`}
-                                />
-
-                                <div className="space-y-2">
-                                  <div className="flex items-center justify-between text-[10px] font-black">
-                                    <span
-                                      className={`${
-                                        post.source === "plaza"
-                                          ? "text-amber-600"
-                                          : "text-[#f97316]"
-                                      }`}
-                                    >
-                                      {post.source === "plaza"
-                                        ? "🛒 알뜰 광장"
-                                        : `💡 ${
-                                            post.category === "trouble"
-                                              ? "고민 창구"
-                                              : "입점 제안"
-                                          }`}
-                                    </span>
-                                    <span className="text-stone-400 font-semibold">
-                                      {post.date}
-                                    </span>
-                                  </div>
-
-                                  <h3 className="text-xs sm:text-[13px] font-extrabold text-stone-900 group-hover:text-[#f97316] line-clamp-1 transition-colors leading-snug text-left font-bold">
-                                    {post.title}
-                                  </h3>
-
-                                  <p className="text-[11px] text-[#555] line-clamp-2 leading-relaxed font-semibold text-left">
-                                    {post.content}
-                                  </p>
-                                </div>
-
-                                <div className="flex items-center justify-between text-[10px] text-stone-400 pt-2 border-t border-stone-100/50">
-                                  <span className="font-bold text-stone-500 block max-w-[120px] truncate">
-                                    {post.author}
-                                  </span>
-                                  <div className="flex items-center gap-1.5 font-bold shrink-0">
-                                    <span>👍 {post.votes}</span>
-                                    <span className="text-[8.5px] bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded font-black max-w-[110px] truncate">
-                                      {post.status}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
                       </div>
 
-                      {/* 2) 스마트 장비 간편 그리드 바로가기 영역 */}
-                      <div className="space-y-4 font-sans text-left">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2.5 border-b border-stone-200">
-                          <div>
-                            <span className="text-[9px] bg-blue-100 text-[#2563eb] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-md">
-                              KCT SMART DEVICE
-                            </span>
-                            <h2 className="text-lg sm:text-xl font-black text-stone-900 tracking-tight flex items-center gap-1.5 mt-1">
-                              ⚡ KCT 도우컨디셔너 & 스마트 오븐 라인업
-                            </h2>
-                          </div>
-                          <button
-                            onClick={() => handleNav("equip-list")}
-                            className="text-stone-500 hover:text-stone-900 font-extrabold text-[11px] flex items-center gap-0.5 hover:underline"
-                          >
-                            스마트 기기 라인업 전체보기{" "}
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </button>
+                      {/* Right Column (High-quality rustic photo with interactive floating live card) */}
+                      <div className="w-full md:w-1/2 min-h-[50vh] md:h-screen relative overflow-hidden flex items-center justify-center p-6 sm:p-12 md:p-16">
+                        {/* Background Baguettes/Bakery Image */}
+                        <div className="absolute inset-0 z-0">
+                          <img 
+                            src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=1200" 
+                            alt="Premium Baguettes on Rustic Table" 
+                            className="w-full h-full object-cover brightness-[0.85] contrast-[1.05]"
+                            referrerPolicy="no-referrer"
+                          />
+                          {/* Soft overlay gradient to melt edges */}
+                          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-stone-950/20 via-transparent to-stone-950/30" />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                          {/* Device Card 1 */}
-                          <div
-                            onClick={() => {
-                              setSelectedEquipId("eq-pro-01");
-                              handleNav("equip-detail");
-                            }}
-                            className="bg-white rounded-2xl p-5 border border-stone-200/80 hover:border-[#2563eb] hover:shadow-xl transition-all cursor-pointer group flex gap-4 text-left"
-                          >
-                            <div className="w-24 h-24 bg-stone-50 rounded-xl flex items-center justify-center p-2.5 border border-stone-150 shrink-0 overflow-hidden">
-                              <img
-                                src={ovenImage}
-                                alt="KCT Smart Pro"
-                                className="h-full object-contain filter drop-shadow group-hover:scale-105 transition-all duration-300"
-                                referrerPolicy="no-referrer"
-                              />
-                            </div>
-                            <div className="space-y-1.5">
-                              <span className="text-[8.5px] font-black uppercase text-[#2563eb] bg-blue-50 px-2 py-0.5 rounded">
-                                상업용 초정밀 올인원
-                              </span>
-                              <h3 className="text-xs sm:text-[13.5px] font-black text-stone-900 group-hover:text-[#2563eb] leading-tight">
-                                KCT 수직형 AI 도우컨디셔너+오븐 일체형 [Smart
-                                Pro]
-                              </h3>
-                              <p className="text-[10px] text-stone-450 leading-relaxed font-semibold line-clamp-2">
-                                좁은 1인 매장의 한계를 정복하는 170cm 수직 적층
-                                오븐. 바코드 레시피 자동 조율 전산 모듈 내장.
-                              </p>
-                            </div>
-                          </div>
+                        {/* Centered Floating Glassmorphism Post Display */}
+                        <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-md p-8 sm:p-10 rounded-3xl shadow-[0_30px_100px_rgba(0,0,0,0.18)] border border-white/50 flex flex-col justify-between min-h-[280px] md:min-h-[300px]">
+                          {/* Top & bottom light gradient masking inside the rolling text wrapper */}
+                          <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-white/95 to-transparent rounded-t-3xl pointer-events-none z-10" />
+                          <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-white/95 to-transparent rounded-b-3xl pointer-events-none z-10" />
 
-                          {/* Device Card 2 */}
-                          <div
-                            onClick={() => {
-                              setSelectedEquipId("eq-home-01");
-                              handleNav("equip-detail");
-                            }}
-                            className="bg-white rounded-2xl p-5 border border-stone-200/80 hover:border-amber-500 hover:shadow-xl transition-all cursor-pointer group flex gap-4 text-left"
-                          >
-                            <div className="w-24 h-24 bg-amber-50/20 rounded-xl flex items-center justify-center border border-amber-100 shrink-0 overflow-hidden">
-                              <img
-                                src={warmBakingFamilyImage}
-                                alt="KCT Home Companion"
-                                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
-                                referrerPolicy="no-referrer"
-                              />
-                            </div>
-                            <div className="space-y-1.5">
-                              <span className="text-[8.5px] font-black uppercase text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
-                                가정용 콤팩트 홈베이크
-                              </span>
-                              <h3 className="text-xs sm:text-[13.5px] font-black text-stone-900 group-hover:text-amber-600 leading-tight">
-                                KCT 컴팩트 홈베이크 AI 도우컨디셔너+오븐 콤보
-                                [Home Companion]
-                              </h3>
-                              <p className="text-[10px] text-stone-450 leading-relaxed font-semibold line-clamp-2">
-                                주방 아일랜드에 알맞춤한 콤팩트 명품. 상부
-                                스팀오븐 1단 + 하부 해동도우컨디셔너 1베이
-                                패밀리 가전.
-                              </p>
-                            </div>
+                          <div className="relative h-[180px] flex items-center w-full z-2 py-4">
+                            {shuffledLivePosts.length === 0 ? (
+                              <div className="text-stone-400 text-xs sm:text-sm font-light w-full text-center">
+                                실시간 피드를 수집하고 있습니다...
+                              </div>
+                            ) : (
+                              <AnimatePresence mode="wait">
+                                {(() => {
+                                  const post = shuffledLivePosts[currentLiveIndex % shuffledLivePosts.length];
+                                  if (!post) return null;
+                                  return (
+                                    <motion.div
+                                      key={post.id}
+                                      initial={{ opacity: 0, y: 35, filter: "blur(5px)" }}
+                                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                      exit={{ opacity: 0, y: -25, filter: "blur(2px)" }}
+                                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                      onClick={() => handleLivePostClick(post)}
+                                      className="w-full text-left cursor-pointer group flex flex-col justify-between h-full space-y-4"
+                                    >
+                                      <div className="space-y-3">
+                                        <div className="flex items-center justify-between text-[10px] font-bold tracking-wider">
+                                          <span className={`px-2.5 py-0.5 rounded-full ${
+                                            post.source === "plaza"
+                                              ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                                              : "bg-orange-500/10 text-[#f97316] border border-[#f97316]/20"
+                                          }`}>
+                                            {post.source === "plaza"
+                                              ? "🛒 알뜰 광장 공구"
+                                              : `💡 ${post.category === "trouble" ? "고민 창구" : "입점 제안"}`}
+                                          </span>
+                                          <span className="text-stone-400">
+                                            {post.date}
+                                          </span>
+                                        </div>
+
+                                        <h3 className="text-base sm:text-lg font-bold text-stone-950 group-hover:text-[#f97316] transition-colors leading-snug tracking-wide line-clamp-1">
+                                          {post.title}
+                                        </h3>
+
+                                        <p className="text-stone-600 text-xs sm:text-sm font-light leading-relaxed line-clamp-2 tracking-wide">
+                                          {post.content}
+                                        </p>
+                                      </div>
+
+                                      <div className="flex items-center justify-between pt-3 border-t border-stone-100">
+                                        <div className="flex items-center gap-2">
+                                          <div className="w-5 h-5 rounded-full bg-stone-100 flex items-center justify-center text-[10px] text-stone-600 font-bold border border-stone-200">
+                                            {post.author.slice(0, 1)}
+                                          </div>
+                                          <span className="text-xs font-semibold text-stone-500 max-w-[120px] truncate">
+                                            {post.author}
+                                          </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs">
+                                          <span className="text-stone-400">👍 {post.votes}</span>
+                                          <span className="bg-stone-50 text-stone-500 px-2 py-0.5 rounded text-[9px] font-medium border border-stone-150 max-w-[110px] truncate">
+                                            {post.status}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </motion.div>
+                                  );
+                                })()}
+                              </AnimatePresence>
+                            )}
                           </div>
                         </div>
                       </div>
                     </div>
+
+                    {/* 2) 에베인 진행 중인 특별 이벤트 (Full Width 50:50 Screen-filled Premium Layout - Reversed) */}
+                    <div className="w-full min-h-screen bg-white text-stone-900 overflow-hidden relative flex flex-col md:flex-row-reverse border-b border-stone-150">
+                      
+                      {/* Right Column (Fixed area with elegant white/stone minimalist aesthetic) */}
+                      <div className="w-full md:w-1/2 min-h-[50vh] md:h-screen flex flex-col justify-center items-start text-left p-8 sm:p-16 md:p-20 lg:p-24 xl:p-28 bg-white relative">
+                        <div className="max-w-md space-y-6 md:space-y-8 z-10">
+                          <span className="text-stone-400 font-semibold tracking-[0.25em] text-[11px] uppercase block font-sans">
+                            ✦ SPECIAL BENEFIT & PROMOTION
+                          </span>
+                          
+                          <h2 className="text-3xl sm:text-4.2xl md:text-[42px] xl:text-[48px] font-light text-stone-900 leading-tight tracking-wide font-serif-warm">
+                            놓치지 말아야 할
+                            <br />
+                            <span className="text-stone-950 font-bold tracking-widest block mt-2">에베인 특별 혜택</span>
+                          </h2>
+                          
+                          <p className="text-stone-500 text-sm md:text-base leading-relaxed font-sans max-w-sm font-light tracking-wide">
+                            베이커리 점주뿐만 아니라 카페 창업가, 그리고 나만의 홈베이킹 라이프를 즐기는 모든 에베인분들을 위해 준비된 시즌 이벤트와 특별 혜택을 소개합니다. 
+                            매주 업데이트되는 정기 혜택전부터 다양한 아이디어가 교차하는 빵천하제일대회까지 자유롭게 즐겨보세요.
+                          </p>
+
+                          <div className="pt-4">
+                            <button
+                              onClick={() => {
+                                setCurrentView("events");
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                              }}
+                              className="inline-flex items-center justify-between px-8 py-3.5 border border-stone-900 hover:bg-stone-950 text-stone-900 hover:text-white text-xs sm:text-sm font-medium tracking-[0.15em] transition-all duration-300 uppercase cursor-pointer"
+                              style={{ width: '240px' }}
+                            >
+                              <span>이벤트 전체보기</span>
+                              <span className="text-base font-light">→</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Left Column (Rustic photo with floating glassmorphism event card changing automatically) */}
+                      <div className="w-full md:w-1/2 min-h-[50vh] md:h-screen relative overflow-hidden flex items-center justify-center p-6 sm:p-12 md:p-16">
+                        {/* Background Baker Work Table Image */}
+                        <div className="absolute inset-0 z-0">
+                          <img 
+                            src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=1200" 
+                            alt="Premium Baker Baking Counter with Flour" 
+                            className="w-full h-full object-cover brightness-[0.8] contrast-[1.05]"
+                            referrerPolicy="no-referrer"
+                          />
+                          {/* Soft overlay gradient */}
+                          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-l from-stone-950/20 via-transparent to-stone-950/30" />
+                        </div>
+
+                        {/* Floating Glassmorphism Event Display */}
+                        <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-md p-8 sm:p-10 rounded-3xl shadow-[0_30px_100px_rgba(0,0,0,0.18)] border border-white/50 flex flex-col justify-between min-h-[280px] md:min-h-[300px]">
+                          {/* Soft gradient mask for sliding */}
+                          <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-white/95 to-transparent rounded-t-3xl pointer-events-none z-10" />
+                          <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-white/95 to-transparent rounded-b-3xl pointer-events-none z-10" />
+
+                          <div className="relative h-[200px] flex items-center w-full z-2 py-4">
+                            <AnimatePresence mode="wait">
+                              {currentEventIndex === 0 ? (
+                                <motion.div
+                                  key="event-monday"
+                                  initial={{ opacity: 0, y: 35, filter: "blur(5px)" }}
+                                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                  exit={{ opacity: 0, y: -25, filter: "blur(2px)" }}
+                                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                  onClick={() => handleEventClick("monday-day")}
+                                  className="w-full text-left cursor-pointer group flex flex-col justify-between h-full space-y-4"
+                                >
+                                  <div className="space-y-3">
+                                    <div className="flex items-center justify-between text-[10px] font-bold tracking-wider">
+                                      <span className="px-2.5 py-0.5 rounded-full bg-orange-500/10 text-[#f97316] border border-orange-500/20">
+                                        🥐 정기 특가전
+                                      </span>
+                                      <span className="text-stone-450 flex items-center gap-1">
+                                        <Clock className="w-3 h-3 text-stone-400" /> ~ 06.08(월) 오전 11시
+                                      </span>
+                                    </div>
+
+                                    <h3 className="text-base sm:text-lg font-bold text-stone-950 group-hover:text-[#f97316] transition-colors leading-snug tracking-wide line-clamp-2">
+                                      베스트 상품, 더 알뜰하게 ~33% 특가 🥐
+                                    </h3>
+
+                                    <p className="text-stone-600 text-xs sm:text-sm font-light leading-relaxed line-clamp-3 tracking-wide">
+                                      매주 월요일 찾아오는 고정 수혜 라인업! 최대 33% 할인 혜택과 10% 추가 다운로더블 쿠폰 기회를 절대 놓치지 마세요.
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center justify-between pt-3 border-t border-stone-100">
+                                    <span className="text-xs font-semibold text-stone-500">
+                                      참여 대상: 에브리베이크 회원 누구나
+                                    </span>
+                                    <span className="text-[10px] bg-stone-950 text-white px-2.5 py-1 rounded-md font-bold group-hover:bg-[#f97316] transition-colors">
+                                      혜택 받기 →
+                                    </span>
+                                  </div>
+                                </motion.div>
+                              ) : (
+                                <motion.div
+                                  key="event-baking"
+                                  initial={{ opacity: 0, y: 35, filter: "blur(5px)" }}
+                                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                  exit={{ opacity: 0, y: -25, filter: "blur(2px)" }}
+                                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                  onClick={() => handleEventClick("baking-king")}
+                                  className="w-full text-left cursor-pointer group flex flex-col justify-between h-full space-y-4"
+                                >
+                                  <div className="space-y-3">
+                                    <div className="flex items-center justify-between text-[10px] font-bold tracking-wider">
+                                      <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 border border-indigo-500/20">
+                                        🏆 명예의 전당
+                                      </span>
+                                      <span className="text-stone-450 flex items-center gap-1">
+                                        <Award className="w-3 h-3 text-indigo-400" /> 누적 심사 집계중
+                                      </span>
+                                    </div>
+
+                                    <h3 className="text-base sm:text-lg font-bold text-stone-950 group-hover:text-indigo-600 transition-colors leading-snug tracking-wide line-clamp-2">
+                                      제 3회 에브리베이크 빵천하제일대회 🏆
+                                    </h3>
+
+                                    <p className="text-stone-600 text-xs sm:text-sm font-light leading-relaxed line-clamp-3 tracking-wide">
+                                      에베인들의 독창적인 생지 쿠프 기법과 온도 레시피 꿀팁을 겨루는 시간! 상생지원금 바우처와 명예의 훈장을 득템하세요.
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center justify-between pt-3 border-t border-stone-100">
+                                    <span className="text-xs font-semibold text-stone-500">
+                                      참여 대상: 점주, 예비 창업자, 홈베이커
+                                    </span>
+                                    <span className="text-[10px] bg-stone-950 text-white px-2.5 py-1 rounded-md font-bold group-hover:bg-indigo-600 transition-colors">
+                                      도전 하기 →
+                                    </span>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 )}
 
@@ -3345,333 +3408,395 @@ export default function App() {
                 {/* ==================================================== */}
                 {currentView === "home" && (
                   <>
-                    <div className="max-w-5xl mx-auto px-6 pb-12 space-y-12">
-                      <div className="space-y-4 font-sans">
-                        <div className="text-left pb-2 border-b border-stone-200">
-                          <span className="text-[9px] bg-purple-100 text-purple-700 font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-md">
-                            SPECIAL BENEFIT
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {/* Event 1 Card */}
-                          <div
-                            onClick={() => handleEventClick("monday-day")}
-                            className="group relative bg-[#fffdfa] hover:bg-[#fffbf6] border border-orange-100 hover:border-[#f97316] rounded-2xl p-5 cursor-pointer transition-all flex flex-col sm:flex-row justify-between items-stretch gap-4 text-left shadow-xs hover:shadow-md"
-                          >
-                            <div className="flex flex-col justify-between space-y-3 flex-1">
-                              <div className="space-y-1.5">
-                                <span className="inline-block text-[9px] font-black uppercase tracking-widest text-[#f97316] bg-orange-100/60 px-2 py-0.5 rounded">
-                                  정기 특가전
-                                </span>
-                                <h3 className="text-sm sm:text-base font-black text-stone-900 group-hover:text-[#f97316] transition-colors leading-tight">
-                                  베스트 상품, 더 알뜰하게 ~33% 특가 🥐
-                                </h3>
-                                <p className="text-[11px] text-stone-550 font-semibold leading-relaxed">
-                                  매주 월요일 찾아오는 고정 수혜 라인업! 최대
-                                  33% 할인 혜택과 10% 추가 다운로더블 쿠폰
-                                  기회를 절대 놓치지 마세요.
-                                </p>
+                    {/* 3) EVERYBAKE 추천상품 - 100% full-screen width luxurious museum layout */}
+                    <div className="w-full bg-white py-24 border-b border-stone-150 overflow-hidden">
+                      <div className="max-w-[1600px] mx-auto px-6 sm:px-12 md:px-16 flex flex-col lg:flex-row gap-12 lg:gap-20 items-stretch">
+                        
+                        {/* Left Branding/Title Section */}
+                        <div className="w-full lg:w-[360px] shrink-0 flex flex-col justify-between py-4 text-left">
+                          <div className="space-y-6">
+                            {/* Spinning luxury badge */}
+                            <div className="relative w-28 h-28 flex items-center justify-center">
+                              <svg viewBox="0 0 100 100" className="w-full h-full absolute inset-0" style={{ animation: "spin 18s linear infinite" }}>
+                                <path id="circleTextPath" d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" fill="none" />
+                                <text className="text-[7px] font-black tracking-[0.22em] fill-stone-350 uppercase">
+                                  <textPath href="#circleTextPath">
+                                    BEST PRODUCT ✦ EVERYBAKE RECOMMENDED ✦ 
+                                  </textPath>
+                                </text>
+                              </svg>
+                              {/* Inner static luxury circle or icon */}
+                              <div className="w-12 h-12 rounded-full bg-stone-50 border border-stone-100 flex items-center justify-center">
+                                <span className="text-sm">✦</span>
                               </div>
-                              <span className="text-[10px] text-stone-400 font-bold flex items-center gap-1">
-                                <Clock className="w-3 h-3 text-stone-400" /> ~
-                                06.08(월) 오전 11시 마감 임박
-                              </span>
                             </div>
 
-                            <div className="flex flex-row sm:flex-col justify-end items-center gap-3 shrink-0 sm:self-center">
-                              <div className="w-14 h-14 rounded-full bg-orange-100/50 text-stone-800 outline outline-3 outline-white flex items-center justify-center text-3xl shadow-sm group-hover:scale-105 transition-transform">
-                                🥖
-                              </div>
-                              <span className="px-2.5 py-1 bg-white hover:bg-stone-50 text-stone-800 text-[10px] font-black rounded-lg border border-stone-200 group-hover:bg-[#f97316] group-hover:text-white group-hover:border-transparent transition-all flex items-center gap-0.5 shadow-xs">
-                                혜택받기 <ChevronRight className="w-3 h-3" />
-                              </span>
+                            <div className="space-y-3 pt-2">
+                              <h2 className="text-3.5xl sm:text-4.5xl font-black text-stone-900 tracking-tight leading-tight">
+                                EVERYBAKE 추천상품
+                              </h2>
+                              <p className="text-stone-500 text-sm font-light leading-relaxed max-w-xs">
+                                베스트 셀러에서 엄선한 최상급 시그니처 생지 라인업. 미술관에 온 듯 깊은 맛의 예술을 감상해 보세요.
+                              </p>
                             </div>
                           </div>
 
-                          {/* Event 2 Card */}
-                          <div
-                            onClick={() => handleEventClick("baking-king")}
-                            className="group relative bg-[#f9f5ff] hover:bg-[#f5eeff] border border-indigo-150 hover:border-indigo-400 rounded-2xl p-5 cursor-pointer transition-all flex flex-col sm:flex-row justify-between items-stretch gap-4 text-left shadow-xs hover:shadow-md"
-                          >
-                            <div className="flex flex-col justify-between space-y-3 flex-1">
-                              <div className="space-y-1.5">
-                                <span className="inline-block text-[9px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-100/60 px-2 py-0.5 rounded">
-                                  명예의 전당
-                                </span>
-                                <h3 className="text-sm sm:text-base font-black text-stone-900 group-hover:text-indigo-600 transition-colors leading-tight">
-                                  제 3회 에브리베이크 빵천하제일대회 🏆
-                                </h3>
-                                <p className="text-[11px] text-stone-550 font-semibold leading-relaxed">
-                                  전국 가맹 사장님만의 생지 200% 활용 쿠프 및
-                                  온도 설정 꿀팁을 나누고 상생지원금 바우처를
-                                  지금 득템하세요!
-                                </p>
-                              </div>
-                              <span className="text-[10px] text-stone-400 font-bold flex items-center gap-1">
-                                <Award className="w-3 h-3 text-indigo-400" />{" "}
-                                실시간 참여 명필 사장님 피드백 누적 집계중
-                              </span>
-                            </div>
-
-                            <div className="flex flex-row sm:flex-col justify-end items-center gap-3 shrink-0 sm:self-center">
-                              <div className="w-14 h-14 rounded-full bg-indigo-100/50 text-stone-800 outline outline-3 outline-white flex items-center justify-center text-3xl shadow-sm group-hover:scale-105 transition-transform">
-                                👑
-                              </div>
-                              <span className="px-2.5 py-1 bg-white hover:bg-stone-50 text-stone-800 text-[10px] font-black rounded-lg border border-stone-200 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-transparent transition-all flex items-center gap-0.5 shadow-xs">
-                                도전하기 <ChevronRight className="w-3 h-3" />
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 3) 생지 라이브러리 베스트셀러 TOP 5 바로가기 (Minimal high-end lists) */}
-                      <div className="space-y-4 font-sans">
-                        <div className="flex justify-between items-center pb-2 border-b border-stone-200">
-                          <div className="text-left">
-                            <span className="text-[9px] bg-amber-100 text-amber-800 font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md">
-                              BEST SELLERS
-                            </span>
-                            <h2 className="text-lg sm:text-xl font-black text-stone-900 tracking-tight mt-1">
-                              🥐 실시간 생지 라이브러리 누적 판매 TOP 5
-                            </h2>
-                          </div>
-                          <button
-                            onClick={() => handleNav("dough-main")}
-                            className="text-stone-500 hover:text-stone-900 font-extrabold text-[11px] flex items-center gap-0.5 hover:underline"
-                          >
-                            전체 보기 <ChevronRight className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                          {["m-001", "g-002", "h-001", "h-006", "h-009"]
-                            .map((id) =>
-                              CURATED_DOUGHS.find((d) => d.id === id),
-                            )
-                            .filter((d): d is any => !!d)
-                            .map((dough, index) => (
-                              <div
-                                key={dough.id}
-                                onClick={() => handleDoughClick(dough.id)}
-                                className="group bg-white p-4.5 rounded-xl border border-stone-200 hover:border-amber-500 hover:shadow-xs transition-all cursor-pointer text-left flex flex-col justify-between space-y-3.5 relative overflow-hidden"
+                          <div className="pt-8 lg:pt-0 space-y-6">
+                            {/* Sliders navigation buttons */}
+                            <div className="flex items-center gap-3">
+                              <button
+                                onClick={() => {
+                                  if (recommendScrollRef.current) {
+                                    recommendScrollRef.current.scrollBy({ left: -400, behavior: "smooth" });
+                                  }
+                                }}
+                                className="w-12 h-12 rounded-full border border-stone-250 hover:border-stone-900 flex items-center justify-center text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
                               >
-                                {/* Rank Badge overlay */}
-                                <div
-                                  className={`absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${
-                                    index === 0
-                                      ? "bg-amber-100 text-amber-800 outline outline-1 outline-amber-300"
-                                      : index === 1
-                                        ? "bg-[#f5f5f5] text-stone-700 outline outline-1 outline-stone-300"
-                                        : index === 2
-                                          ? "bg-amber-55 text-amber-900"
-                                          : "bg-stone-50 text-stone-500"
-                                  }`}
-                                >
-                                  {index + 1}
-                                </div>
+                                <ChevronLeft className="w-5 h-5" />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (recommendScrollRef.current) {
+                                    recommendScrollRef.current.scrollBy({ left: 400, behavior: "smooth" });
+                                  }
+                                }}
+                                className="w-12 h-12 rounded-full border border-stone-250 hover:border-stone-900 flex items-center justify-center text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
+                              >
+                                <ChevronRight className="w-5 h-5" />
+                              </button>
+                            </div>
 
-                                <div className="space-y-1">
-                                  <span className="text-[9px] font-extrabold text-stone-400 block tracking-tight">
-                                    {dough.masterName || "EveryBake"}
-                                  </span>
-                                  <h3 className="text-xs sm:text-[13px] font-extrabold text-stone-900 group-hover:text-amber-600 transition-colors line-clamp-2 leading-snug">
-                                    {dough.name}
-                                  </h3>
-                                </div>
-
-                                <div className="flex items-center justify-between pt-1 text-xs">
-                                  <span className="text-[#f97316] font-black font-mono">
-                                    {dough.price.toLocaleString()}원
-                                  </span>
-                                  <span className="text-[9px] font-extrabold text-stone-400 group-hover:text-stone-850 flex items-center gap-0.25">
-                                    자세히{" "}
-                                    <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
+                            {/* Scroll progress bar */}
+                            <div className="w-full max-w-[200px] bg-stone-100 h-[3px] relative rounded-full overflow-hidden">
+                              <div 
+                                className="bg-stone-900 h-full absolute transition-all duration-500 rounded-full"
+                                style={{ 
+                                  width: `${100 / 5}%`, 
+                                  left: `${(activeRecommendIndex / 5) * 100}%` 
+                                }} 
+                              />
+                            </div>
+                          </div>
                         </div>
+
+                        {/* Right Carousel Slider Area */}
+                        <div className="flex-1 overflow-hidden relative">
+                          <div 
+                            ref={recommendScrollRef}
+                            onScroll={() => {
+                              if (recommendScrollRef.current) {
+                                const { scrollLeft, scrollWidth, clientWidth } = recommendScrollRef.current;
+                                const maxScroll = scrollWidth - clientWidth;
+                                const ratio = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+                                const index = Math.min(4, Math.max(0, Math.round(ratio * 4)));
+                                setActiveRecommendIndex(index);
+                              }
+                            }}
+                            className="flex gap-8 overflow-x-auto scrollbar-none pb-6 pt-2 select-none scroll-smooth"
+                          >
+                            {[
+                              {
+                                id: "m-001",
+                                imgUrl: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=800",
+                                discount: "30%"
+                              },
+                              {
+                                id: "g-002",
+                                imgUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=800",
+                                discount: "15%"
+                              },
+                              {
+                                id: "h-001",
+                                imgUrl: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800",
+                                discount: "20%"
+                              },
+                              {
+                                id: "h-006",
+                                imgUrl: "https://images.unsplash.com/photo-1541119638723-c51cbe2262aa?auto=format&fit=crop&q=80&w=800",
+                                discount: "25%"
+                              },
+                              {
+                                id: "h-009",
+                                imgUrl: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&q=80&w=800",
+                                discount: "10%"
+                              }
+                            ].map((item, index) => {
+                              const dough = CURATED_DOUGHS.find((d) => d.id === item.id);
+                              if (!dough) return null;
+                              return (
+                                <div
+                                  key={dough.id}
+                                  onClick={() => handleDoughClick(dough.id)}
+                                  className="w-[280px] sm:w-[340px] md:w-[380px] shrink-0 group flex flex-col justify-between text-left cursor-pointer transition-all duration-300"
+                                >
+                                  {/* Big Premium Image Card Container */}
+                                  <div className="aspect-square w-full bg-stone-50 rounded-2xl overflow-hidden relative flex items-center justify-center border border-stone-100 group-hover:shadow-lg transition-all duration-500">
+                                    <img
+                                      src={item.imgUrl}
+                                      alt={dough.name}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                                      referrerPolicy="no-referrer"
+                                    />
+                                    {/* Number luxury overlay */}
+                                    <div className="absolute top-4 left-4 font-mono text-[11px] text-stone-400 font-medium tracking-widest bg-white/90 backdrop-blur-xs px-3 py-1 rounded-full border border-stone-100 shadow-2xs">
+                                      {String(index + 1).padStart(2, '0')}
+                                    </div>
+                                    
+                                    {/* Quick Info Hover Overlay */}
+                                    <div className="absolute inset-0 bg-stone-950/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                  </div>
+
+                                  {/* Bottom Details (Luxurious Minimal Text style) */}
+                                  <div className="mt-5 space-y-2 flex flex-col justify-between flex-1">
+                                    <div className="space-y-1">
+                                      <span className="text-[10px] text-stone-400 font-semibold tracking-wider block uppercase">
+                                        {dough.masterName || "EveryBake Master"}
+                                      </span>
+                                      <h3 className="text-stone-900 text-sm sm:text-base font-bold leading-tight tracking-wide group-hover:text-stone-950 transition-colors line-clamp-1">
+                                        {dough.name}
+                                      </h3>
+                                      <p className="text-stone-500 text-xs font-light leading-relaxed line-clamp-2 mt-1">
+                                        {dough.description}
+                                      </p>
+                                    </div>
+
+                                    {/* Price and Cart Row */}
+                                    <div className="flex items-center justify-between pt-4 border-t border-stone-100 mt-2">
+                                      <div className="flex items-baseline gap-2">
+                                        <span className="text-stone-400 line-through text-[11px] font-mono">
+                                          {Math.round(dough.price * 1.35).toLocaleString()}원
+                                        </span>
+                                        <span className="text-stone-900 font-bold text-sm sm:text-base font-mono">
+                                          {dough.price.toLocaleString()}원
+                                        </span>
+                                        <span className="text-red-500 font-bold text-xs sm:text-sm">
+                                          {item.discount}
+                                        </span>
+                                      </div>
+
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleAddToCart(dough);
+                                        }}
+                                        className="text-[11px] font-bold text-stone-900 hover:text-[#f97316] tracking-widest uppercase border-b border-stone-900 hover:border-[#f97316] pb-0.5 transition-all cursor-pointer"
+                                      >
+                                        CART
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
                       </div>
                     </div>
 
-                    {/* Core B2B Category Navigation Grid */}
-                    <div className="max-w-5xl mx-auto px-6 py-12">
-                      <h2 className="text-center text-xs font-extrabold tracking-widest text-[#f97316] uppercase mb-1">
-                        EVEIN MEMBER SERVICES
-                      </h2>
-                      <h3 className="text-center text-2xl font-black text-stone-905 tracking-tight mb-8">
-                        플랫폼 전용 서비스 선택
-                      </h3>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-                        {/* 1. 도우컨디셔너 / 오븐 */}
-                        <div
-                          onClick={() => handleNav("equip-list")}
-                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
-                          id="cat-card-1"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-orange-50 text-[#f97316] flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
-                            💻
-                          </div>
-                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
-                            도우컨디셔너 / 오븐
-                          </h4>
-                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-                            AI 기반 발효 지능
-                            <br />
-                            스마트 베이킹 오븐
-                          </p>
-                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
-                              자세히 보기 <ChevronRight className="w-3 h-3" />
+                    {/* Core B2B Category Navigation Grid - Redesigned as a luxury brand index */}
+                    <div className="w-full bg-stone-50/40 py-24 border-b border-stone-150 text-left">
+                      <div className="max-w-[1600px] mx-auto px-6 sm:px-12 md:px-16">
+                        
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 pb-8 border-b border-stone-200">
+                          <div className="space-y-2">
+                            <span className="text-[10px] font-semibold tracking-[0.25em] text-stone-400 block uppercase">
+                              ✦ INTEGRATED PORTFOLIO
                             </span>
+                            <h3 className="text-2.5xl sm:text-3.5xl font-black text-stone-900 tracking-tight leading-tight">
+                              플랫폼 전용 서비스 선택
+                            </h3>
                           </div>
+                          <p className="text-stone-500 text-xs sm:text-sm font-light max-w-md leading-relaxed">
+                            에브리베이크의 검증된 브랜드들과 제휴 솔루션을 한자리에서 만나보세요. 
+                            스마트 기기 연동부터 원부자재 유통망까지 빈틈없는 인프라를 제공합니다.
+                          </p>
                         </div>
 
-                        {/* 2. AI 스마트 포스 */}
-                        <div
-                          onClick={() => handleNav("ai-pos")}
-                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
-                          id="cat-card-ai-pos"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
-                            🖥️
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-px bg-stone-200 overflow-hidden rounded-2xl border border-stone-200 shadow-2xs">
+                          
+                          {/* 01. 도우컨디셔너 / 오븐 */}
+                          <div
+                            onClick={() => handleNav("equip-list")}
+                            className="bg-white p-8 hover:bg-stone-50 transition-all duration-300 cursor-pointer group flex flex-col justify-between min-h-[220px]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-start">
+                                <span className="font-mono text-[10px] text-stone-400 tracking-widest font-medium">01</span>
+                                <Cpu className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
+                              </div>
+                              <h4 className="text-sm font-bold text-stone-900 mt-6 tracking-wide group-hover:text-stone-950 transition-colors">
+                                도우컨디셔너 & 스마트 오븐
+                              </h4>
+                              <p className="text-[11px] text-stone-500 font-light mt-3 leading-relaxed">
+                                AI 기반 미세 발효 제어 지능
+                                <br />
+                                초정밀 스마트 베이킹 오븐 라인업
+                              </p>
+                            </div>
+                            <div className="pt-6">
+                              <span className="text-[10px] text-stone-400 font-semibold tracking-wider flex items-center gap-1 group-hover:text-stone-900 transition-all">
+                                VIEW CATALOGUE <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
                           </div>
-                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
-                            AI 스마트 포스
-                          </h4>
-                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-                            기기 자동제어 동기화
-                            <br />
-                            실시간 주문 예측 로봇
-                          </p>
-                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
-                              자세히 보기 <ChevronRight className="w-3 h-3" />
-                            </span>
-                          </div>
-                        </div>
 
-                        {/* 3. 프리미엄 생지 */}
-                        <div
-                          onClick={() => handleNav("dough-main")}
-                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
-                          id="cat-card-2"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
-                            🥐
+                          {/* 02. AI 스마트 포스 */}
+                          <div
+                            onClick={() => handleNav("ai-pos")}
+                            className="bg-white p-8 hover:bg-stone-50 transition-all duration-300 cursor-pointer group flex flex-col justify-between min-h-[220px]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-start">
+                                <span className="font-mono text-[10px] text-stone-400 tracking-widest font-medium">02</span>
+                                <Laptop className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
+                              </div>
+                              <h4 className="text-sm font-bold text-stone-900 mt-6 tracking-wide group-hover:text-stone-950 transition-colors">
+                                AI 스마트 포스 솔루션
+                              </h4>
+                              <p className="text-[11px] text-stone-500 font-light mt-3 leading-relaxed">
+                                스마트 기기 오븐 자동 연동 제어
+                                <br />
+                                기상예보 연계 당일 생산 예측 POS
+                              </p>
+                            </div>
+                            <div className="pt-6">
+                              <span className="text-[10px] text-stone-400 font-semibold tracking-wider flex items-center gap-1 group-hover:text-stone-900 transition-all">
+                                ENTER SYSTEM <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
                           </div>
-                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
-                            프리미엄 생지
-                          </h4>
-                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-                            한국 제과명장의 레시피
-                            <br />
-                            글로벌 명품 라인업
-                          </p>
-                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
-                              자세히 보기 <ChevronRight className="w-3 h-3" />
-                            </span>
-                          </div>
-                        </div>
 
-                        {/* 3. 커피 원두 / 머신 */}
-                        <div
-                          onClick={() => handleNav("coffee")}
-                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
-                          id="cat-card-3"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-stone-100 text-stone-700 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
-                            ☕
+                          {/* 03. 프리미엄 생지 */}
+                          <div
+                            onClick={() => handleNav("dough-main")}
+                            className="bg-white p-8 hover:bg-stone-50 transition-all duration-300 cursor-pointer group flex flex-col justify-between min-h-[220px]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-start">
+                                <span className="font-mono text-[10px] text-stone-400 tracking-widest font-medium">03</span>
+                                <Layers className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
+                              </div>
+                              <h4 className="text-sm font-bold text-stone-900 mt-6 tracking-wide group-hover:text-stone-950 transition-colors">
+                                프리미엄 생지 라이브러리
+                              </h4>
+                              <p className="text-[11px] text-stone-500 font-light mt-3 leading-relaxed">
+                                한국 제과 명장의 전통 레시피 생지
+                                <br />
+                                글로벌 명품 정통 콜드 유통 제품군
+                              </p>
+                            </div>
+                            <div className="pt-6">
+                              <span className="text-[10px] text-stone-400 font-semibold tracking-wider flex items-center gap-1 group-hover:text-stone-900 transition-all">
+                                BROWSE PRODUCTS <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
                           </div>
-                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
-                            커피 원두 / 머신
-                          </h4>
-                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-                            에베인 전용 특가 원두
-                            <br />
-                            상업용 에스프레소 머신
-                          </p>
-                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
-                              자세히 보기 <ChevronRight className="w-3 h-3" />
-                            </span>
-                          </div>
-                        </div>
 
-                        {/* 4. 원부자재 */}
-                        <div
-                          onClick={() => handleNav("ingredients")}
-                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
-                          id="cat-card-ingredients"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-605 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
-                            🌾
+                          {/* 04. 커피 원두 / 머신 */}
+                          <div
+                            onClick={() => handleNav("coffee")}
+                            className="bg-white p-8 hover:bg-stone-50 transition-all duration-300 cursor-pointer group flex flex-col justify-between min-h-[220px]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-start">
+                                <span className="font-mono text-[10px] text-stone-400 tracking-widest font-medium">04</span>
+                                <Sparkles className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
+                              </div>
+                              <h4 className="text-sm font-bold text-stone-900 mt-6 tracking-wide group-hover:text-stone-950 transition-colors">
+                                커피 원두 & 에스프레소 머신
+                              </h4>
+                              <p className="text-[11px] text-stone-500 font-light mt-3 leading-relaxed">
+                                에베인 전용 등급 스페셜티 직배송 원두
+                                <br />
+                                세계적 프리미엄 상업 에스프레소 기기
+                              </p>
+                            </div>
+                            <div className="pt-6">
+                              <span className="text-[10px] text-stone-400 font-semibold tracking-wider flex items-center gap-1 group-hover:text-stone-900 transition-all">
+                                VIEW BRANDS <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
                           </div>
-                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
-                            원부자재
-                          </h4>
-                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-                            가루류, 액체류, 유지류,
-                            <br />
-                            당류, 이스트 등 다양화
-                          </p>
-                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
-                              자세히 보기 <ChevronRight className="w-3 h-3" />
-                            </span>
-                          </div>
-                        </div>
 
-                        {/* 5. 에브리베이크 커뮤니티 */}
-                        <div
-                          onClick={() => handleNav("community")}
-                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
-                          id="cat-card-4"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
-                            💬
+                          {/* 05. 원부자재 */}
+                          <div
+                            onClick={() => handleNav("ingredients")}
+                            className="bg-white p-8 hover:bg-stone-50 transition-all duration-300 cursor-pointer group flex flex-col justify-between min-h-[220px]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-start">
+                                <span className="font-mono text-[10px] text-stone-400 tracking-widest font-medium">05</span>
+                                <Award className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
+                              </div>
+                              <h4 className="text-sm font-bold text-stone-900 mt-6 tracking-wide group-hover:text-stone-950 transition-colors">
+                                베이킹 원부자재 홀세일
+                              </h4>
+                              <p className="text-[11px] text-stone-500 font-light mt-3 leading-relaxed">
+                                프리미엄 가루류, 가공 유지, 명품 프랑스 버터
+                                <br />
+                                초신선 유기농 직납 도매 전산 카탈로그
+                              </p>
+                            </div>
+                            <div className="pt-6">
+                              <span className="text-[10px] text-stone-400 font-semibold tracking-wider flex items-center gap-1 group-hover:text-stone-900 transition-all">
+                                EXPLORE MATERIALS <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
                           </div>
-                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
-                            상생 커뮤니티
-                          </h4>
-                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-                            전국 사장님들과의 소통
-                            <br />
-                            신규 품목 입점 제안 및 투표
-                          </p>
-                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
-                              소통방 입장 <ChevronRight className="w-3 h-3" />
-                            </span>
-                          </div>
-                        </div>
 
-                        {/* 5. 입점 및 제휴 문의 */}
-                        <div
-                          onClick={() => handleNav("inquiry")}
-                          className="bg-white rounded-2xl border border-stone-200/80 shadow-xs hover:shadow-md cursor-pointer group hover:border-[#f97316] transition-all text-center flex flex-col items-center justify-center p-5 sm:p-6 lg:p-8 aspect-auto sm:aspect-square h-auto relative"
-                          id="cat-card-5"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-4 text-3xl group-hover:scale-110 transition-transform">
-                            🤝
+                          {/* 06. 에브리베이크 커뮤니티 */}
+                          <div
+                            onClick={() => handleNav("community")}
+                            className="bg-white p-8 hover:bg-stone-50 transition-all duration-300 cursor-pointer group flex flex-col justify-between min-h-[220px]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-start">
+                                <span className="font-mono text-[10px] text-stone-400 tracking-widest font-medium">06</span>
+                                <MessageSquare className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
+                              </div>
+                              <h4 className="text-sm font-bold text-stone-900 mt-6 tracking-wide group-hover:text-stone-950 transition-colors">
+                                에베인 상생 커뮤니티
+                              </h4>
+                              <p className="text-[11px] text-stone-500 font-light mt-3 leading-relaxed">
+                                전국 가맹 사장님들의 생산 노하우 교류
+                                <br />
+                                신품목 입점 정기 제안 및 민주적 온라인 투표
+                              </p>
+                            </div>
+                            <div className="pt-6">
+                              <span className="text-[10px] text-stone-400 font-semibold tracking-wider flex items-center gap-1 group-hover:text-stone-900 transition-all">
+                                ENTER PLAZA <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
                           </div>
-                          <h4 className="text-sm font-extrabold text-stone-900 group-hover:text-[#f97316] transition-colors">
-                            입점 & 제휴 문의
-                          </h4>
-                          <p className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-                            공급사 신규 상품 등록
-                            <br />
-                            실시간 제안 전송망
-                          </p>
-                          <div className="absolute bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] text-[#f97316] font-bold flex items-center gap-0.5">
-                              자세히 보기 <ChevronRight className="w-3 h-3" />
-                            </span>
+
+                          {/* 07. 입점 및 제휴 문의 */}
+                          <div
+                            onClick={() => handleNav("inquiry")}
+                            className="bg-white p-8 hover:bg-stone-50 transition-all duration-300 cursor-pointer group flex flex-col justify-between min-h-[220px]"
+                          >
+                            <div>
+                              <div className="flex justify-between items-start">
+                                <span className="font-mono text-[10px] text-stone-400 tracking-widest font-medium">07</span>
+                                <Building2 className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
+                              </div>
+                              <h4 className="text-sm font-bold text-stone-900 mt-6 tracking-wide group-hover:text-stone-950 transition-colors">
+                                파트너십 & 제휴 제안망
+                              </h4>
+                              <p className="text-[11px] text-stone-500 font-light mt-3 leading-relaxed">
+                                글로벌 우수 공급사 신규 품목 등록
+                                <br />
+                                원자재 투명 상생 납품 정기 제안 채널
+                              </p>
+                            </div>
+                            <div className="pt-6">
+                              <span className="text-[10px] text-stone-400 font-semibold tracking-wider flex items-center gap-1 group-hover:text-stone-900 transition-all">
+                                SUBMIT PROPOSAL <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -4188,13 +4313,13 @@ export default function App() {
                           </div>
                         </div>
 
-                        {/* Item 2: Family Warmth with image */}
+                        {/* Item 2: Premium Smart Technology with image */}
                         <div className="space-y-6">
                           {/* Immersive centered image */}
                           <div className="w-full rounded-[32px] overflow-hidden bg-stone-50 border border-stone-150 shadow-xs">
                             <img
-                              src={warmBakingFamilyImage}
-                              alt="Cozy familial baking environment"
+                              src={kctActualOvenStoryImage}
+                              alt="Premium Smart Baking Technology"
                               className="w-full h-auto max-h-[500px] object-cover hover:scale-[1.01] transition-transform duration-700 pointer-events-none"
                               referrerPolicy="no-referrer"
                             />
@@ -4202,18 +4327,15 @@ export default function App() {
                           {/* Centered clean description stack */}
                           <div className="text-center max-w-2xl mx-auto space-y-3 pt-2">
                             <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest block font-mono">
-                              02 / HOME CONGENIAL WELLBEING
+                              02 / PREMIUM SMART INTEGRATION
                             </span>
                             <h3 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight leading-snug">
-                              아침을 여는 소박한 행복, 엄마의 주방에서 피어난
-                              따스한 웃음
+                              최상급 프리미엄 도우 제어 기능의 스마트 하드웨어 통합
                             </h3>
                             <p className="text-stone-550 text-xs sm:text-sm leading-relaxed">
-                              버터의 풍요로운 향기가 집안을 사르르 채우는 행복을
-                              느껴보십시오. 조리 안전 차단 시스템이 어린
-                              자녀들과의 소중한 베이킹 체험을 안전하게 수화하며,
-                              전문가의 수고로운 매뉴얼 작업을 원터치 컨트롤
-                              하나로 모두 줄여 주었습니다.
+                              가장 편안하고 진보된 클라우드 연계 오븐 소성 환경을 누려보십시오. 
+                              통합형 온도 및 전력 전송 제어를 기반으로 하여, 안전하고 정밀하게 오븐 상태를 통제하며,
+                              B2B 사업장에 최적화된 하드웨어 동작 상태를 지켜냅니다.
                             </p>
                           </div>
                         </div>
@@ -7408,7 +7530,7 @@ export default function App() {
                               <h3 className="text-sm font-extrabold text-stone-900 leading-tight mb-2">
                                 {item.name}
                               </h3>
-                              <p className="text-[11px] text-[#78716c] leading-relaxed font-semibold">
+                              <p className="text-[11px] text-[#78716c] font-semibold product-spec-font">
                                 {item.description}
                               </p>
                             </div>
@@ -7657,7 +7779,7 @@ export default function App() {
                               <h3 className="text-sm font-extrabold text-stone-900 leading-tight mb-2">
                                 {item.name}
                               </h3>
-                              <p className="text-[11px] text-stone-500 leading-relaxed font-semibold">
+                              <p className="text-[11px] text-stone-500 font-semibold product-spec-font">
                                 {item.description}
                               </p>
                             </div>
@@ -8565,192 +8687,75 @@ export default function App() {
         </div>
       </footer>
 
-      {/* 🥐🍞 Cute Floating Bread Scroll-to-Top/Bottom Controller 🥯🥖 */}
-      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-center select-none">
-        {/* Scroll Top Button (Toast Bread design) */}
-        <div className="relative group">
-          <div className="absolute right-16 top-1/2 -translate-y-1/2 bg-[#fffbeb] text-[#78350f] border-2 border-[#854d0e] text-[10px] px-2.5 py-1.5 rounded-xl font-black whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 -translate-x-3 group-hover:translate-x-0 transition-all duration-250 pointer-events-none flex items-center gap-1">
-            <span>🧈</span> 버터처럼 사르르 (맨 위로)
-          </div>
+      {/* Minimalist Apple B2B Scroll-to-Top/Bottom Controller */}
+      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-2 items-center select-none shadow-xs">
+        {/* Scroll Top Button */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="w-10 h-10 bg-white/95 hover:bg-stone-50 border border-stone-200/60 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-center justify-center cursor-pointer text-stone-600 hover:text-stone-900 transition-all active:scale-95"
+          title="위로 이동"
+          id="btn-scroll-top"
+        >
+          <ChevronUp className="w-4 h-4 text-stone-600" />
+        </button>
 
-          <motion.button
-            whileHover={{ scale: 1.15, y: -4, rotate: -2 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="w-14 h-14 bg-[#fffbeb] hover:bg-[#fef3c7] border-[3.5px] border-[#854d0e] rounded-[18px_18px_12px_12px] shadow-lg hover:shadow-xl flex flex-col items-center justify-center cursor-pointer text-[#78350f] focus:outline-hidden transition-colors"
-            id="btn-scroll-top"
-          >
-            {/* Top bread ears shape highlights */}
-            <div className="absolute -top-1 left-2 w-4 h-2.5 bg-[#854d0e]/15 rounded-full" />
-            <div className="absolute -top-1 right-2 w-4 h-2.5 bg-[#854d0e]/15 rounded-full" />
-
-            <ChevronUp className="w-5 h-5 text-[#854d0e] stroke-[2.5px] group-hover:animate-bounce mb-0.5" />
-            <span className="text-[14px]">🍞</span>
-            <span className="text-[9px] font-black text-[#b45309] -mt-0.5">
-              TOP
-            </span>
-          </motion.button>
-        </div>
-
-        {/* Scroll Bottom Button (Tasty Pastry design) */}
-        <div className="relative group">
-          <div className="absolute right-16 top-1/2 -translate-y-1/2 bg-[#fffbeb] text-[#78350f] border-2 border-[#854d0e] text-[10px] px-2.5 py-1.5 rounded-xl font-black whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 -translate-x-3 group-hover:translate-x-0 transition-all duration-250 pointer-events-none flex items-center gap-1">
-            <span>🍯</span> 시럽과 함께 쭉 (맨 아래로)
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.15, y: 4, rotate: 2 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() =>
-              window.scrollTo({
-                top: document.documentElement.scrollHeight,
-                behavior: "smooth",
-              })
-            }
-            className="w-14 h-14 bg-[#fdf4e3] hover:bg-[#faebcd] border-[3.5px] border-[#854d0e] rounded-[14px_14px_18px_18px] shadow-lg hover:shadow-xl flex flex-col items-center justify-center cursor-pointer text-[#78350f] focus:outline-hidden transition-colors"
-            id="btn-scroll-bottom"
-          >
-            {/* Bottom crust visual details */}
-            <div className="absolute -bottom-1 left-3 w-8 h-2 bg-[#854d0e]/10 rounded-full" />
-
-            <span className="text-[14px]">🥐</span>
-            <ChevronDown className="w-5 h-5 text-[#854d0e] stroke-[2.5px] group-hover:translate-y-0.5 transition-transform mt-0.5" />
-            <span className="text-[9px] font-black text-[#b45309] -mt-0.5">
-              BTM
-            </span>
-          </motion.button>
-        </div>
+        {/* Scroll Bottom Button */}
+        <button
+          onClick={() =>
+            window.scrollTo({
+              top: document.documentElement.scrollHeight,
+              behavior: "smooth",
+            })
+          }
+          className="w-10 h-10 bg-white/95 hover:bg-stone-50 border border-stone-200/60 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-center justify-center cursor-pointer text-stone-600 hover:text-stone-900 transition-all active:scale-95"
+          title="아래로 이동"
+          id="btn-scroll-bottom"
+        >
+          <ChevronDown className="w-4 h-4 text-stone-600" />
+        </button>
       </div>
 
-      {/* 🥐 Satisfying Global Click Particle Animation Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-[100001] overflow-hidden">
-        {clickParticles.map((p) => (
-          <div
-            key={p.id}
-            className="absolute animate-bread-pop text-2xl select-none"
-            style={{
-              left: p.x,
-              top: p.y,
-            }}
-          >
-            {p.emoji}
-          </div>
-        ))}
-      </div>
+      {/* Satisfying Click Particle Animation - Disabled for professional UX */}
+      <div className="fixed inset-0 pointer-events-none z-[100001] overflow-hidden" />
 
-      {/* 🥖 Beautiful Page Transition Screen Overlay with Flying Breads */}
+      {/* Elegant High-end B2B Transition Screen Overlay */}
       {isTransitioning && (
         <div
-          className={`fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-[#faf6eb] transition-all duration-300 ease-out ${
+          className={`fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-white transition-all duration-300 ease-out ${
             transitionFadeState === "in"
-              ? "opacity-100 scale-100"
-              : "opacity-0 scale-105 pointer-events-none"
+              ? "opacity-100"
+              : "opacity-0 pointer-events-none"
           } overflow-hidden`}
         >
-          {/* Main Illustration Background Image - Sized and positioned elegantly to occupy half of the screen without any overlapping */}
-          <div className="absolute inset-x-0 top-[8%] bottom-[25%] select-none pointer-events-none bg-[#faf6eb] flex flex-col items-center justify-center p-4">
-            <div className="relative w-full h-full max-w-xl sm:max-w-3xl flex items-center justify-center scale-135 sm:scale-140 transition-transform duration-300">
-              <img
-                src={everyBakeLogo}
-                alt="EveryBake Transition Logo Mark"
-                className="w-auto h-full max-h-[56vh] sm:max-h-[60vh] object-contain opacity-95 brightness-[1.02] filter drop-shadow-[0_12px_28px_rgba(230,215,185,0.45)]"
-                referrerPolicy="no-referrer"
-              />
-              {/* Soft vignette fade at the edges of the logo block */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#faf6eb]/5 via-transparent to-[#faf6eb]/10 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Background Cute Flying Breads - made subtle with higher transparency and small size so it doesn't clutter the artwork */}
-          <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden select-none opacity-40">
-            <div
-              className="absolute animate-fly-ltr text-xl"
-              style={{ "--fly-duration": "3.2s", top: "12vh" } as any}
-            >
-              🍞
-            </div>
-            <div
-              className="absolute animate-fly-ltr text-xl"
-              style={{ "--fly-duration": "4.1s", top: "42vh" } as any}
-            >
-              🥖
-            </div>
-            <div
-              className="absolute animate-fly-ltr text-xl"
-              style={{ "--fly-duration": "3.5s", top: "72vh" } as any}
-            >
-              🥯
-            </div>
-            <div
-              className="absolute animate-fly-ltr text-xl"
-              style={{ "--fly-duration": "4.8s", top: "28vh" } as any}
-            >
-              🥞
-            </div>
-            <div
-              className="absolute animate-fly-ltr text-xl"
-              style={{ "--fly-duration": "3.9s", top: "58vh" } as any}
-            >
-              🧁
+          <div 
+            className="text-center text-stone-950 flex flex-col items-center justify-center space-y-8 md:space-y-10 select-none"
+            style={{ fontFamily: '"Nanum Myeongjo", "Cormorant Garamond", serif' }}
+          >
+            {/* EVERY BAKE */}
+            <div className="animate-cinematic-depth space-y-4 flex flex-col items-center">
+              <span className="text-[11px] sm:text-[13px] md:text-[14px] uppercase tracking-[0.4em] text-stone-400 font-sans font-bold block">
+                EVERY BAKE
+              </span>
+              <div className="h-[1px] w-10 bg-stone-200" />
             </div>
 
-            <div
-              className="absolute animate-fly-rtl text-xl"
-              style={{ "--fly-duration": "3.4s", top: "25vh" } as any}
-            >
-              🥐
+            {/* Poetic Copy as explicitly requested with cinematic depth effects */}
+            <div className="space-y-4 sm:space-y-5 text-stone-900 animate-cinematic-depth-slow">
+              <p className="text-xl sm:text-2.5xl md:text-3xl font-light tracking-[0.15em] leading-[1.6]">
+                당신의 식탁
+              </p>
+              <p className="text-xl sm:text-2.5xl md:text-3xl font-light tracking-[0.15em] leading-[1.6]">
+                당신의 매 순간
+              </p>
+              <p className="text-3.5xl sm:text-4.5xl md:text-5.5xl font-extrabold tracking-[0.15em] text-[#101010] pt-4 block leading-none">
+                에브리 베이크
+              </p>
             </div>
-            <div
-              className="absolute animate-fly-rtl text-xl"
-              style={{ "--fly-duration": "4.5s", top: "8vh" } as any}
-            >
-              🥨
-            </div>
-            <div
-              className="absolute animate-fly-rtl text-xl"
-              style={{ "--fly-duration": "3.8s", top: "48vh" } as any}
-            >
-              🍩
-            </div>
-            <div
-              className="absolute animate-fly-rtl text-xl"
-              style={{ "--fly-duration": "4.2s", top: "82vh" } as any}
-            >
-              🍪
-            </div>
-            <div
-              className="absolute animate-fly-rtl text-xl"
-              style={{ "--fly-duration": "5.0s", top: "62vh" } as any}
-            >
-              🥯
-            </div>
-          </div>
 
-          {/* 1. UPPER SPACE: Spaced elegant mini label above pastry arch */}
-          <div className="absolute top-10 z-20 text-center space-y-1">
-            <span className="text-[#8c6d53] text-[9px] sm:text-xs uppercase font-black tracking-[0.25em] font-mono block animate-pulse">
-              EVERYBAKE PREMIUM TRANSITION
-            </span>
-            <div className="h-[1px] w-8 bg-[#8c6d53]/30 mx-auto rounded-full" />
-          </div>
-
-          {/* 2. BOTTOM SPACE: Beautifully integrated glass capsule between cherubs */}
-          <div className="absolute bottom-24 z-20 text-center px-4 max-w-[90vw] sm:max-w-md w-full">
-            <div className="backdrop-blur-md bg-white/70 border border-white/50 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl shadow-[0_10px_35px_rgba(140,109,83,0.06)] space-y-1.5 sm:space-y-2">
-              <h2 className="text-[#4a3525] text-lg sm:text-xl font-black tracking-tight leading-normal font-sans">
-                당신의 식탁, 당신의 매 순간
-              </h2>
-              <div className="h-[1.5px] w-5 bg-[#f97316]/60 mx-auto rounded-full" />
-              <h3 className="text-[#8c6d53] text-xs sm:text-sm font-bold tracking-tight">
-                에브리베이크
-              </h3>
+            {/* A silent elegant organic micro indicator */}
+            <div className="pt-8 opacity-40">
+              <div className="w-1.5 h-1.5 bg-stone-950 rounded-full animate-ping" />
             </div>
-          </div>
-
-          {/* 3. SOOTHING FOOTER: Subtle status bar below the cherubs */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 text-[9px] text-[#8c6d53] font-black tracking-wider uppercase font-mono bg-[#8c6d53]/5 px-3.5 py-1.5 rounded-full border border-[#8c6d53]/10">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
-            온·습도 동시 수송 시스템 가동 중
           </div>
         </div>
       )}
