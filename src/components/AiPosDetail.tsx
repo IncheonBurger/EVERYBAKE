@@ -947,11 +947,11 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
                 </p>
               </div>
 
-              {/* Price Details - 1,500,000 KRW, No rental details */}
+              {/* Price Details - 4,500,000 KRW, No rental details */}
               <div className="border-t border-b border-stone-100 py-6 space-y-2">
                 <span className="text-stone-400 text-[11px] font-medium block">영구 일시불 판매가</span>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl sm:text-4xl font-black text-black">1,500,000원</span>
+                  <span className="text-3xl sm:text-4xl font-black text-black">4,500,000원</span>
                   <span className="text-xs text-stone-500 font-medium">(부가세 포함)</span>
                 </div>
                 <p className="text-[11px] text-stone-400 font-light font-sans">

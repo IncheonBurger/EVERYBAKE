@@ -3064,7 +3064,7 @@ export default function App() {
                           width: isMobile ? "100%" : hoveredPanel === "right" ? "75%" : hoveredPanel === "left" ? "25%" : "50%" 
                         }}
                         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-                        className="h-1/2 md:h-full flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 relative group overflow-hidden border-t md:border-t-0 border-stone-850 cursor-pointer select-none bg-stone-900 z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.85)]"
+                        className="h-1/2 md:h-full flex flex-col justify-between pt-24 pb-6 sm:pb-10 md:pb-14 lg:pb-16 px-6 sm:px-10 md:px-14 lg:px-16 relative group overflow-hidden border-t md:border-t-0 border-stone-850 cursor-pointer select-none bg-stone-900 z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.85)]"
                       >
                         {/* Background full-bleed image of master artisan handcrafting dough */}
                         <div className="absolute inset-0 z-0">
@@ -3098,7 +3098,7 @@ export default function App() {
                                 e.stopPropagation();
                                 handleNav("dough-main");
                               }}
-                              className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 hover:border-white text-white hover:bg-white hover:text-black text-[10px] font-bold tracking-widest transition-all duration-300 rounded-full cursor-pointer mt-2 uppercase font-sans bg-black/40 backdrop-blur-xs text-white-force"
+                              className="premium-dough-btn inline-flex items-center gap-2 px-5 py-2.5 text-[10px] font-bold tracking-widest rounded-full cursor-pointer mt-2 uppercase font-sans"
                             >
                               <span>프리미엄생지 자세히보기</span>
                               <ArrowRight className="w-3.5 h-3.5 text-amber-400 text-amber-force" />

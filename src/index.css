@@ -424,4 +424,23 @@ section {
   padding-bottom: 8rem !important;
 }
 
+/* Master Dough premium button hover fixes */
+.premium-dough-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  transition: all 300ms ease !important;
+}
+.premium-dough-btn:hover {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #000000 !important;
+}
+.premium-dough-btn:hover span {
+  color: #000000 !important;
+}
+.premium-dough-btn:active {
+  transform: scale(0.97);
+}
+
 
