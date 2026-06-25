@@ -321,8 +321,8 @@ export default function EventsView({
                 <span className="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 text-[10px] sm:text-xs font-bold tracking-widest px-3 py-1 rounded-full uppercase inline-block font-gnb-menu">
                   ✦ LUXURY BAKING CODES
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#FAF9F6] tracking-tight leading-none font-serif-warm">
-                  오늘의 행운 <span className="text-[#D4AF37]">골드 스크래치 패드</span> ⚜️
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#D4AF37] tracking-tight leading-none font-serif-warm gold-force gold-text-important">
+                  오늘의 행운 골든 스크래치 패드 ⚜️
                 </h2>
                 <p className="text-[#E8E5DF] text-xs sm:text-sm font-light leading-relaxed font-sans">
                   프리미엄 파트너십을 맺은 전국의 블랑제 오너 분들을 위한 기품 있는 베네핏 패드입니다. 

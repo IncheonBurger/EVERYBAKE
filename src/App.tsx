@@ -2142,7 +2142,7 @@ export default function App() {
             setTransitionFadeState("idle");
             setPendingView(null);
           }, 300);
-        }, 1800);
+        }, 1000);
       }, 350);
     } else {
       // Instant transition without delay or overlay screen for subcategories, details, or other helper views
@@ -4562,78 +4562,6 @@ export default function App() {
                       </p>
 
                       <div className="w-full max-w-3xl text-left space-y-8">
-                        {/* Reviews Form */}
-                        <form
-                          onSubmit={handleAddEquipReview}
-                          className="bg-stone-50 p-6 rounded-2xl border border-stone-200 space-y-4"
-                        >
-                          <h3 className="text-xs font-black uppercase tracking-wider text-stone-500">
-                            실제 기기 사용 후기를 남겨주세요
-                          </h3>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">
-                                성함 또는 매장명
-                              </label>
-                              <input
-                                type="text"
-                                required
-                                value={newEquipAuthor}
-                                onChange={(e) =>
-                                  setNewEquipAuthor(e.target.value)
-                                }
-                                placeholder="예: 서울 마포구 C베이커리"
-                                className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-900 focus:border-stone-900 outline-hidden"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">
-                                만족도 별점
-                              </label>
-                              <select
-                                value={newEquipStars}
-                                onChange={(e) =>
-                                  setNewEquipStars(parseInt(e.target.value))
-                                }
-                                className="w-full text-xs rounded-xl border border-stone-250 bg-white px-3 py-2.5 focus:ring-1 focus:ring-stone-900 focus:border-stone-900 outline-hidden"
-                              >
-                                <option value="5">★★★★★ (5점 만점)</option>
-                                <option value="4">★★★★☆ (4점 우수)</option>
-                                <option value="3">★★★☆☆ (3점 보통)</option>
-                                <option value="2">★★☆☆☆ (2점 미흡)</option>
-                                <option value="1">★☆☆☆☆ (1점 매우불만)</option>
-                              </select>
-                            </div>
-                          </div>
-
-                          <div>
-                            <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1">
-                              어떤 점이 좋으셨나요?
-                            </label>
-                            <textarea
-                              required
-                              rows={3}
-                              value={newEquipContent}
-                              onChange={(e) =>
-                                setNewEquipContent(e.target.value)
-                              }
-                              placeholder="실제 사용하며 느끼신 앱 원격 제어나 정밀 발효 제어 시스템의 만족감을 알려주세요."
-                              className="w-full text-xs rounded-xl border border-stone-250 bg-white p-3 focus:ring-1 focus:ring-stone-900 focus:border-stone-900 outline-hidden resize-none"
-                            />
-                          </div>
-
-                          <div className="flex justify-end">
-                            <button
-                              type="submit"
-                              className="px-6 py-2.5 bg-stone-905 hover:bg-black text-white rounded-xl text-xs font-bold transition-all shadow cursor-pointer flex items-center gap-1.5"
-                            >
-                              <Send className="w-3.5 h-3.5" />
-                              <span>후기 등록</span>
-                            </button>
-                          </div>
-                        </form>
-
                         {/* Render review list */}
                         <div className="divide-y divide-stone-150 space-y-6 pt-4">
                           {equipReviews.map((item) => (

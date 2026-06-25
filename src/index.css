@@ -197,6 +197,21 @@
   animation: warmCinematicDepthSlow 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
 /* ==========================================
    LONDONS CONTEMPORARY GALLERY ART-DIRECTION
    ========================================== */
@@ -264,6 +279,9 @@ h1, h2, h3, h4, .serif-heading, [class*="text-2xl"], [class*="text-3xl"], [class
 }
 .text-amber-force {
   color: #fbbf24 !important;
+}
+.gold-force, .gold-text-important {
+  color: #D4AF37 !important;
 }
 
 /* Luxurious Signature Phrase Typography overrides to bypass aggressive global titles */
