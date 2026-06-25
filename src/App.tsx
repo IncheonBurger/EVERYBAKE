@@ -2980,7 +2980,7 @@ export default function App() {
                 {currentView === "home" && (
                   <div className="animate-fade-in font-sans">
                     {/* Premium Dynamic Split Presentation (High-End Sliding Paper & Minimalist Aesthetic) */}
-                    <div className="w-full h-screen md:h-[90vh] lg:h-[840px] bg-stone-950 overflow-hidden relative flex flex-col md:flex-row border-b border-stone-850">
+                    <div className="w-full h-screen bg-stone-950 overflow-hidden relative flex flex-col md:flex-row border-b border-stone-850">
                       
                                           {/* Left Half: AI Dough Conditioner (Intelligent Hardware - Light Theme Gallery Showroom) */}
                       <motion.div 
