@@ -94,6 +94,7 @@ export const getDoughSales = (id: string): number => {
 import artisanBakerDetailImage from "./assets/images/artisan_baker_detail_1780289872811.png";
 import modernSmartOvenImage from "./assets/images/modern_smart_oven_close_1780289886400.png";
 import kctActualOvenStoryImage from "./assets/images/kct_actual_oven_story_1780296704183.png";
+import tallSmartOvenImage from "./assets/images/tall_smart_oven_1780277904002.png";
 
 interface CartItem {
   item: DoughItem;
@@ -555,6 +556,9 @@ export default function App() {
   const [activeDoughTab, setActiveDoughTab] = useState<
     "master" | "global" | "tasty"
   >("master");
+  const [activeDoughSubCategory, setActiveDoughSubCategory] = useState<
+    "all" | "hard" | "pastry" | "soft"
+  >("all");
 
   // Shopping / Cart drawer state
   const [cartOpen, setCartOpen] = useState<boolean>(false);
@@ -2975,154 +2979,136 @@ export default function App() {
                 {/* ==================================================== */}
                 {currentView === "home" && (
                   <div className="animate-fade-in font-sans">
-                    {/* Fullscreen Auto Slider (Museum & Luxury Hotel Vibe) */}
-                    <div className="w-full h-screen overflow-hidden relative select-none bg-stone-950 font-sans">
+                    {/* Premium Dynamic Split Presentation (High-End Sliding Paper & Minimalist Aesthetic) */}
+                    <div className="w-full h-screen md:h-[90vh] lg:h-[840px] bg-stone-950 overflow-hidden relative flex flex-col md:flex-row border-b border-stone-850">
                       
-                      {/* Slide 1: Hardware & AI Dough Conditioner */}
-                      <div 
-                        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
-                          currentSlide === 0 ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
-                        }`}
+                                          {/* Left Half: AI Dough Conditioner (Intelligent Hardware - Light Theme Gallery Showroom) */}
+                      <motion.div 
+                        onMouseEnter={() => setHoveredPanel("left")}
+                        onMouseLeave={() => setHoveredPanel(null)}
+                        onClick={() => setHoveredPanel("left")}
+                        animate={{ 
+                          width: isMobile ? "100%" : hoveredPanel === "left" ? "75%" : hoveredPanel === "right" ? "25%" : "50%" 
+                        }}
+                        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                        className="h-1/2 md:h-full flex flex-col justify-between pt-24 pb-6 sm:pb-10 md:pb-14 lg:pb-16 px-6 sm:px-10 md:px-14 lg:px-16 relative group overflow-hidden border-b md:border-b-0 border-stone-200 cursor-pointer select-none bg-[#f5f3f0] z-10"
                       >
-                        {/* Refined dark background with custom warm center light and luxury overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#161413] via-[#0F0E0D] to-[#080707] z-0 overflow-hidden" />
-                        
-                        {/* Subtle glowing backlight */}
-                        <div className="absolute w-[35rem] h-[35rem] bg-[#f97316]/10 rounded-full blur-[120px] left-[60%] top-[50%] -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-screen" />
-                        
-                        {/* Premium dark vignette overlay */}
-                        <div className="absolute inset-0 bg-black/45 z-2" />
-                        <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/80 to-transparent z-3 pointer-events-none" />
+                        {/* Clean showroom soft lighting */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#f5f3f0]/20 via-transparent to-white/60 pointer-events-none z-10" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_50%,rgba(249,115,22,0.04)_0%,transparent_70%)] pointer-events-none z-10" />
 
-                        {/* 3D Floating Product Image - Placed on the right side on desktop with soft floating animation */}
-                        <div className="absolute inset-0 z-5 pointer-events-none select-none flex items-center justify-center md:justify-end overflow-hidden px-6 md:px-16 lg:px-24">
-                          <motion.div
-                            animate={{
-                              y: [-8, 8, -8],
-                            }}
-                            transition={{
-                              duration: 6,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                            className="h-[55%] md:h-[75%] w-full md:w-1/2 flex items-center justify-center opacity-35 md:opacity-100 transition-all duration-700"
-                          >
-                            <img
+                        {/* Foreground actual 170cm Dough Conditioner image with a realistic soft shadow */}
+                        <div className="absolute right-4 sm:right-8 md:right-12 lg:right-16 top-[10%] sm:top-[14%] md:top-[18%] h-[30%] sm:h-[36%] md:h-[40%] lg:h-[44%] z-20 flex items-end justify-center pointer-events-none">
+                          <div className="relative h-full flex items-end">
+                            {/* Realistic physical shadow base */}
+                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-[85%] h-5 bg-black/15 filter blur-xl rounded-full" />
+                            <motion.img
                               src={ovenImage}
-                              alt="EveryBake Smart Pro Main Product"
-                              className="h-full w-auto max-h-[100%] object-contain filter drop-shadow-[0_25px_50px_rgba(249,115,22,0.25)]"
+                              alt="EVERYBAKE Professional 170cm AI Dough Conditioner"
+                              animate={{ 
+                                scale: hoveredPanel === "left" ? 1.05 : hoveredPanel === "right" ? 0.92 : 1,
+                                y: hoveredPanel === "left" ? -8 : 0
+                              }}
+                              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                              className="h-full w-auto object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.12)]"
                               referrerPolicy="no-referrer"
                             />
-                          </motion.div>
+                          </div>
                         </div>
 
-                        {/* Content Container - Beautifully aligned on the left */}
-                        <div className="absolute inset-0 p-6 sm:p-12 md:p-20 lg:p-24 flex flex-col justify-center items-start text-left z-10 w-full h-full">
-                          <div className="max-w-xl space-y-4 md:space-y-5">
-                            <span className="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 text-[10px] sm:text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full uppercase inline-block font-gnb-menu">
-                              ✦ PRECISION ENGINEERING
-                            </span>
-                            
-                            <h2 className="text-2xl sm:text-3.5xl md:text-4xl lg:text-[45px] xl:text-[50px] font-light text-white leading-tight tracking-wide font-serif-warm drop-shadow-sm">
-                              당신의 식탁,
-                              <br />
-                              당신의 매 순간
-                              <br />
-                              <span className="text-[#D4AF37] font-semibold tracking-widest">에브리베이크</span>
+                        {/* Middle: Title & Quick Actions */}
+                        <div className="z-30 text-left my-4 sm:my-6 space-y-3">
+                          <div className={`transition-all duration-500 ${hoveredPanel === "right" ? "opacity-30 scale-95 origin-left" : "opacity-100 scale-100 origin-left"}`}>
+                            <h2 className="text-lg sm:text-xl md:text-2xl font-light text-stone-900 tracking-[0.18em] uppercase font-sans text-stone-900-force">
+                              AI DOUGH <span className="font-semibold text-[#f97316] text-orange-force">CONDITIONER</span>
                             </h2>
-                            
-                            <p className="text-stone-300 text-xs sm:text-sm md:text-base font-light leading-relaxed max-w-md font-sans tracking-wide">
-                              매 순간 최상의 온도와 습도를 조율하여 생지의 본연의 가치를 보존합니다. 
-                              에브리베이크의 스마트 코어 기술이 자아내는 고결한 풍미를 맞이해 보십시오.
-                            </p>
+                          </div>
 
+                          <div className={`transition-all duration-500 ${hoveredPanel === "right" ? "opacity-0 scale-90 translate-y-2 pointer-events-none" : "opacity-100 scale-100 translate-y-0"}`}>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleNav("equip-list");
                               }}
-                              className="inline-flex items-center justify-center px-8 py-3 bg-[#D4AF37] hover:bg-white text-stone-950 hover:text-stone-950 text-xs font-medium tracking-[0.15em] transition-all duration-300 uppercase cursor-pointer mt-2"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 border border-stone-900/30 hover:border-stone-900 text-stone-900 hover:bg-stone-900 hover:text-white text-[10px] font-bold tracking-widest transition-all duration-300 rounded-full cursor-pointer mt-2 uppercase font-sans text-stone-900-force bg-[#f5f3f0]/60 backdrop-blur-xs"
                             >
-                              <span>AI도우컨디셔너 자세히 보기 &gt;</span>
+                              <span>도우컨디셔너 자세히보기</span>
+                              <ArrowRight className="w-3.5 h-3.5 text-[#f97316] text-orange-force" />
                             </button>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Slide 2: Premium Master Dough Library */}
-                      <div 
-                        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
-                          currentSlide === 1 ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
-                        }`}
+                        {/* Bottom: Signature Phrase (Strict User Requirement) */}
+                        <div className={`z-30 mt-auto text-left pt-6 transition-all duration-500 border-t border-stone-300/60 ${hoveredPanel === "right" ? "opacity-20 scale-95 origin-left" : "opacity-100 scale-100"}`}>
+                          <div className="space-y-1 select-none">
+                            <div className="signature-title-1">
+                              당신의 식탁
+                            </div>
+                            <div className="signature-title-2">
+                              당신의 매순간.
+                            </div>
+                            <div className="signature-brand mt-4 flex items-center gap-2">
+                              <span>에브리 베이크</span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#f97316] animate-pulse" />
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Right Half: Premium Master Dough Library (Curated Selection - Dark Atmospheric Theme) */}
+                      <motion.div 
+                        onMouseEnter={() => setHoveredPanel("right")}
+                        onMouseLeave={() => setHoveredPanel(null)}
+                        onClick={() => setHoveredPanel("right")}
+                        animate={{ 
+                          width: isMobile ? "100%" : hoveredPanel === "right" ? "75%" : hoveredPanel === "left" ? "25%" : "50%" 
+                        }}
+                        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                        className="h-1/2 md:h-full flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 relative group overflow-hidden border-t md:border-t-0 border-stone-850 cursor-pointer select-none bg-stone-900 z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.85)]"
                       >
-                        {/* Background Image: Flour Dust Cloud & Master Baker */}
-                        <div className="absolute inset-0 bg-[#0F0E0D] z-0 overflow-hidden">
-                          <img
+                        {/* Background full-bleed image of master artisan handcrafting dough */}
+                        <div className="absolute inset-0 z-0">
+                          <motion.img
                             src={artisanBakerDetailImage}
-                            alt="프리미엄 생지 마스터 베이커"
-                            className="absolute inset-0 w-full h-full object-cover object-center scale-102 brightness-90 saturate-[0.85]"
+                            alt="Master Baker Artisanal Dough Craft"
+                            animate={{ 
+                              scale: hoveredPanel === "right" ? 1.05 : 1,
+                              filter: hoveredPanel === "left" ? "brightness(0.3) contrast(1.1)" : "brightness(0.55) contrast(1.15)"
+                            }}
+                            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                            className="w-full h-full object-cover"
                             referrerPolicy="no-referrer"
                           />
+                          {/* High-end luxurious gradient masks for flawless text contrast */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/15 z-10 pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-transparent to-black/10 z-10 pointer-events-none" />
                         </div>
-                        
-                        {/* Luxury dark gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/50 to-black/90 z-2" />
-                        <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/85 to-transparent z-3 pointer-events-none" />
 
-                        {/* Content Container - Beautifully aligned on the left */}
-                        <div className="absolute inset-0 p-6 sm:p-12 md:p-20 lg:p-24 flex flex-col justify-center items-start text-left z-10 w-full h-full">
-                          <div className="max-w-2xl space-y-4 md:space-y-5">
-                            <span className="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 text-[10px] sm:text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full uppercase inline-block font-gnb-menu">
-                              ✦ ARTISANAL MASTERPIECE
-                            </span>
-                            
-                            <h2 className="text-xl sm:text-2.5xl md:text-3.2xl lg:text-[36px] xl:text-[42px] font-light text-white leading-snug tracking-wide font-serif-warm drop-shadow-sm">
-                              최고의 재료와 명장의 숨결이 깃든
-                              <br />
-                              <span className="text-[#D4AF37] font-semibold tracking-widest">프리미엄 마스터 생지 라이브러리</span>
+                        {/* Middle: Title & Quick Actions */}
+                        <div className="z-30 text-left my-4 sm:my-6 space-y-3">
+                          <div className={`transition-all duration-500 ${hoveredPanel === "left" ? "opacity-30 scale-95 origin-left" : "opacity-100 scale-100 origin-left"}`}>
+                            <h2 className="text-lg sm:text-xl md:text-2xl font-light text-white tracking-[0.18em] uppercase font-sans text-white-force">
+                              MASTER <span className="font-semibold text-amber-400 text-amber-force">DOUGH</span>
                             </h2>
-                            
-                            <p className="text-stone-300 text-xs sm:text-sm md:text-base font-light leading-relaxed max-w-lg font-sans tracking-wide">
-                              명장의 섬세한 손길이 닿아 탄생한 예술적인 천연 발효 도우 컬렉션입니다. 
-                              유럽 현지 직수입 명품 원료와 하이엔드 저온 동결 공법으로 완성된 극상의 텍스처를 경험해 보세요.
-                            </p>
+                          </div>
 
+                          <div className={`transition-all duration-500 ${hoveredPanel === "left" ? "opacity-0 scale-90 translate-y-2 pointer-events-none" : "opacity-100 scale-100 translate-y-0"}`}>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleNav("dough-main");
                               }}
-                              className="inline-flex items-center justify-center px-8 py-3 border border-[#D4AF37]/60 hover:border-[#D4AF37] text-white hover:text-stone-950 bg-transparent hover:bg-[#D4AF37] text-xs font-medium tracking-[0.15em] transition-all duration-300 uppercase cursor-pointer mt-2"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 hover:border-white text-white hover:bg-white hover:text-black text-[10px] font-bold tracking-widest transition-all duration-300 rounded-full cursor-pointer mt-2 uppercase font-sans bg-black/40 backdrop-blur-xs text-white-force"
                             >
-                              <span>프리미엄 생지 자세히보기 &gt;</span>
+                              <span>프리미엄생지 자세히보기</span>
+                              <ArrowRight className="w-3.5 h-3.5 text-amber-400 text-amber-force" />
                             </button>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Manual Slider Controller - Bottom Center Navigation */}
-                      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex items-center gap-6 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 shadow-2xl">
-                        <button
-                          onClick={handlePrevSlide}
-                          className="text-white hover:text-[#D4AF37] transition-all duration-300 cursor-pointer p-1 rounded-full hover:bg-white/5 active:scale-90"
-                          aria-label="Previous Slide"
-                        >
-                          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </button>
-                        
-                        <div className="flex items-center gap-2">
-                          <span className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${currentSlide === 0 ? "bg-[#D4AF37] w-6" : "bg-white/40"}`} />
-                          <span className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${currentSlide === 1 ? "bg-[#D4AF37] w-6" : "bg-white/40"}`} />
-                        </div>
-
-                        <button
-                          onClick={handleNextSlide}
-                          className="text-white hover:text-[#D4AF37] transition-all duration-300 cursor-pointer p-1 rounded-full hover:bg-white/5 active:scale-90"
-                          aria-label="Next Slide"
-                        >
-                          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </button>
-                      </div>
+                        {/* Spacer to keep flex layout consistent */}
+                        <div className="mt-auto h-0" />
+                      </motion.div>
 
                     </div>
 
@@ -4709,570 +4695,494 @@ export default function App() {
                       </p>
                     </div>
 
-                    {/* Dough View Tabs */}
-                    <div
-                      className="flex flex-wrap justify-center gap-2 mb-8"
-                      id="dough-subtabs-group"
-                    >
-                      <button
-                        onClick={() => {
-                          setActiveDoughTab("master");
-                          setSelectedKoreaPin(null);
-                        }}
-                        className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
-                          activeDoughTab === "master"
-                            ? "bg-[#2563eb] text-white border-[#2563eb]"
-                            : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
-                        }`}
-                      >
-                        대한민국 명장의 생지 🇰🇷
-                      </button>
-                      <button
-                        onClick={() => {
-                          setActiveDoughTab("global");
-                          setSelectedGlobalPin(null);
-                        }}
-                        className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
-                          activeDoughTab === "global"
-                            ? "bg-[#2563eb] text-white border-[#2563eb]"
-                            : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
-                        }`}
-                      >
-                        글로벌 시그니처 생지 ✈️
-                      </button>
-                      <button
-                        onClick={() => setActiveDoughTab("tasty")}
-                        className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
-                          activeDoughTab === "tasty"
-                            ? "bg-[#2563eb] text-white border-[#2563eb]"
-                            : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
-                        }`}
-                      >
-                        에브리베이크 테이스트 픽 (맛 보장 베스트) ⭐
-                      </button>
+                    {/* Map or Banner Top Card (Placed on top, full width) */}
+                    <div className="bg-white rounded-3xl p-5 border border-stone-200 shadow-sm mb-8 text-left">
+                      <h3 className="text-xs font-black text-stone-400 mb-3.5 uppercase tracking-widest text-center">
+                        {activeDoughTab === "tasty" ? "에브리베이크 프리미엄 셀렉션" : "원재료 실시간 위치 추적 스마트 관제"}
+                      </h3>
+                      {activeDoughTab === "master" ? (
+                        <KoreaMap
+                          selectedPinId={selectedKoreaPin}
+                          onSelectPin={setSelectedKoreaPin}
+                          activeRegion={hoveredRegion}
+                        />
+                      ) : activeDoughTab === "global" ? (
+                        <GlobalMap
+                          selectedPinId={selectedGlobalPin}
+                          onSelectPin={setSelectedGlobalPin}
+                          activeRegion={hoveredRegion}
+                        />
+                      ) : (
+                        <div className="h-[280px] sm:h-[340px] bg-amber-50/40 rounded-3xl border border-amber-100 flex flex-col items-center justify-center p-6 text-center space-y-4 shadow-inner animate-fade-in">
+                          <div className="w-16 h-16 rounded-2xl bg-white border border-amber-100 flex items-center justify-center text-3xl shadow-md animate-bounce">
+                            ⭐
+                          </div>
+                          <h4 className="text-stone-900 text-lg font-black font-sans">
+                            에브리베이크 테이스티 픽
+                          </h4>
+                          <p className="text-stone-600 text-xs leading-relaxed max-w-md font-semibold">
+                            특정 지리적 연동에 구애받지 않고 전국 가맹점주 만족도 평점 <strong>4.98점</strong>을 획득한 초특급 베스트셀러만을 고속 엄선한 프리미엄 밀집 컬렉션입니다.
+                          </p>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Interactive geographic sync layout - Integrated Stacked Layout */}
-                    <div className="flex flex-col gap-10 mb-12 max-w-4xl mx-auto w-full">
-                      {/* Map Column (Generous display) */}
-                      <div className="w-full space-y-4">
-                        <div className="bg-white rounded-3xl p-5 border border-stone-200 shadow-xl">
-                          <h3 className="text-xs font-black text-stone-400 mb-3.5 uppercase tracking-widest text-center">
-                            원재료 실시간 위치 추적 스마트 관제
-                          </h3>
-                          {activeDoughTab === "master" ? (
-                            <KoreaMap
-                              selectedPinId={selectedKoreaPin}
-                              onSelectPin={setSelectedKoreaPin}
-                              activeRegion={hoveredRegion}
-                            />
-                          ) : activeDoughTab === "global" ? (
-                            <GlobalMap
-                              selectedPinId={selectedGlobalPin}
-                              onSelectPin={setSelectedGlobalPin}
-                              activeRegion={hoveredRegion}
-                            />
-                          ) : (
-                            <div className="h-[450px] md:h-[500px] bg-amber-50/40 rounded-3xl border border-amber-100 flex flex-col items-center justify-center p-8 text-center space-y-4 shadow-inner animate-fade-in">
-                              <div className="w-20 h-20 rounded-2xl bg-white border border-amber-100 flex items-center justify-center text-4xl shadow-md animate-bounce">
-                                ⭐
+                    {/* Reorganized 2-Column Responsive Layout - Sidebar placed on the left side of the product grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                      
+                      {/* LEFT COLUMN: Premium Dough Categories Sidebar */}
+                      <div className="lg:col-span-3 space-y-4 lg:sticky lg:top-5">
+                        
+                        {/* Dough Sidebar Widget */}
+                        <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-xs">
+                          <div className="bg-stone-50/80 px-4 py-3.5 border-b border-stone-200">
+                            <span className="text-[10px] uppercase font-black tracking-wider text-[#f97316]">
+                              EVERYBAKE 생지 카테고리
+                            </span>
+                          </div>
+
+                          <div className="p-3 space-y-4">
+                            
+                            {/* Group 1: 대한민국 명장의 생지 */}
+                            <div className="space-y-1">
+                              <button
+                                onClick={() => {
+                                  setActiveDoughTab("master");
+                                  setActiveDoughSubCategory("all");
+                                  setSelectedKoreaPin(null);
+                                }}
+                                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-between ${
+                                  activeDoughTab === "master" && activeDoughSubCategory === "all"
+                                    ? "bg-orange-50 text-[#f97316] font-extrabold"
+                                    : "text-stone-900 hover:bg-stone-50"
+                                }`}
+                              >
+                                <span className="flex items-center gap-1.5">
+                                  <span className="text-sm">🇰🇷</span>
+                                  <span>대한민국 명장의 생지</span>
+                                </span>
+                                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                                  activeDoughTab === "master" && activeDoughSubCategory === "all"
+                                    ? "bg-[#f97316]/20 text-[#f97316]"
+                                    : "bg-stone-100 text-stone-600"
+                                }`}>
+                                  {CURATED_DOUGHS.filter(d => d.category === "master").length}
+                                </span>
+                              </button>
+
+                              <div className="pl-6 pr-1 space-y-0.5">
+                                {[
+                                  { id: "hard", label: "🥖 하드 계열 (식사빵류)", count: CURATED_DOUGHS.filter(d => d.category === "master" && d.subCategory === "hard").length },
+                                  { id: "pastry", label: "🥐 페이스트리 계열", count: CURATED_DOUGHS.filter(d => d.category === "master" && d.subCategory === "pastry").length },
+                                  { id: "soft", label: "🍞 소프트 계열", count: CURATED_DOUGHS.filter(d => d.category === "master" && d.subCategory === "soft").length }
+                                ].map((sub) => (
+                                  <button
+                                    key={`master-sub-${sub.id}`}
+                                    onClick={() => {
+                                      setActiveDoughTab("master");
+                                      setActiveDoughSubCategory(sub.id as any);
+                                      setSelectedKoreaPin(null);
+                                    }}
+                                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-between ${
+                                      activeDoughTab === "master" && activeDoughSubCategory === sub.id
+                                        ? "bg-orange-50/70 text-[#f97316] font-bold"
+                                        : "text-stone-600 hover:bg-stone-50/60 hover:text-stone-900"
+                                    }`}
+                                  >
+                                    <span>{sub.label}</span>
+                                    <span className="text-[10px] font-mono text-stone-400">
+                                      {sub.count}
+                                    </span>
+                                  </button>
+                                ))}
                               </div>
-                              <h4 className="text-stone-900 text-xl font-black font-sans">
-                                에브리베이크 테이스트 픽
-                              </h4>
-                              <p className="text-stone-600 text-xs sm:text-sm leading-relaxed max-w-md font-medium">
-                                <strong>
-                                  맛 보장 에브리베이크 테이스트 픽
-                                </strong>{" "}
-                                라인업은 특정 지리적 연동에 구애받지 않고 전국
-                                유명 베이커리 매장의 사장님들로부터 만족도 평점
-                                4.98점을 획득한 프리미엄 베스트 셀러들만을 완벽
-                                엄선한 컬렉션입니다.
-                              </p>
                             </div>
-                          )}
+
+                            <hr className="border-stone-100" />
+
+                            {/* Group 2: 글로벌 시그니처 생지 */}
+                            <div className="space-y-1">
+                              <button
+                                onClick={() => {
+                                  setActiveDoughTab("global");
+                                  setActiveDoughSubCategory("all");
+                                  setSelectedGlobalPin(null);
+                                }}
+                                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-between ${
+                                  activeDoughTab === "global" && activeDoughSubCategory === "all"
+                                    ? "bg-orange-50 text-[#f97316] font-extrabold"
+                                    : "text-stone-900 hover:bg-stone-50"
+                                }`}
+                              >
+                                <span className="flex items-center gap-1.5">
+                                  <span className="text-sm">✈️</span>
+                                  <span>글로벌 시그니처 생지</span>
+                                </span>
+                                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                                  activeDoughTab === "global" && activeDoughSubCategory === "all"
+                                    ? "bg-[#f97316]/20 text-[#f97316]"
+                                    : "bg-stone-100 text-stone-600"
+                                }`}>
+                                  {CURATED_DOUGHS.filter(d => d.category === "global").length}
+                                </span>
+                              </button>
+
+                              <div className="pl-6 pr-1 space-y-0.5">
+                                {[
+                                  { id: "hard", label: "🥖 하드 계열 (식사빵류)", count: CURATED_DOUGHS.filter(d => d.category === "global" && d.subCategory === "hard").length },
+                                  { id: "pastry", label: "🥐 페이스트리 계열", count: CURATED_DOUGHS.filter(d => d.category === "global" && d.subCategory === "pastry").length },
+                                  { id: "soft", label: "🍞 소프트 계열", count: CURATED_DOUGHS.filter(d => d.category === "global" && d.subCategory === "soft").length }
+                                ].map((sub) => (
+                                  <button
+                                    key={`global-sub-${sub.id}`}
+                                    onClick={() => {
+                                      setActiveDoughTab("global");
+                                      setActiveDoughSubCategory(sub.id as any);
+                                      setSelectedGlobalPin(null);
+                                    }}
+                                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-between ${
+                                      activeDoughTab === "global" && activeDoughSubCategory === sub.id
+                                        ? "bg-orange-50/70 text-[#f97316] font-bold"
+                                        : "text-stone-600 hover:bg-stone-50/60 hover:text-stone-900"
+                                    }`}
+                                  >
+                                    <span>{sub.label}</span>
+                                    <span className="text-[10px] font-mono text-stone-400">
+                                      {sub.count}
+                                    </span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            <hr className="border-stone-100" />
+
+                            {/* Group 3: 에브리베이크 테이스티 픽 */}
+                            <div className="space-y-1">
+                              <button
+                                onClick={() => {
+                                  setActiveDoughTab("tasty");
+                                  setActiveDoughSubCategory("all");
+                                }}
+                                className={`w-full text-left px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-between ${
+                                  activeDoughTab === "tasty" && activeDoughSubCategory === "all"
+                                    ? "bg-orange-50 text-[#f97316] font-extrabold"
+                                    : "text-stone-900 hover:bg-stone-50"
+                                }`}
+                              >
+                                <span className="flex items-center gap-1.5">
+                                  <span className="text-sm">⭐</span>
+                                  <span>에브리베이크 테이스티 픽</span>
+                                </span>
+                                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                                  activeDoughTab === "tasty" && activeDoughSubCategory === "all"
+                                    ? "bg-[#f97316]/20 text-[#f97316]"
+                                    : "bg-stone-100 text-stone-600"
+                                }`}>
+                                  {CURATED_DOUGHS.filter(d => d.category === "tasty").length}
+                                </span>
+                              </button>
+
+                              <div className="pl-6 pr-1 space-y-0.5">
+                                {[
+                                  { id: "hard", label: "🥖 하드 계열 (식사빵류)", count: CURATED_DOUGHS.filter(d => d.category === "tasty" && d.subCategory === "hard").length },
+                                  { id: "pastry", label: "🥐 페이스트리 계열", count: CURATED_DOUGHS.filter(d => d.category === "tasty" && d.subCategory === "pastry").length },
+                                  { id: "soft", label: "🍞 소프트 계열", count: CURATED_DOUGHS.filter(d => d.category === "tasty" && d.subCategory === "soft").length }
+                                ].map((sub) => (
+                                  <button
+                                    key={`tasty-sub-${sub.id}`}
+                                    onClick={() => {
+                                      setActiveDoughTab("tasty");
+                                      setActiveDoughSubCategory(sub.id as any);
+                                    }}
+                                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-between ${
+                                      activeDoughTab === "tasty" && activeDoughSubCategory === sub.id
+                                        ? "bg-orange-50/70 text-[#f97316] font-bold"
+                                        : "text-stone-600 hover:bg-stone-50/60 hover:text-stone-900"
+                                    }`}
+                                  >
+                                    <span>{sub.label}</span>
+                                    <span className="text-[10px] font-mono text-stone-400">
+                                      {sub.count}
+                                    </span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                          </div>
                         </div>
+
                       </div>
 
-                      {/* Product Catalog Cards Column (Natural vertical follow) */}
-                      <div className="w-full">
-                        <div className="flex justify-between items-center mb-5 pb-3 border-b border-stone-150">
-                          <span className="text-sm font-black text-stone-800">
-                            조회된 파트너 생지 목록 ({getTabDoughs().length}개)
-                          </span>
+                      {/* RIGHT COLUMN: The Product List Area */}
+                      <div className="lg:col-span-9 space-y-8 text-left">
 
-                          {activeDoughTab === "master" && selectedKoreaPin && (
-                            <button
-                              onClick={() => setSelectedKoreaPin(null)}
-                              className="text-xs text-[#2563eb] font-bold hover:underline bg-transparent"
-                            >
-                              지역 연동 필터 초기화
-                            </button>
-                          )}
-                          {activeDoughTab === "global" && selectedGlobalPin && (
-                            <button
-                              onClick={() => setSelectedGlobalPin(null)}
-                              className="text-xs text-[#2563eb] font-bold hover:underline bg-transparent"
-                            >
-                              국가 연동 필터 초기화
-                            </button>
-                          )}
-                        </div>
+                        {/* List Area */}
+                        <div>
+                          <div className="flex justify-between items-center mb-5 pb-3 border-b border-stone-150">
+                            <span className="text-xs sm:text-sm font-black text-stone-800">
+                              조회된 파트너 생지 목록 ({getTabDoughs().length}개)
+                            </span>
 
-                        {/* 🌟 Category Quick Jump Navigation Cards/Pill links */}
-                        {getTabDoughs().length > 0 && (
-                          <div className="bg-stone-50/60 rounded-2xl border border-stone-200/60 p-4 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
-                            <div className="space-y-1">
-                              <div className="text-xs font-black text-stone-800 flex items-center gap-1.5">
-                                <span className="inline-block w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-                                카테고리 원터치 빠른 탐색
-                              </div>
-                              <p className="text-[11px] text-stone-500 font-medium leading-relaxed">
-                                원하시는 분류명을 선택하시면 스크롤 동작 없이
-                                해당 리스트 영역으로 즉시 부드럽게 고속
-                                이동합니다.
+                            {activeDoughTab === "master" && selectedKoreaPin && (
+                              <button
+                                onClick={() => setSelectedKoreaPin(null)}
+                                className="text-xs text-[#2563eb] font-bold hover:underline bg-transparent"
+                              >
+                                지역 연동 필터 초기화
+                              </button>
+                            )}
+                            {activeDoughTab === "global" && selectedGlobalPin && (
+                              <button
+                                onClick={() => setSelectedGlobalPin(null)}
+                                className="text-xs text-[#2563eb] font-bold hover:underline bg-transparent"
+                              >
+                                국가 연동 필터 초기화
+                              </button>
+                            )}
+                          </div>
+
+                          {getTabDoughs().length === 0 ? (
+                            <div className="bg-white p-12 text-center rounded-3xl border border-stone-200 flex flex-col items-center justify-center space-y-3">
+                              <span className="text-4xl text-stone-300">🔍</span>
+                              <h4 className="text-stone-800 font-bold">
+                                탐색된 제안 생지가 없습니다
+                              </h4>
+                              <p className="text-xs text-stone-400">
+                                지정된 로케이션 상의 검증된 생지 원재료 노드가 비활성화 상태입니다.
                               </p>
                             </div>
+                          ) : (
+                            <div className="space-y-10">
+                              {(() => {
+                                const allDoughs = getTabDoughs();
+                                const sortedAll = [...allDoughs].sort(
+                                  (a, b) => getDoughSales(b.id) - getDoughSales(a.id),
+                                );
+                                const totalTop3 = sortedAll.slice(0, 3);
 
-                            <div className="flex flex-wrap items-center gap-2">
-                              {getTabDoughs().filter(
-                                (d) => d.subCategory === "hard",
-                              ).length > 0 && (
-                                <button
-                                  onClick={() => {
-                                    document
-                                      .getElementById("dough-section-hard")
-                                      ?.scrollIntoView({
-                                        behavior: "smooth",
-                                        block: "start",
-                                      });
-                                  }}
-                                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-blue-200 bg-blue-50/80 hover:bg-blue-100 text-blue-800 text-xs font-bold transition-all hover:scale-[1.02] shadow-sm cursor-pointer"
-                                >
-                                  <span className="text-xs">🥖</span>
-                                  <span>하드 계열</span>
-                                  <span className="bg-blue-600 text-white font-mono text-[9px] px-1.5 py-0.2 rounded-full font-black">
-                                    {
-                                      getTabDoughs().filter(
-                                        (d) => d.subCategory === "hard",
-                                      ).length
-                                    }
-                                  </span>
-                                </button>
-                              )}
+                                return (
+                                  <>
+                                    {/* 🏆 실시간 프리미엄 통합 토탈 TOP 3 랭킹 Block (Only shown on "all" subcategory view) */}
+                                    {activeDoughSubCategory === "all" && totalTop3.length > 0 && (
+                                      <div className="space-y-4 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent p-5 sm:p-6 rounded-3xl border-2 border-amber-500/30 shadow-xs text-left animate-fade-in">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/40">
+                                          <div className="space-y-1">
+                                            <div className="flex items-center gap-2">
+                                              <span className="text-xl">🏆</span>
+                                              <h4 className="text-sm font-black text-amber-900 uppercase tracking-tight">
+                                                에브리베이크 실시간 통합 토탈 인기 TOP 3 생지
+                                              </h4>
+                                              <span className="text-[10px] font-black text-white bg-amber-500 px-2.5 py-0.5 rounded-full font-mono animate-pulse shrink-0">
+                                                INTEGRATED BEST
+                                              </span>
+                                            </div>
+                                            <p className="text-[11px] text-[#78350f] font-semibold leading-relaxed">
+                                              분류 구분 없이 금일 전국 프랜차이즈 가맹매장에서 가장 주문량이 높은 최상위 3가지 시그니처 원재료입니다.
+                                            </p>
+                                          </div>
+                                          <div className="text-[10px] font-bold text-amber-800 bg-amber-100/60 border border-amber-200/80 px-3 py-1.5 rounded-xl whitespace-nowrap self-start sm:self-center font-mono">
+                                            실시간 판매량 분석 기준 (Box 단위)
+                                          </div>
+                                        </div>
 
-                              {getTabDoughs().filter(
-                                (d) => d.subCategory === "pastry",
-                              ).length > 0 && (
-                                <button
-                                  onClick={() => {
-                                    document
-                                      .getElementById("dough-section-pastry")
-                                      ?.scrollIntoView({
-                                        behavior: "smooth",
-                                        block: "start",
-                                      });
-                                  }}
-                                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-amber-200 bg-amber-50/80 hover:bg-amber-100/90 text-amber-800 text-xs font-bold transition-all hover:scale-[1.02] shadow-sm cursor-pointer"
-                                >
-                                  <span className="text-xs">🥐</span>
-                                  <span>페이스트리 계열</span>
-                                  <span className="bg-amber-500 text-stone-950 font-mono text-[9px] px-1.5 py-0.2 rounded-full font-black">
-                                    {
-                                      getTabDoughs().filter(
-                                        (d) => d.subCategory === "pastry",
-                                      ).length
-                                    }
-                                  </span>
-                                </button>
-                              )}
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                                          {totalTop3.map((dough, idx) => {
+                                            const subCatLabel =
+                                              dough.subCategory === "hard"
+                                                ? "🥖 하드 계열"
+                                                : dough.subCategory === "pastry"
+                                                  ? "🥐 페이스트리"
+                                                  : "🍞 소프트 계열";
 
-                              {getTabDoughs().filter(
-                                (d) => d.subCategory === "soft",
-                              ).length > 0 && (
-                                <button
-                                  onClick={() => {
-                                    document
-                                      .getElementById("dough-section-soft")
-                                      ?.scrollIntoView({
-                                        behavior: "smooth",
-                                        block: "start",
-                                      });
-                                  }}
-                                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-emerald-200 bg-emerald-50/80 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-all hover:scale-[1.02] shadow-sm cursor-pointer"
-                                >
-                                  <span className="text-xs">🍞</span>
-                                  <span>소프트 계열</span>
-                                  <span className="bg-emerald-600 text-white font-mono text-[9px] px-1.5 py-0.2 rounded-full font-black">
-                                    {
-                                      getTabDoughs().filter(
-                                        (d) => d.subCategory === "soft",
-                                      ).length
-                                    }
-                                  </span>
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        )}
+                                            return (
+                                              <div
+                                                key={`total-top3-${dough.id}`}
+                                                className="relative group"
+                                              >
+                                                {/* Subcategory Label overlay tag */}
+                                                <div className="absolute top-2.5 right-2.5 bg-stone-900/85 backdrop-blur-xs text-white text-[9px] font-black px-2 py-0.5 rounded-md z-20 shadow-sm">
+                                                  {subCatLabel}
+                                                </div>
 
-                        {getTabDoughs().length === 0 ? (
-                          <div className="bg-white p-12 text-center rounded-3xl border border-stone-200 flex flex-col items-center justify-center space-y-3">
-                            <span className="text-4xl text-stone-300">🔍</span>
-                            <h4 className="text-stone-800 font-bold">
-                              탐색된 제안 생지가 없습니다
-                            </h4>
-                            <p className="text-xs text-stone-400">
-                              지정된 로케이션 상의 검증된 생지 원재료 노드가
-                              비활성화 상태입니다.
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="space-y-12">
-                            {(() => {
-                              const allDoughs = getTabDoughs();
-                              const sortedAll = [...allDoughs].sort(
-                                (a, b) =>
-                                  getDoughSales(b.id) - getDoughSales(a.id),
-                              );
-                              const totalTop3 = sortedAll.slice(0, 3);
+                                                <DoughCard
+                                                  item={dough}
+                                                  onAddToCart={handleAddToCart}
+                                                  onToggleNotification={handleToggleNotification}
+                                                  isNotificationApplied={notifications.includes(dough.id)}
+                                                  onScanShortcut={handleScanShortcut}
+                                                  activeInOven={ovenActiveDoughId === dough.id}
+                                                  onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                                  onViewStory={(id) => {
+                                                    setSelectedDoughId(id);
+                                                    handleNav("dough-detail");
+                                                  }}
+                                                  rank={idx + 1}
+                                                  salesCount={getDoughSales(dough.id)}
+                                                />
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    )}
 
-                              return (
-                                <>
-                                  {/* 🏆 실시간 프리미엄 통합 토탈 TOP 3 랭킹 Block */}
-                                  {totalTop3.length > 0 && (
-                                    <div className="space-y-4 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent p-5 sm:p-6 rounded-3xl border-2 border-amber-500/30 shadow-xs text-left animate-fade-in">
-                                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/40">
-                                        <div className="space-y-1">
-                                          <div className="flex items-center gap-2">
-                                            <span className="text-xl">🏆</span>
-                                            <h4 className="text-sm font-black text-amber-900 uppercase tracking-tight">
-                                              에브리베이크 실시간 통합 토탈 인기
-                                              TOP 3 생지
-                                            </h4>
-                                            <span className="text-[10px] font-black text-white bg-amber-500 px-2.5 py-0.5 rounded-full font-mono animate-pulse shrink-0">
-                                              INTEGRATED BEST
+                                    {/* 1. 하드 계열 (식사빵류) Section */}
+                                    {(activeDoughSubCategory === "all" || activeDoughSubCategory === "hard") && allDoughs.filter((d) => d.subCategory === "hard").length > 0 && (
+                                      <div id="dough-section-hard" className="space-y-4 scroll-mt-24">
+                                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                            <h3 className="text-sm sm:text-base font-black text-stone-900 flex items-center gap-2">
+                                              <span className="bg-blue-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">
+                                                01
+                                              </span>
+                                              하드 계열 (식사빵류)
+                                            </h3>
+                                            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100/60 font-mono">
+                                              오븐의 스팀 기능 & 발효 극대화 품격 💨
                                             </span>
                                           </div>
-                                          <p className="text-[11px] text-[#78350f] font-semibold leading-relaxed">
-                                            분류 구분 없이 금일 전국 프랜차이즈
-                                            가맹매장에서 가장 주문량이 높은
-                                            최상위 3가지 시그니처 원재료입니다.
+                                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                                            유럽식 주식 빵으로, 담백한 맛이 특징이며 샌드위치 베이스로 많이 쓰입니다. 오븐의 스팀 기능과 발효가 매우 중요합니다. 대표 품목: 바게트, 깜빠뉴, 베이글 등
                                           </p>
                                         </div>
-                                        <div className="text-[10px] font-bold text-amber-800 bg-amber-100/60 border border-amber-200/80 px-3 py-1.5 rounded-xl whitespace-nowrap self-start sm:self-center font-mono">
-                                          실시간 판매량 분석 기준 (Box 단위)
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                          {allDoughs
+                                            .filter((d) => d.subCategory === "hard")
+                                            .map((dough) => {
+                                              const rankIdx = totalTop3.findIndex((t) => t.id === dough.id);
+                                              return (
+                                                <div key={dough.id} className="relative group">
+                                                  <DoughCard
+                                                    item={dough}
+                                                    onAddToCart={handleAddToCart}
+                                                    onToggleNotification={handleToggleNotification}
+                                                    isNotificationApplied={notifications.includes(dough.id)}
+                                                    onScanShortcut={handleScanShortcut}
+                                                    activeInOven={ovenActiveDoughId === dough.id}
+                                                    onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                                    onViewStory={(id) => {
+                                                      setSelectedDoughId(id);
+                                                      handleNav("dough-detail");
+                                                    }}
+                                                    rank={rankIdx !== -1 ? rankIdx + 1 : undefined}
+                                                    salesCount={getDoughSales(dough.id)}
+                                                  />
+                                                </div>
+                                              );
+                                            })}
                                         </div>
                                       </div>
+                                    )}
 
-                                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                                        {totalTop3.map((dough, idx) => {
-                                          const subCatLabel =
-                                            dough.subCategory === "hard"
-                                              ? "🥖 하드 계열"
-                                              : dough.subCategory === "pastry"
-                                                ? "🥐 페이스트리"
-                                                : "🍞 소프트 계열";
-
-                                          return (
-                                            <div
-                                              key={`total-top3-${dough.id}`}
-                                              className="relative group"
-                                            >
-                                              {/* Subcategory Label overlay tag for Integrated Top 3 */}
-                                              <div className="absolute top-2.5 right-2.5 bg-stone-900/85 backdrop-blur-xs text-white text-[9px] font-black px-2 py-0.5 rounded-md z-20 shadow-sm">
-                                                {subCatLabel}
-                                              </div>
-
-                                              <DoughCard
-                                                item={dough}
-                                                onAddToCart={handleAddToCart}
-                                                onToggleNotification={
-                                                  handleToggleNotification
-                                                }
-                                                isNotificationApplied={notifications.includes(
-                                                  dough.id,
-                                                )}
-                                                onScanShortcut={
-                                                  handleScanShortcut
-                                                }
-                                                activeInOven={
-                                                  ovenActiveDoughId === dough.id
-                                                }
-                                                onHoverCard={(
-                                                  reg: string | null,
-                                                ) => setHoveredRegion(reg)}
-                                                onViewStory={(id) => {
-                                                  setSelectedDoughId(id);
-                                                  handleNav("dough-detail");
-                                                }}
-                                                rank={idx + 1}
-                                                salesCount={getDoughSales(
-                                                  dough.id,
-                                                )}
-                                              />
-                                            </div>
-                                          );
-                                        })}
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* 1. 하드 계열 (식사빵류) Section */}
-                                  {allDoughs.filter(
-                                    (d) => d.subCategory === "hard",
-                                  ).length > 0 && (
-                                    <div
-                                      id="dough-section-hard"
-                                      className="space-y-6 scroll-mt-24"
-                                    >
-                                      <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                                          <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
-                                            <span className="bg-blue-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">
-                                              01
+                                    {/* 2. 페이스트리 계열 (비에누아즈리) Section */}
+                                    {(activeDoughSubCategory === "all" || activeDoughSubCategory === "pastry") && allDoughs.filter((d) => d.subCategory === "pastry").length > 0 && (
+                                      <div id="dough-section-pastry" className="space-y-4 scroll-mt-24">
+                                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                            <h3 className="text-sm sm:text-base font-black text-stone-900 flex items-center gap-2">
+                                              <span className="bg-amber-500 text-stone-950 text-[10px] uppercase font-mono px-2 py-0.5 rounded">
+                                                02
+                                              </span>
+                                              페이스트리 계열 (비에누아즈리)
+                                            </h3>
+                                            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100/60 font-mono">
+                                              도우컨디셔너 정밀 온도/습도 관리 필수 ❄️
                                             </span>
-                                            하드 계열 (식사빵류)
-                                          </h3>
-                                          <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100/60 font-mono">
-                                            오븐의 스팀 기능 & 발효 극대화 품격
-                                            💨
-                                          </span>
+                                          </div>
+                                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                                            버터 함량이 높아 겹겹이 결이 살아있는 빵입니다. 버터가 녹지 않도록 도우컨디셔너의 정밀한 온도/습도 관리가 필수적인 품종입니다. 대표 품목: 크루아상, 뺑오쇼콜라, 데니쉬 등
+                                          </p>
                                         </div>
-                                        <p className="text-xs text-stone-600 leading-relaxed font-semibold">
-                                          유럽식 주식 빵으로, 담백한 맛이
-                                          특징이며 샌드위치 베이스로 많이
-                                          쓰입니다. 오븐의 스팀 기능과 발효가
-                                          매우 중요합니다. 대표 품목: 바게트,
-                                          치아바타, 깜빠뉴, 베이글, 프레첼 등
-                                        </p>
-                                      </div>
 
-                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                        {allDoughs
-                                          .filter(
-                                            (d) => d.subCategory === "hard",
-                                          )
-                                          .map((dough) => {
-                                            const rankIdx = totalTop3.findIndex(
-                                              (t) => t.id === dough.id,
-                                            );
-                                            return (
-                                              <div
-                                                key={dough.id}
-                                                className="relative group"
-                                              >
-                                                <DoughCard
-                                                  item={dough}
-                                                  onAddToCart={handleAddToCart}
-                                                  onToggleNotification={
-                                                    handleToggleNotification
-                                                  }
-                                                  isNotificationApplied={notifications.includes(
-                                                    dough.id,
-                                                  )}
-                                                  onScanShortcut={
-                                                    handleScanShortcut
-                                                  }
-                                                  activeInOven={
-                                                    ovenActiveDoughId ===
-                                                    dough.id
-                                                  }
-                                                  onHoverCard={(
-                                                    reg: string | null,
-                                                  ) => setHoveredRegion(reg)}
-                                                  onViewStory={(id) => {
-                                                    setSelectedDoughId(id);
-                                                    handleNav("dough-detail");
-                                                  }}
-                                                  rank={
-                                                    rankIdx !== -1
-                                                      ? rankIdx + 1
-                                                      : undefined
-                                                  }
-                                                  salesCount={getDoughSales(
-                                                    dough.id,
-                                                  )}
-                                                />
-                                              </div>
-                                            );
-                                          })}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                          {allDoughs
+                                            .filter((d) => d.subCategory === "pastry")
+                                            .map((dough) => {
+                                              const rankIdx = totalTop3.findIndex((t) => t.id === dough.id);
+                                              return (
+                                                <div key={dough.id} className="relative group">
+                                                  <DoughCard
+                                                    item={dough}
+                                                    onAddToCart={handleAddToCart}
+                                                    onToggleNotification={handleToggleNotification}
+                                                    isNotificationApplied={notifications.includes(dough.id)}
+                                                    onScanShortcut={handleScanShortcut}
+                                                    activeInOven={ovenActiveDoughId === dough.id}
+                                                    onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                                    onViewStory={(id) => {
+                                                      setSelectedDoughId(id);
+                                                      handleNav("dough-detail");
+                                                    }}
+                                                    rank={rankIdx !== -1 ? rankIdx + 1 : undefined}
+                                                    salesCount={getDoughSales(dough.id)}
+                                                  />
+                                                </div>
+                                              );
+                                            })}
+                                        </div>
                                       </div>
-                                    </div>
-                                  )}
+                                    )}
 
-                                  {/* 2. 페이스트리 계열 (비에누아즈리) Section */}
-                                  {allDoughs.filter(
-                                    (d) => d.subCategory === "pastry",
-                                  ).length > 0 && (
-                                    <div
-                                      id="dough-section-pastry"
-                                      className="space-y-6 scroll-mt-24"
-                                    >
-                                      <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                                          <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
-                                            <span className="bg-amber-500 text-stone-950 text-[10px] uppercase font-mono px-2 py-0.5 rounded">
-                                              02
+                                    {/* 3. 소프트 계열 (간식 및 조리빵류) Section */}
+                                    {(activeDoughSubCategory === "all" || activeDoughSubCategory === "soft") && allDoughs.filter((d) => d.subCategory === "soft").length > 0 && (
+                                      <div id="dough-section-soft" className="space-y-4 scroll-mt-24">
+                                        <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
+                                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                            <h3 className="text-sm sm:text-base font-black text-stone-900 flex items-center gap-2">
+                                              <span className="bg-emerald-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">
+                                                03
+                                              </span>
+                                              소프트 계열 (간식 및 조리빵류)
+                                            </h3>
+                                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100/60 font-mono">
+                                              부드러운 식감 & 대중성 · 빠른 회전율 보증 🍞
                                             </span>
-                                            페이스트리 계열 (비에누아즈리)
-                                          </h3>
-                                          <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-100/60 font-mono">
-                                            도우컨디셔너 정밀 온도/습도 관리
-                                            필수 ❄️
-                                          </span>
+                                          </div>
+                                          <p className="text-xs text-stone-600 leading-relaxed font-semibold">
+                                            부드러운 식감으로 대중성이 높고 회전율이 빠른 기본 품종들입니다. 대표 품목: 식빵, 단팥빵, 소보로, 명란바게트, 소금빵 등
+                                          </p>
                                         </div>
-                                        <p className="text-xs text-stone-600 leading-relaxed font-semibold">
-                                          버터 함량이 높아 겹겹이 결이 살아있는
-                                          빵입니다. 버터가 녹지 않도록
-                                          도우컨디셔너의 정밀한 온도/습도 관리가
-                                          필수적인 품종입니다. 대표 품목:
-                                          크루아상, 뺑오쇼콜라, 데니쉬, 크로플
-                                          등
-                                        </p>
-                                      </div>
 
-                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                        {allDoughs
-                                          .filter(
-                                            (d) => d.subCategory === "pastry",
-                                          )
-                                          .map((dough) => {
-                                            const rankIdx = totalTop3.findIndex(
-                                              (t) => t.id === dough.id,
-                                            );
-                                            return (
-                                              <div
-                                                key={dough.id}
-                                                className="relative group"
-                                              >
-                                                <DoughCard
-                                                  item={dough}
-                                                  onAddToCart={handleAddToCart}
-                                                  onToggleNotification={
-                                                    handleToggleNotification
-                                                  }
-                                                  isNotificationApplied={notifications.includes(
-                                                    dough.id,
-                                                  )}
-                                                  onScanShortcut={
-                                                    handleScanShortcut
-                                                  }
-                                                  activeInOven={
-                                                    ovenActiveDoughId ===
-                                                    dough.id
-                                                  }
-                                                  onHoverCard={(
-                                                    reg: string | null,
-                                                  ) => setHoveredRegion(reg)}
-                                                  onViewStory={(id) => {
-                                                    setSelectedDoughId(id);
-                                                    handleNav("dough-detail");
-                                                  }}
-                                                  rank={
-                                                    rankIdx !== -1
-                                                      ? rankIdx + 1
-                                                      : undefined
-                                                  }
-                                                  salesCount={getDoughSales(
-                                                    dough.id,
-                                                  )}
-                                                />
-                                              </div>
-                                            );
-                                          })}
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* 3. 소프트 계열 (간식 및 조리빵류) Section */}
-                                  {allDoughs.filter(
-                                    (d) => d.subCategory === "soft",
-                                  ).length > 0 && (
-                                    <div
-                                      id="dough-section-soft"
-                                      className="space-y-6 scroll-mt-24"
-                                    >
-                                      <div className="bg-stone-50/70 p-4 rounded-2xl border border-stone-200/60 text-left">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                                          <h3 className="text-base font-black text-stone-900 flex items-center gap-2">
-                                            <span className="bg-emerald-600 text-white text-[10px] uppercase font-mono px-2 py-0.5 rounded">
-                                              03
-                                            </span>
-                                            소프트 계열 (간식 및 조리빵류)
-                                          </h3>
-                                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100/60 font-mono">
-                                            부드러운 식감 & 대중성 · 빠른 회전율
-                                            보증 🍞
-                                          </span>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                          {allDoughs
+                                            .filter((d) => d.subCategory === "soft")
+                                            .map((dough) => {
+                                              const rankIdx = totalTop3.findIndex((t) => t.id === dough.id);
+                                              return (
+                                                <div key={dough.id} className="relative group">
+                                                  <DoughCard
+                                                    item={dough}
+                                                    onAddToCart={handleAddToCart}
+                                                    onToggleNotification={handleToggleNotification}
+                                                    isNotificationApplied={notifications.includes(dough.id)}
+                                                    onScanShortcut={handleScanShortcut}
+                                                    activeInOven={ovenActiveDoughId === dough.id}
+                                                    onHoverCard={(reg: string | null) => setHoveredRegion(reg)}
+                                                    onViewStory={(id) => {
+                                                      setSelectedDoughId(id);
+                                                      handleNav("dough-detail");
+                                                    }}
+                                                    rank={rankIdx !== -1 ? rankIdx + 1 : undefined}
+                                                    salesCount={getDoughSales(dough.id)}
+                                                  />
+                                                </div>
+                                              );
+                                            })}
                                         </div>
-                                        <p className="text-xs text-stone-600 leading-relaxed font-semibold">
-                                          부드러운 식감으로 대중성이 높고
-                                          회전율이 빠른 기본 품종들입니다. 대표
-                                          품목: 우유/탕종식빵, 단팥빵, 소보로,
-                                          명란바게트, 소금빵(수요 증가에 따라
-                                          최적화) 등
-                                        </p>
                                       </div>
+                                    )}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          )}
+                        </div>
 
-                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                        {allDoughs
-                                          .filter(
-                                            (d) => d.subCategory === "soft",
-                                          )
-                                          .map((dough) => {
-                                            const rankIdx = totalTop3.findIndex(
-                                              (t) => t.id === dough.id,
-                                            );
-                                            return (
-                                              <div
-                                                key={dough.id}
-                                                className="relative group"
-                                              >
-                                                <DoughCard
-                                                  item={dough}
-                                                  onAddToCart={handleAddToCart}
-                                                  onToggleNotification={
-                                                    handleToggleNotification
-                                                  }
-                                                  isNotificationApplied={notifications.includes(
-                                                    dough.id,
-                                                  )}
-                                                  onScanShortcut={
-                                                    handleScanShortcut
-                                                  }
-                                                  activeInOven={
-                                                    ovenActiveDoughId ===
-                                                    dough.id
-                                                  }
-                                                  onHoverCard={(
-                                                    reg: string | null,
-                                                  ) => setHoveredRegion(reg)}
-                                                  onViewStory={(id) => {
-                                                    setSelectedDoughId(id);
-                                                    handleNav("dough-detail");
-                                                  }}
-                                                  rank={
-                                                    rankIdx !== -1
-                                                      ? rankIdx + 1
-                                                      : undefined
-                                                  }
-                                                  salesCount={getDoughSales(
-                                                    dough.id,
-                                                  )}
-                                                />
-                                              </div>
-                                            );
-                                          })}
-                                      </div>
-                                    </div>
-                                  )}
-                                </>
-                              );
-                            })()}
-                          </div>
-                        )}
                       </div>
+
                     </div>
                   </div>
                 )}

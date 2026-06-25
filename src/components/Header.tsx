@@ -40,7 +40,7 @@ export default function Header({
   }, []);
 
   const isAtTop = scrollY < 12;
-  const isDarkThemeAtTop = isAtTop && currentView === "home";
+  const isDarkThemeAtTop = false;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -76,9 +76,7 @@ export default function Header({
   const isEventActive = currentView === "events";
   const isCommunityActive = currentView === "community";
 
-  const currentNavBg = isAtTop
-    ? "bg-transparent border-b-0 border-none shadow-none backdrop-blur-none"
-    : "bg-white/95 border-b-0 border-none shadow-none backdrop-blur-md";
+  const currentNavBg = "bg-white/90 border-b border-stone-200/50 shadow-xs backdrop-blur-md";
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${currentNavBg}`} id="main-navigation-bar">

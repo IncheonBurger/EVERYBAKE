@@ -594,10 +594,10 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
               EVERYBAKE SMART DEVICE
             </span>
             <h3 id="heading-showroom-title" className="text-3xl sm:text-4xl font-extrabold text-[#111112] tracking-tight leading-none">
-              EveryBake AI POS & 하드웨어 패키지
+              EveryBake AI POS & 하이브리드 주문형 키오스크 패키지
             </h3>
             <p id="desc-showroom-sub" className="text-stone-500 text-xs sm:text-sm font-light max-w-xl mx-auto leading-relaxed">
-              비전 가이드 센서 기반의 자동 빵 탐지 분석 및 인공지능 로드셀 저울, 전면 스마트 터치 스크린 태블릿이 결합된 에브리베이커 전용 프리미엄 일체형 결제 시스템 패키지입니다.
+              자동 빵 스캔 기술과 터치패드 오더링 시스템이 하나로 결합된 스마트 결제 디바이스입니다. 손님이 직접 빵을 스캔하고, 음료 주문까지 동시에 처리할 수 있어 점주가 신경 쓸 필요 없는 완벽한 무인 자율 자판 시스템을 구현합니다.
             </p>
           </div>
 
@@ -940,10 +940,10 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
                   Premium Package
                 </span>
                 <h4 className="text-2xl sm:text-3xl font-extrabold text-[#111112] tracking-tight leading-tight">
-                  EveryBake AI POS & 하드웨어 패키지
+                  EveryBake AI POS & 하이브리드 주문형 키오스크 패키지
                 </h4>
                 <p className="text-stone-500 text-xs sm:text-sm font-light leading-relaxed font-sans">
-                  비전 가이드 센서 기반의 자동 빵 식별 분석기 및 인공지능 로드셀 저울, 통합 결제 태블릿 단말이 하나로 통합된 에브리베이커 매장 전용 스마트 일체형 결제 시스템입니다.
+                  비전 가이드 센서 기반의 자동 빵 식별 결제뿐만 아니라, 음료 및 사이드 메뉴를 직접 선택할 수 있는 <b>터치패드 오더링 시스템</b>이 결합된 하이브리드 스마트 키오스크입니다. 무인 운영 환경에서도 손님이 스스로 빵 스캔과 커피 주문을 해결하여, 점주가 계산대에 상주하며 신경 쓸 필요가 없는 혁신적인 자동 결제 라이프를 제공합니다.
                 </p>
               </div>
 
@@ -973,23 +973,33 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
                   <div className="flex items-start gap-2.5 text-xs text-stone-600 font-light">
                     <Check className="w-4 h-4 text-[#f97316] shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-semibold text-stone-900 block font-sans">지능형 듀얼 플레이트 쉘</span>
-                      무게와 이미지를 완벽 매칭하여 수하물 자동 전송 케어
+                      <span className="font-semibold text-stone-900 block font-sans">하이브리드 터치 오더링 UI</span>
+                      커피 및 각종 사이드 음료 주문 전용 고감도 10인치 터치패드 탑재
                     </div>
                   </div>
                   <div className="flex items-start gap-2.5 text-xs text-stone-600 font-light">
                     <Check className="w-4 h-4 text-[#f97316] shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-semibold text-stone-900 block font-sans">스마트 페이 전용 모듈</span>
-                      IC카드 삽입구, MST, NFC 애플/삼성페이 및 QR 일체형 단말
+                      <span className="font-semibold text-stone-900 block font-sans">지능형 듀얼 플레이트 저울</span>
+                      무게와 이미지를 교차 실시간 정밀 교정하여 누락 없는 안전 전송 케어
                     </div>
                   </div>
                   <div className="flex items-start gap-2.5 text-xs text-stone-600 font-light">
                     <Check className="w-4 h-4 text-[#f97316] shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-semibold text-stone-900 block font-sans">안심 2개년 무상 보증십</span>
-                      도입 완료 후 하드웨어 이상 대비 24시간 안심 출동 케어 제공
+                      <span className="font-semibold text-stone-900 block font-sans">스마트 통합 페이먼트</span>
+                      IC카드 삽입구, MST, NFC 애플/삼성페이 및 QR 일체형 전천후 단말
                     </div>
+                  </div>
+                  
+                  {/* Hybrid ordering concept detail box */}
+                  <div className="col-span-1 sm:col-span-2 bg-[#f97316]/5 p-4 rounded-2xl border border-[#f97316]/10 space-y-1 mt-1 text-left">
+                    <span className="text-[11px] font-bold text-[#f97316] flex items-center gap-1">
+                      💡 점주 관리 제로(Zero-Care) 무인 결제 모델
+                    </span>
+                    <p className="text-[10.5px] text-stone-600 leading-relaxed font-light">
+                      쟁반을 올리면 사워도우, 소금빵 등 매대 빵류는 <b>AI 스캔으로 0.2초 만에 완벽 인식</b>되고, 추가 아메리카노 등은 화면의 <b>터치 키오스크 메뉴판</b>에서 편리하게 선택합니다. 결제 한 번으로 모든 자율 정산이 끝나므로 매장 점주님이 카운터를 종일 지킬 필요가 없습니다.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1477,135 +1487,31 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
                   카메라 센서가 식판 위의 빵 종류와 무게를 완벽하게 연동하는 모습입니다.
                 </p>
               </div>
-
-              {/* Select Tab */}
-              <div className="flex bg-stone-100 p-0.5 rounded-lg text-[10px] font-semibold self-start sm:self-auto gap-1">
-                <button
-                  onClick={() => setVideoActiveTab("preview")}
-                  className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
-                    videoActiveTab === "preview"
-                      ? "bg-white text-stone-900 shadow-sm"
-                      : "text-stone-400 hover:text-stone-700"
-                  }`}
-                >
-                  웹 시뮬레이터 (수정 반영됨) ✨
-                </button>
-                <button
-                  onClick={() => setVideoActiveTab("demo")}
-                  className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
-                    videoActiveTab === "demo"
-                      ? "bg-white text-stone-900 shadow-sm"
-                      : "text-stone-400 hover:text-stone-700"
-                  }`}
-                >
-                  기본 시연 보기
-                </button>
-                <button
-                  onClick={() => setVideoActiveTab("upload")}
-                  className={`px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
-                    videoActiveTab === "upload"
-                      ? "bg-white text-stone-900 shadow-sm"
-                      : "text-stone-400 hover:text-stone-700"
-                  }`}
-                >
-                  개별 파일로 시청하기
-                </button>
-              </div>
             </div>
 
             <div className="relative bg-stone-950 rounded-2xl overflow-hidden shadow-2xl border border-stone-900 aspect-video group">
-              {videoActiveTab === "preview" ? (
-                <div className="w-full h-full relative bg-[#FAF9F6]">
-                  <iframe
-                    srcDoc={singleHtmlCode}
-                    title="EveryBake Standalone Premium Landing Page Preview"
-                    className="w-full h-full border-0 absolute inset-0 bg-[#FAF9F6]"
-                    sandbox="allow-scripts allow-same-origin allow-popups"
-                  />
+              <div className="w-full h-full relative">
+                <iframe
+                  src="https://www.youtube.com/embed/awlHNsoaX94?autoplay=1&mute=1&loop=1&playlist=awlHNsoaX94&controls=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0"
+                  title="EveryBake AI POS Real Demonstration"
+                  className="w-full h-full border-0 absolute inset-0 opacity-95 text-[#0c0d12] bg-[#0c0d12]"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+                
+                {/* Subtle active state overlays representing real-time telemetry model */}
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/20 via-transparent to-stone-950/10 pointer-events-none" />
+                
+                {/* Overlay indicators positioned nicely */}
+                <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-[#ffffff]/10 z-10 pointer-events-none">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[9px] font-black tracking-widest text-[#22d3ee] font-mono">MODEL v2.4 (LIVE ACTIVE)</span>
                 </div>
-              ) : videoActiveTab === "demo" ? (
-                <div className="w-full h-full relative">
-                  <iframe
-                    src="https://www.youtube.com/embed/awlHNsoaX94?autoplay=1&mute=1&loop=1&playlist=awlHNsoaX94&controls=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0"
-                    title="EveryBake AI POS Real Demonstration"
-                    className="w-full h-full border-0 absolute inset-0 opacity-95 text-[#0c0d12] bg-[#0c0d12]"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
-                  
-                  {/* Subtle active state overlays representing real-time telemetry model */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/20 via-transparent to-stone-950/10 pointer-events-none" />
-                  
-                  {/* Overlay indicators positioned nicely */}
-                  <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-[#ffffff]/10 z-10 pointer-events-none">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[9px] font-black tracking-widest text-[#22d3ee] font-mono">MODEL v2.4 (LIVE ACTIVE)</span>
-                  </div>
-                  
-                  <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-[#ffffff]/10 text-[9px] font-bold text-white font-mono z-10 pointer-events-none">
-                    SCAN SPEED: 0.2s
-                  </div>
+                
+                <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-[#ffffff]/10 text-[9px] font-bold text-white font-mono z-10 pointer-events-none">
+                  SCAN SPEED: 0.2s
                 </div>
-              ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
-                  {videoFileUrl ? (
-                    <div className="relative w-full h-full bg-black flex items-center justify-center">
-                      <video
-                        ref={videoRef}
-                        src={videoFileUrl}
-                        className="w-full h-full max-h-full object-contain"
-                        controls
-                        playsInline
-                        autoPlay
-                        loop
-                      />
-                    </div>
-                  ) : (
-                    <label className="cursor-pointer space-y-4 flex flex-col items-center justify-center p-6 border-2 border-dashed border-stone-800 rounded-xl hover:border-stone-600 transition-all w-full h-full bg-[#0d0e12]">
-                      <input
-                        type="file"
-                        accept="video/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setVideoFileUrl(URL.createObjectURL(file));
-                          }
-                        }}
-                        className="hidden"
-                      />
-                      <div className="w-12 h-12 rounded-full bg-stone-900 flex items-center justify-center text-stone-400 border border-stone-800">
-                        <UploadCloud className="w-6 h-6 animate-bounce" />
-                      </div>
-                      <div className="space-y-1.5">
-                        <p className="text-[12px] font-bold text-stone-200">
-                          다운로드한 실물 동영상 파일을 선택하세요
-                        </p>
-                        <p className="text-[10px] text-stone-500">
-                          이 브라우저 탭에서 다운로드한 mp4 파일을 불러와 무손실 오리지널 최상의 해상도로 시청할 수 있습니다.
-                        </p>
-                      </div>
-                    </label>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Visual helpful info */}
-            <div className="text-left text-[11px] text-stone-500 bg-orange-50/50 p-4 rounded-xl border border-orange-100/60 leading-relaxed font-sans space-y-2">
-              <p className="font-semibold text-stone-800 flex items-center gap-1.5">
-                💡 <span className="text-[#f97316]">영상 사이트 내 영구 장착(Embed) 가이드</span>
-              </p>
-              <p className="text-stone-600 font-light text-[10.5px]">
-                현재 대화창에 올려주신 동영상 파일은 메모리로 사용되므로 소스 코드 디렉토리에 자동으로 영구 저장되지 않습니다. 하지만 <b>자체 비디오 모듈로 매우 간편하게 영구 고정할 수 있습니다!</b>
-              </p>
-              <ol className="list-decimal list-inside text-stone-500 space-y-1 pl-1 text-[10px] font-light">
-                <li>대화창의 실제 시연 영상을 PC에 마우스 우클릭으로 <b className="text-stone-750">저장(다운로드)</b>합니다.</li>
-                <li>화면 왼쪽 <b>파일 탐색기(File Explorer)</b>의 <b className="text-stone-750">`public/`</b> 폴더를 클릭합니다.</li>
-                <li>다운로드받은 동영상 파일명을 <b className="text-[#f97316]">`everybake_demo.mp4`</b>로 변경한 뒤, 해당 `public/` 폴더 안으로 직접 <b className="text-stone-700">새로고침 없이 드래그 업로드</b>하세요!</li>
-              </ol>
-              <p className="text-[10px] text-stone-400 font-light border-t border-orange-150/40 pt-1.5">
-                업로드를 완료하시면 주소창에 접속하자마자 어떠한 조작 없이도 <b>실제 시연 영상이 자동으로 이곳에 계속 반복 재생</b>됩니다! (현재는 로컬 파일이 없을 시 보여주는 멋진 빵 스캔 3D 모형 데모가 임시로 떠있습니다.)
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -1927,6 +1833,212 @@ export default function AiPosDetail({ onBack, onInquiry }: AiPosDetailProps) {
                   </defs>
                 </svg>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4.5 Hybrid Kiosk Showcase Section (하이브리드 주문형 키오스크 대형 쇼케이스) */}
+      <section className="py-24 bg-white text-stone-900 border-b border-stone-200 relative overflow-hidden">
+        {/* Subtle grid background for light canvas */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-70" />
+        
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-5 space-y-6 text-left reveal">
+              <span className="text-[10px] font-black text-[#f97316] uppercase tracking-widest font-mono bg-[#f97316]/10 px-2.5 py-1 rounded-md border border-[#f97316]/20 inline-block">
+                HYBRID SELF-ORDERING & SCAN
+              </span>
+              <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight text-stone-900">
+                빵 스캔과 커피 주문을 하나로.<br/>
+                <span className="text-[#f97316]">완벽한 하이브리드 키오스크</span>
+              </h3>
+              <p className="text-stone-600 text-xs sm:text-sm font-light leading-relaxed">
+                단순히 빵을 인식하는 것에 그치지 않습니다. 고객이 쟁반을 올려 빵을 초고속 자동 인식하는 동시에, 내장된 고선명 대형 터치 스크린 메뉴판을 통해 음료나 각종 부자재를 직접 오더링하는 진정한 하이브리드 자율 결제를 실현합니다.
+              </p>
+              
+              <div className="space-y-5 pt-2 border-t border-stone-200">
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f97316] to-amber-500 flex items-center justify-center shrink-0 shadow-lg text-white font-bold text-lg">
+                    🥤
+                  </div>
+                  <div className="space-y-1">
+                    <h5 className="text-xs font-bold text-stone-900">자율 터치패드 오더링 (Coffee & Beverage)</h5>
+                    <p className="text-[11px] text-stone-600 leading-relaxed font-light">
+                      아메리카노, 에이드, 라떼 등 추가 가공이 필요하거나 쇼케이스 외부의 음료 상품들을 고객이 직관적인 터치 조작으로 셀프 즉석 추가할 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f97316] to-amber-500 flex items-center justify-center shrink-0 shadow-lg text-white font-bold text-lg">
+                    🤖
+                  </div>
+                  <div className="space-y-1">
+                    <h5 className="text-xs font-bold text-stone-900">0.2초 AI 실시간 식판 스캐닝</h5>
+                    <p className="text-[11px] text-stone-600 leading-relaxed font-light">
+                      바쁜 출근 시간이나 몰리는 피크 타임에도 여러 종류의 단과자빵이나 베이글을 가볍게 트레이에 올려만 주면 비전 인공지능이 일괄적으로 즉시 품목을 완성합니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f97316] to-amber-500 flex items-center justify-center shrink-0 shadow-lg text-white font-bold text-lg">
+                    🏪
+                  </div>
+                  <div className="space-y-1">
+                    <h5 className="text-xs font-bold text-stone-900">매장 무인화 완료 (Zero-Care Autonomous Shop)</h5>
+                    <p className="text-[11px] text-stone-600 leading-relaxed font-light">
+                      손님이 스스로 빵 스캔과 음료 주문을 원스톱으로 처리하므로 카운터를 지키던 직원이 제조나 제품 진열에 더 많은 시간을 할애하거나 아예 무인으로 24시간 안심 운영할 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Illustration: Gorgeous Simulated Hybrid POS Terminal */}
+            <div className="lg:col-span-7 bg-[#0c0d12] rounded-[32px] p-6 border border-stone-800 shadow-2xl relative overflow-hidden flex flex-col justify-between h-auto sm:h-[520px] reveal">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#f97316]/10 rounded-full filter blur-[80px] pointer-events-none" />
+              
+              {/* Simulator Header */}
+              <div className="flex justify-between items-center pb-4 border-b border-stone-800 mb-6">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-black tracking-widest text-[#22d3ee] font-mono">HYBRID POS ACTIVE</span>
+                </div>
+                <span className="text-[9px] font-bold text-stone-500 font-mono">STANDBY / NO ATTENDANT REQUIRED</span>
+              </div>
+
+              {/* Layout Mockup of Screen */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch flex-1">
+                {/* Simulated POS Screen (Left inside simulator screen) */}
+                <div className="md:col-span-7 bg-[#121214] rounded-2xl border border-stone-800 p-4 flex flex-col justify-between text-left relative overflow-hidden">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[8px] font-black text-[#f97316] tracking-wider uppercase font-mono">TOUCH ORDER KIOSK</span>
+                      <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold">자율 정산 모드</span>
+                    </div>
+
+                    {/* Interactive Selection Menu Mockup */}
+                    <div className="space-y-2.5">
+                      <span className="text-[9px] font-bold text-stone-400 block">🥤 추천 오더링 메뉴 (터치하여 즉시 추가)</span>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="bg-stone-900 p-2 rounded-lg border border-[#f97316]/40 cursor-pointer transition-all flex flex-col justify-between h-18 text-left relative">
+                          <span className="text-[10px] font-bold text-stone-200">아이스 아메리카노</span>
+                          <div className="flex justify-between items-end">
+                            <span className="text-[8px] text-stone-500 font-light">Premium Arabica</span>
+                            <span className="text-[10px] font-bold text-amber-400">+3,500원</span>
+                          </div>
+                          {/* Checked indicator */}
+                          <div className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-[#f97316] flex items-center justify-center text-[7px] font-black text-white">✓</div>
+                        </div>
+                        <div className="bg-stone-900/50 p-2 rounded-lg border border-stone-800 cursor-pointer transition-all flex flex-col justify-between h-18 text-left">
+                          <span className="text-[10px] font-bold text-stone-300">리얼 바닐라 라떼</span>
+                          <div className="flex justify-between items-end">
+                            <span className="text-[8px] text-stone-500 font-light">Organic Milk</span>
+                            <span className="text-[10px] font-bold text-stone-400">4,200원</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Receipt Items list with mix of scan and touch order */}
+                    <div className="space-y-2 pt-2 border-t border-stone-850">
+                      <span className="text-[9px] font-bold text-stone-400 block">🛒 결제 장바구니 내역</span>
+                      
+                      <div className="space-y-1.5 max-h-28 overflow-y-auto font-mono text-[9px]">
+                        {/* Scanned bread */}
+                        <div className="flex justify-between items-center text-stone-300 bg-stone-900/40 px-2 py-1 rounded">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[8px] px-1 py-0.2 rounded bg-emerald-500/10 text-emerald-400 font-sans">AI 스캔</span>
+                            <span>소금 버터롤 (1개)</span>
+                          </div>
+                          <span className="font-bold text-stone-100">2,800원</span>
+                        </div>
+                        {/* Scanned bread */}
+                        <div className="flex justify-between items-center text-stone-300 bg-stone-900/40 px-2 py-1 rounded">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[8px] px-1 py-0.2 rounded bg-emerald-500/10 text-emerald-400 font-sans">AI 스캔</span>
+                            <span>깜파뉴 오 쇼콜라</span>
+                          </div>
+                          <span className="font-bold text-stone-100">4,500원</span>
+                        </div>
+                        {/* Touched menu item */}
+                        <div className="flex justify-between items-center text-[#f97316] bg-[#f97316]/10 px-2 py-1 rounded border border-[#f97316]/20">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[8px] px-1 py-0.2 rounded bg-[#f97316]/20 text-[#f97316] font-sans">터치오더</span>
+                            <span className="font-bold">아이스 아메리카노</span>
+                          </div>
+                          <span className="font-bold text-[#f97316]">3,500원</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-stone-850 flex justify-between items-center">
+                    <div>
+                      <span className="text-[8px] text-stone-500 block">TOTAL AMOUNT</span>
+                      <span className="text-sm font-bold text-amber-400 font-mono">10,800원</span>
+                    </div>
+                    <button className="bg-[#f97316] text-white text-[9px] font-bold px-3 py-1.5 rounded-lg shadow-lg shadow-[#f97316]/20 transition-transform active:scale-95 cursor-pointer font-sans">
+                      자율 계산하기 →
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3D tray visualization on the right of the screen */}
+                <div className="md:col-span-5 flex flex-col justify-between bg-stone-900/40 rounded-2xl border border-stone-800/80 p-4 text-center">
+                  <div className="space-y-1">
+                    <span className="text-[8px] font-black text-stone-400 tracking-wider uppercase font-mono">TRAY VISION SCANNER</span>
+                    <p className="text-[9px] text-stone-500 font-light leading-snug">
+                      트레이 위의 빵을 올리는 즉시 실시간 무게/비전 교차 분석
+                    </p>
+                  </div>
+
+                  {/* SVG Tray Scan Graphic */}
+                  <div className="flex-1 flex items-center justify-center my-4">
+                    <svg className="w-full h-28 text-stone-700 select-none drop-shadow-md" viewBox="0 0 100 80" fill="none">
+                      {/* Scale Platform Base */}
+                      <ellipse cx="50" cy="65" rx="36" ry="8" fill="#000" opacity="0.4" />
+                      <path d="M18,58 L82,58 L85,63 L15,63 Z" fill="#2d2d30" />
+                      
+                      {/* Laser grid glowing sweep effect */}
+                      <ellipse cx="50" cy="59" rx="28" ry="5.5" fill="none" stroke="#22c55e" strokeWidth="0.75" strokeDasharray="2,2" opacity="0.7" />
+                      
+                      {/* Simulated salt bread and campange */}
+                      <g transform="translate(50, 44)">
+                        {/* Campagne */}
+                        <path d="M-18,10 C-22,-4 5,-4 2,10 Z" fill="#78350f" stroke="#451a03" strokeWidth="0.5" transform="rotate(-10)" />
+                        <path d="M-10,4 Q-5,-1 0,4 M-4,5 Q1,0 6,5" stroke="#fff" strokeWidth="0.5" opacity="0.3" />
+                        
+                        {/* Salt Bread */}
+                        <path d="M-2,14 C-4,4 18,4 16,14 Z" fill="#d97706" stroke="#92400e" strokeWidth="0.5" transform="rotate(15)" />
+                        <ellipse cx="7" cy="8" rx="5" ry="1.5" fill="#fff" opacity="0.4" />
+                      </g>
+
+                      {/* Scanning visual brackets */}
+                      <path d="M22,35 L14,35 L14,43" stroke="#22c55e" strokeWidth="1" strokeLinecap="round" />
+                      <path d="M78,35 L86,35 L86,43" stroke="#22c55e" strokeWidth="1" strokeLinecap="round" />
+                      <path d="M22,64 L14,64 L14,56" stroke="#22c55e" strokeWidth="1" strokeLinecap="round" />
+                      <path d="M78,64 L86,64 L86,56" stroke="#22c55e" strokeWidth="1" strokeLinecap="round" />
+
+                      {/* Success Scan Green Beam */}
+                      <line x1="14" y1="48" x2="86" y2="48" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" className="animate-pulse" />
+                    </svg>
+                  </div>
+
+                  <div className="bg-stone-950/80 p-2 rounded-lg border border-stone-850/60 flex items-center justify-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
+                    <span className="text-[8.5px] font-bold text-stone-300 font-sans">실물 트레이 결제 완료 대기</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Info Footer */}
+              <p className="text-[10px] text-stone-500 font-light mt-4 text-center leading-relaxed">
+                ※ EveryBake 하이브리드 키오스크는 신용카드 단말기 탑재는 물론 바코드/QR 리더, 영수증 프린터까지 하나의 프레임에 올인원으로 완성됩니다.
+              </p>
             </div>
           </div>
         </div>

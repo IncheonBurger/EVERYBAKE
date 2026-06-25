@@ -197,3 +197,213 @@
   animation: warmCinematicDepthSlow 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* ==========================================
+   LONDONS CONTEMPORARY GALLERY ART-DIRECTION
+   ========================================== */
+
+/* 1. Global Reset to Absolute Sharp Lines & Hairlines */
+* {
+  border-radius: 0px !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition-duration: 200ms !important;
+}
+
+/* Explicit EXCEPTION to preserve round shapes of actual circles (like status dots, checkmarks, badges) */
+[class*="rounded-full"],
+.rounded-full,
+[class*="w-1.5 h-1.5"],
+[class*="w-2 h-2"],
+[class*="w-2.5 h-2.5"],
+[class*="w-3 h-3"],
+[class*="w-4 h-4"],
+[class*="w-10 h-10"],
+[class*="w-12 h-12"],
+[class*="w-14 h-14"],
+[class*="w-16 h-16"],
+[class*="w-20 h-20"],
+[class*="h-[165px]"], /* LED status strip */
+ellipse, circle, svg *,
+.animate-ping, .animate-pulse {
+  border-radius: 9999px !important;
+}
+
+/* 2. Elegant, Crisp Typography - High-End Premium Sans-serif Readability Edition */
+body {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", "Inter", sans-serif !important;
+  background-color: #fbfbfa !important; /* Elegant museum warm white background */
+  color: #1a1a1a !important; /* Deep charcoal for perfect reading contrast */
+  line-height: 1.6 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Titles: Solid, Premium Modern Sans-serif (Pretendard) with strong weight and comfortable tracking */
+h1, h2, h3, h4, .serif-heading, [class*="text-2xl"], [class*="text-3xl"], [class*="text-4xl"], [class*="text-5xl"] {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", "Inter", sans-serif !important;
+  font-weight: 700 !important; /* Strong weight for excellent visibility without pixel cracking */
+  color: #111111;
+  letter-spacing: -0.02em !important;
+  line-height: 1.4 !important;
+  text-transform: none !important; /* Natural casing looks more sophisticated */
+}
+
+.text-white-force {
+  color: #ffffff !important;
+}
+.text-stone-200-force {
+  color: #e5e1dc !important;
+}
+.text-stone-300-force {
+  color: #d1d1ca !important;
+}
+.text-stone-400-force {
+  color: #a1928b !important;
+}
+.text-orange-force {
+  color: #f97316 !important;
+}
+.text-amber-force {
+  color: #fbbf24 !important;
+}
+
+/* Luxurious Signature Phrase Typography overrides to bypass aggressive global titles */
+.signature-title-1 {
+  font-family: "Maru Buri", "Nanum Myeongjo", "Cormorant Garamond", serif !important;
+  font-size: 2.0rem !important; /* Mobile */
+  font-weight: 300 !important;
+  color: #1c1917 !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.35 !important;
+  text-transform: none !important;
+}
+@media (min-width: 640px) {
+  .signature-title-1 {
+    font-size: 2.75rem !important;
+  }
+}
+@media (min-width: 1024px) {
+  .signature-title-1 {
+    font-size: 3.5rem !important;
+  }
+}
+
+.signature-title-2 {
+  font-family: "Maru Buri", "Nanum Myeongjo", "Cormorant Garamond", serif !important;
+  font-size: 2.0rem !important; /* Mobile */
+  font-weight: 300 !important;
+  color: #78716c !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.35 !important;
+  text-transform: none !important;
+}
+@media (min-width: 640px) {
+  .signature-title-2 {
+    font-size: 2.75rem !important;
+  }
+}
+@media (min-width: 1024px) {
+  .signature-title-2 {
+    font-size: 3.5rem !important;
+  }
+}
+
+.signature-brand {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", "Inter", sans-serif !important;
+  font-size: 1.375rem !important;
+  font-weight: 800 !important;
+  color: #f97316 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+}
+@media (min-width: 640px) {
+  .signature-brand {
+    font-size: 1.75rem !important;
+  }
+}
+@media (min-width: 1024px) {
+  .signature-brand {
+    font-size: 2.25rem !important;
+  }
+}
+
+/* Sub-headings, buttons & metadata */
+h5, h6, .sans-heading, button, label {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", "Inter", sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Fine-tune body description paragraph & span text styles - Upgraded to regular weight for extreme legibility */
+p, span, li, dt, dd {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", "Inter", sans-serif !important;
+  font-weight: 400 !important; /* Comfortably readable Regular weight */
+  letter-spacing: -0.01em !important;
+  line-height: 1.65 !important;
+}
+
+/* 3. Smart, Sophisticated Contrast for Dark/Light Contexts */
+/* Dark theme background normalization */
+.bg-stone-900, .bg-stone-950, .bg-black, .bg-neutral-900, .bg-stone-850,
+[class*="bg-stone-9"], [class*="bg-stone-8"], [class*="bg-stone-950"], [class*="bg-black"],
+#tablet-frame, .phone-ui, .phone-screen, .control-panel, .display-panel, .interactive-panel,
+.bg-[#0a0a0c], .bg-[#121214], .bg-[#0c0d12], .bg-[#1c1c1e], .bg-stone-950\/80 {
+  background-color: #0c0c0e !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Ensure text elements inside all dark-theme containers are readable white */
+.bg-stone-900 p, .bg-stone-900 span, .bg-stone-900 li, .bg-stone-900 dt, .bg-stone-900 dd, .bg-stone-900 label, .bg-stone-900 h1, .bg-stone-900 h2, .bg-stone-900 h3, .bg-stone-900 h4, .bg-stone-900 h5, .bg-stone-900 h6, .bg-stone-900 div,
+.bg-stone-950 p, .bg-stone-950 span, .bg-stone-950 li, .bg-stone-950 dt, .bg-stone-950 dd, .bg-stone-950 label, .bg-stone-950 h1, .bg-stone-950 h2, .bg-stone-950 h3, .bg-stone-950 h4, .bg-stone-950 h5, .bg-stone-950 h6, .bg-stone-950 div,
+.bg-black p, .bg-black span, .bg-black li, .bg-black dt, .bg-black dd, .bg-black label, .bg-black h1, .bg-black h2, .bg-black h3, .bg-black h4, .bg-black h5, .bg-black h6, .bg-black div,
+[class*="bg-stone-9"] p, [class*="bg-stone-9"] span, [class*="bg-stone-9"] li, [class*="bg-stone-9"] div,
+[class*="bg-stone-950"] p, [class*="bg-stone-950"] span, [class*="bg-stone-950"] li, [class*="bg-stone-950"] div,
+[class*="bg-black"] p, [class*="bg-black"] span, [class*="bg-black"] li, [class*="bg-black"] div,
+#tablet-frame p, #tablet-frame span, #tablet-frame li, #tablet-frame div, #tablet-frame h1, #tablet-frame h2, #tablet-frame h3, #tablet-frame h4, #tablet-frame h5, #tablet-frame h6,
+.bg-[#0a0a0c] p, .bg-[#0a0a0c] span, .bg-[#0a0a0c] li, .bg-[#0a0a0c] div, .bg-[#0a0a0c] h1, .bg-[#0a0a0c] h2, .bg-[#0a0a0c] h3, .bg-[#0a0a0c] h4,
+.bg-[#121214] p, .bg-[#121214] span, .bg-[#121214] li, .bg-[#121214] div, .bg-[#121214] h1, .bg-[#121214] h2, .bg-[#121214] h3,
+.bg-[#1c1c1e] p, .bg-[#1c1c1e] span, .bg-[#1c1c1e] li, .bg-[#1c1c1e] div {
+  color: #ffffff !important;
+}
+
+/* Bright gray text for descriptions inside dark regions to give depth and perfect contrast */
+.bg-stone-900 p, .bg-stone-950 p, .bg-black p, [class*="bg-stone-9"] p, #tablet-frame p, .bg-[#0a0a0c] p {
+  color: #d1d1ca !important;
+}
+
+/* Absolute Exceptions: Protect elements nested inside white background cards that are inside dark sections */
+.bg-white, .bg-stone-50, .bg-stone-100, .bg-[#fbfbfa], [class*="bg-amber-50"] {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+.bg-white p, .bg-white span, .bg-white li, .bg-white h1, .bg-white h2, .bg-white h3, .bg-white h4, .bg-white h5, .bg-white h6, .bg-white div,
+.bg-stone-50 p, .bg-stone-50 span, .bg-stone-50 li, .bg-stone-50 h1, .bg-stone-50 h2, .bg-stone-50 h3,
+.bg-stone-100 p, .bg-stone-100 span, .bg-stone-100 li, .bg-stone-100 h1, .bg-stone-100 h2, .bg-stone-100 h3,
+.bg-[#fbfbfa] p, .bg-[#fbfbfa] span, .bg-[#fbfbfa] li, .bg-[#fbfbfa] h1, .bg-[#fbfbfa] h2, .bg-[#fbfbfa] h3,
+[class*="bg-amber-50"] p, [class*="bg-amber-50"] span, [class*="bg-amber-50"] li, [class*="bg-amber-50"] select, [class*="bg-amber-50"] label {
+  color: #1a1a1a !important;
+}
+
+/* Safe protection for specific colors like orange primary accents so they don't get forced to white/black */
+.text-[#f97316], .text-[#ea580c], .text-orange-500, .text-amber-500, .text-amber-400,
+[class*="text-[#f97316]"], [class*="text-[#ea580c]"], [class*="text-orange"], [class*="text-amber"] {
+  color: #f97316 !important;
+}
+
+/* Green status indicators and badge text */
+.text-emerald-400, .text-emerald-500, [class*="text-emerald"] {
+  color: #10b981 !important;
+}
+
+/* Subtle hairline borders - extremely thin, clean, 10% opacity */
+div, section, header, footer, button, nav, hr, input, select, textarea {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* 4. Contemporary Gallery Spacious Padding Override */
+section {
+  padding-top: 8rem !important;
+  padding-bottom: 8rem !important;
+}
+
+
