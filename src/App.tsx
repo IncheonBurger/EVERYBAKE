@@ -3410,23 +3410,7 @@ export default function App() {
                         {/* Left Branding/Title Section */}
                         <div className="w-full lg:w-[360px] shrink-0 flex flex-col justify-between py-4 text-left">
                           <div className="space-y-6">
-                            {/* Spinning luxury badge */}
-                            <div className="relative w-28 h-28 flex items-center justify-center">
-                              <svg viewBox="0 0 100 100" className="w-full h-full absolute inset-0" style={{ animation: "spin 18s linear infinite" }}>
-                                <path id="circleTextPath" d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" fill="none" />
-                                <text className="text-[7px] font-black tracking-[0.22em] fill-stone-350 uppercase">
-                                  <textPath href="#circleTextPath">
-                                    BEST PRODUCT ✦ EVERYBAKE RECOMMENDED ✦ 
-                                  </textPath>
-                                </text>
-                              </svg>
-                              {/* Inner static luxury circle or icon */}
-                              <div className="w-12 h-12 rounded-full bg-stone-50 border border-stone-100 flex items-center justify-center">
-                                <span className="text-sm">✦</span>
-                              </div>
-                            </div>
-
-                            <div className="space-y-3 pt-2">
+                            <div className="space-y-3">
                               <h2 className="text-3.5xl sm:text-4.5xl font-black text-stone-900 tracking-tight leading-tight">
                                 EVERYBAKE 추천상품
                               </h2>
@@ -3507,7 +3491,7 @@ export default function App() {
                               },
                               {
                                 id: "h-006",
-                                imgUrl: "https://images.unsplash.com/photo-1541119638723-c51cbe2262aa?auto=format&fit=crop&q=80&w=800",
+                                imgUrl: "https://images.unsplash.com/photo-1518098268026-4e43a1a009de?auto=format&fit=crop&q=80&w=800",
                                 discount: "25%"
                               },
                               {
