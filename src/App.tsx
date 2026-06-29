@@ -3491,7 +3491,7 @@ export default function App() {
                               },
                               {
                                 id: "h-006",
-                                imgUrl: "https://images.unsplash.com/photo-1518098268026-4e43a1a009de?auto=format&fit=crop&q=80&w=800",
+                                imgUrl: "https://images.unsplash.com/photo-1518562180175-34a163b1a9a6?auto=format&fit=crop&q=80&w=800",
                                 discount: "25%"
                               },
                               {
