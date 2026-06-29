@@ -443,4 +443,45 @@ section {
   transform: scale(0.97);
 }
 
+/* Master Dough Dark Background Signature Phrase */
+.signature-title-dark-1 {
+  font-family: "Maru Buri", "Nanum Myeongjo", "Cormorant Garamond", serif !important;
+  font-size: 2.0rem !important; /* Mobile */
+  font-weight: 300 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.35 !important;
+  text-transform: none !important;
+}
+@media (min-width: 640px) {
+  .signature-title-dark-1 {
+    font-size: 2.75rem !important;
+  }
+}
+@media (min-width: 1024px) {
+  .signature-title-dark-1 {
+    font-size: 3.5rem !important;
+  }
+}
+
+.signature-title-dark-2 {
+  font-family: "Maru Buri", "Nanum Myeongjo", "Cormorant Garamond", serif !important;
+  font-size: 2.0rem !important; /* Mobile */
+  font-weight: 300 !important;
+  color: #d6d3d1 !important; /* Stone 300 equivalent */
+  letter-spacing: 0.05em !important;
+  line-height: 1.35 !important;
+  text-transform: none !important;
+}
+@media (min-width: 640px) {
+  .signature-title-dark-2 {
+    font-size: 2.75rem !important;
+  }
+}
+@media (min-width: 1024px) {
+  .signature-title-dark-2 {
+    font-size: 3.5rem !important;
+  }
+}
+
 

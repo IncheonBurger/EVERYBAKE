@@ -3106,8 +3106,17 @@ export default function App() {
                           </div>
                         </div>
 
-                        {/* Spacer to keep flex layout consistent */}
-                        <div className="mt-auto h-0" />
+                        {/* Bottom: Master Dough Signature Phrase (Sensory and Emotional) */}
+                        <div className={`z-30 mt-auto text-right pt-6 transition-all duration-500 border-t border-white/5 ${hoveredPanel === "left" ? "opacity-10 scale-95 origin-right" : "opacity-100 scale-100"}`}>
+                          <div className="select-none space-y-1">
+                            <div className="signature-title-dark-1 text-right">
+                              시간이 빚어낸
+                            </div>
+                            <div className="signature-title-dark-2 text-right">
+                              가장 순수한 결.
+                            </div>
+                          </div>
+                        </div>
                       </motion.div>
 
                     </div>
